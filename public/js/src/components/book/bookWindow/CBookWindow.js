@@ -1,10 +1,10 @@
-import BookWindowView from "./BookWindowView"
+import BookWindowView from "./BookWindowView.js"
 
 // компонент окна для работы с сущностью книги
 export class CBookWindow {
     constructor() {
         this.view
-        this.isShow
+        this.isShow = false
     }
 
     // метод инициализации компонента
@@ -16,7 +16,20 @@ export class CBookWindow {
     }
 
     // метод инициализации обработчиков событий компонента
-    attachEvents() { }
+    attachEvents() { 
+        // инициализация используемых представлений
+        this.view = {
+            window: $$('bookWindow'),
+            windowLabel: $$('bookWindowLabel'),
+            windowCancelBtn: $$('bookWindowCancelBtn'),
+            form: $$('bookWindowForm')
+        }
+
+        // обрабтка закрытия окна
+        this.view.windowCancelBtn.attachEvent('onItemClick', () => {
+            this.view.window.hide()
+        })
+    }
 
     // метод вызова модального окна
     switch(type) {
@@ -34,18 +47,20 @@ export class CBookWindow {
     show(type) {
         switch (type) {
             case BOOK_WINDOW_TYPE.create:
-
+                this.view.windowLabel.setHTML('Добавление книги')
                 break;
             case BOOK_WINDOW_TYPE.update:
-
+                this.view.windowLabel.setHTML('Редактирование книги')
                 break;
             case BOOK_WINDOW_TYPE.delete:
-                
+                this.view.windowLabel.setHTML('Удаление книги')
                 break;
             default:
                 console.error('Неизвестный тип отображения окна для рабоыт с сущностью книги');
-                break;
+                return;
         }
+
+        this.view.window.show()
     }
 
     // метод сокрытия окна

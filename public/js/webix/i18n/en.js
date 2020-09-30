@@ -8,6 +8,8 @@ webix.i18n.locales["en-US"]={
 	timeFormat:"%h:%i %A",
 	longDateFormat:"%d %F %Y",
 	fullDateFormat:"%m/%d/%Y %h:%i %A",
+	am:["am","AM"],
+	pm:["pm","PM"],
 
 	price:"${obj}",
 	priceSettings:{
@@ -30,7 +32,56 @@ webix.i18n.locales["en-US"]={
 		today: "Today"
     },
 
-    controls:{
-    	select:"Select"
+    dataExport:{
+		page:"Page",
+		of:"of"
+    },
+    PDFviewer:{
+		of:"of",
+		automaticZoom:"Automatic Zoom",
+		actualSize:"Actual Size",
+		pageFit:"Page Fit",
+		pageWidth:"Page Width",
+		pageHeight:"Page Height"
+    },
+    aria:{
+		calendar:"Calendar",
+		increaseValue:"Increase value",
+		decreaseValue:"Decrease value",
+		navMonth:["Previous month", "Next month"],
+		navYear:["Previous year", "Next year"],
+		navDecade:["Previous decade", "Next decade"],
+		dateFormat:"%d %F %Y",
+		monthFormat:"%F %Y",
+		yearFormat:"%Y",
+		hourFormat:"Hours: %h %A",
+		minuteFormat:"Minutes: %i",
+		removeItem:"Remove item",
+		pages:["First page", "Previous page", "Next page", "Last page"],
+		page:"Page",
+		headermenu:"Header menu",
+		openGroup:"Open column group",
+		closeGroup:"Close column group",
+		closeTab:"Close tab",
+		showTabs:"Show more tabs",
+		resetTreeMap:"Reset tree map",
+		navTreeMap:"Level up",
+		nextTab:"Next tab",
+		prevTab:"Previous tab",
+		multitextSection:"Add section",
+		multitextextraSection:"Remove section",
+		showChart:"Show chart",
+		hideChart:"Hide chart",
+		resizeChart:"Resize chart"
+    },
+    richtext:{
+        underline: "Underline",
+        bold: "Bold",
+        italic: "Italic"
+    },
+    combo:{
+    	select:"Select",
+    	selectAll:"Select all",
+    	unselectAll:"Unselect all"
     }
 };

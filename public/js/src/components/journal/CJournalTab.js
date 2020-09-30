@@ -1,8 +1,8 @@
-import JournalTabView from "./JournalTabView"
+import JournalTabView from "./JournalTabView.js"
 
 export class CJournalTab {
     constructor() {
-        this.#view
+        this.view
     }
 
     // метод инициализации компонента
@@ -10,7 +10,7 @@ export class CJournalTab {
 
     // метод получения webix конфигурации компонента
     config() {
-        JournalTabView()
+        return JournalTabView()
     }
 
     // метод инициализации обработчиков событий компонента

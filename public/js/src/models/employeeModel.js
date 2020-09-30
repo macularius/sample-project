@@ -1,4 +1,6 @@
-// EmployeeModel объект для работы(CRUD) с данными
+import Model from "../../helpers/model.js";
+
+/// EmployeeModel объект для работы(CRUD) с данными
 class EmployeeModel extends Model {
     constructor() {}
 

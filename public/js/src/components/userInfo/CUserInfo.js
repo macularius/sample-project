@@ -1,8 +1,8 @@
-import UserInfoView from "./UserInfoView"
+import UserInfoView from "./UserInfoView.js"
 
 export class CUserInfo {
     constructor() {
-        this.#view
+        this.view
     }
 
     // метод инициализации компонента
@@ -10,7 +10,7 @@ export class CUserInfo {
 
     // метод получения webix конфигурации компонента
     config() {
-        UserInfoView()
+        return UserInfoView()
     }
 
     // метод инициализации обработчиков событий компонента

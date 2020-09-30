@@ -1,4 +1,6 @@
-// BookModel объект для работы(CRUD) с данными
+import Model from "../../helpers/model.js";
+
+/// BookModel объект для работы(CRUD) с данными
 class BookModel extends Model {
     constructor() {}
 

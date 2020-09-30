@@ -1,4 +1,4 @@
- Font Awesome
+## Font Awesome
 
    Copyright (C) 2012 by Dave Gandy
 
@@ -8,7 +8,7 @@
 
 
 
- PT Sans Free
+## PT Sans Free
 
 	Copyright © 2009 ParaType Ltd.
 	License: Free Font License v1.00

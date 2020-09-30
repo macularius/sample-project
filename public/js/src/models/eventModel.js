@@ -1,4 +1,6 @@
-// EventModel объект для работы(CRUD) с данными
+import Model from "../../helpers/model.js";
+
+/// EventModel объект для работы(CRUD) с данными
 class EventModel extends Model {
     constructor() {}
 

@@ -1,10 +1,10 @@
-import EmployeeWindowView from "./EmployeeWindowView"
+import EmployeeWindowView from "./EmployeeWindowView.js"
 
 // компонент окна для работы с сущностью сотрудника
 export class CEmployeeWindow {
     constructor() {
-        this.#view
-        this.#isShow
+        this.view
+        this.isShow
     }
 
     // метод инициализации компонента
@@ -20,18 +20,18 @@ export class CEmployeeWindow {
 
     // метод вызова модального окна
     switch(type) {
-        switch (this.#isShow) {
+        switch (this.isShow) {
             case true:
-                this.#hide()
+                this.hide()
                 break;
             case false:
-                this.#show(type)
+                this.show(type)
                 break;
         }
     }
 
     // метод отображения окна
-    #show(type) {
+    show(type) {
         switch (type) {
             case EMPLOYEE_WINDOW_TYPE.create:
 
@@ -49,7 +49,7 @@ export class CEmployeeWindow {
     }
 
     // метод сокрытия окна
-    #hide() { }
+    hide() { }
 }
 
 // типы отображения модального окна для работы с сущностью книги

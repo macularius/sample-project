@@ -20,6 +20,14 @@ export class Application {
 
     run() {
         webix.ui(this.config())
+        $$('main-tabbar').setValue('bookTab')
+    }
+
+    attachEvents() {
+        this.userInfo.attachEvents()
+        this.bookTab.attachEvents()
+        this.employeeTab.attachEvents()
+        this.journalTab.attachEvents()
     }
 
     config() {
@@ -30,35 +38,39 @@ export class Application {
                     cols: [
                         {
                             view: 'tabbar',
+                            id: 'main-tabbar',
+                            value: 'listView',
+                            width: 700,
+                            multiview: true,
+                            options: [
+                                { id: 'bookTab', value: 'Книги' },
+                                { id: 'employeeTab', value: 'Сотрудники' },
+                                { id: 'journalTab', value: 'Журнал событий' },
+                            ]
 
                         },
-                        {
-                            cols: [
-                                // фио
-                                {
-                                    view: 'label',
-                                    template: 'Фамилия Имя Отчество',
-                                },
-                                // кнопка выхода
-                                {
-                                    view: 'button',
-                                    text: 'Выход',
-                                },
-                            ]
-                        },
+                        {},
+                        this.userInfo.config(),
                     ],
                 },
                 // содержимое табов
                 {
-
+                    view: "multiview",
+                    id: "main-views", 
+                    cells: [
+                        this.bookTab.config(),
+                        this.employeeTab.config(),
+                        this.journalTab.config(),
+                    ]
                 },
             ],
         }
     }
 }
 
-webix.ready(()=>{
+webix.ready(() => {
     let app = new Application();
     app.init()
     app.run()
+    app.attachEvents()
 })

@@ -4,7 +4,7 @@ webix.i18n.locales["it-IT"] = {
 	groupSize:3,
 	decimalDelimiter:",",
 	decimalSize:2,
-	dateFormat:"%d/%n/%Y",
+	dateFormat:"%d/%m/%Y",
 	timeFormat:"%H:%i",
 	longDateFormat:"%j %F %Y",
 	fullDateFormat:"%j %F %Y %H:%i",
@@ -25,11 +25,60 @@ webix.i18n.locales["it-IT"] = {
 		hours: "Orario",
 		minutes: "Minuti",
 		done:"Pronto",
-		clear: "Chiara",
+		clear: "Pulisci",
 		today: "Oggi"
     },
 
-    controls:{
-    	select:"Selezionare"
+    dataExport:{
+		page:"Pagina",
+		of:"di"
+    },
+    PDFviewer:{
+		of:"di",
+		automaticZoom:"Zoom automatico",
+		actualSize:"Dimensione reale",
+		pageFit:"Dimensioni della pagina",
+		pageWidth:"Larghezza della pagina",
+		pageHeight:"Altezza della pagina"
+    },
+    aria:{
+		calendar:"Calendario",
+		increaseValue:"Aumenta il valore",
+		decreaseValue:"Riduci il valore",
+		navMonth:["Il mese scorso", "Il prossimo mese"],
+		navYear:["L'anno scorso", "L'anno prossimo"],
+		navDecade:["Decennio precedente", "Prossimo decennio"],
+		dateFormat:"%j %F %Y",
+		monthFormat:"%F %Y",
+		yearFormat:"%Y",
+		hourFormat:"Orario: %H",
+		minuteFormat:"Minuti: %i",
+		removeItem:"Rimuovere l'elemento",
+		pages:["Prima pagina", "Pagina precedente", "Pagina successiva", "Ultima pagina"],
+		page:"Pagina",
+		headermenu:"Menu del titolo",
+		openGroup:"Aperto gruppo di colonne",
+		closeGroup:"Chiudi gruppo di colonne",
+		closeTab:"Chiudi tab",
+		showTabs:"Mostra più tabs",
+		resetTreeMap:"Tornare alla vista originale",
+		navTreeMap:"Livello superiore",
+		nextTab:"Tab successivo",
+		prevTab:"Tab precedente",
+		multitextSection:"Aggiungi elemento",
+		multitextextraSection:"Rimuovere l'elemento",
+		showChart:"Mostrare grafico",
+		hideChart:"Nascondere grafico",
+		resizeChart:"Ridimensionare grafico"
+    },
+    richtext:{
+        underline: "Sottolineare",
+        bold: "Grassetto",
+        italic: "Corsivo"
+    },
+    combo:{
+    	select:"Selezionare",
+    	selectAll:"Seleziona tutto",
+    	unselectAll:"Deseleziona tutto"
     }
 };
