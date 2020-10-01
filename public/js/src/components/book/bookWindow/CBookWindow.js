@@ -1,10 +1,12 @@
 import BookWindowView from "./BookWindowView.js"
+import bookModel from "./../../../models/bookModel.js"
 
 // компонент окна для работы с сущностью книги
 export class CBookWindow {
     constructor() {
         this.view
-        this.isShow = false
+        this.type
+        this.onChange
     }
 
     // метод инициализации компонента
@@ -16,24 +18,49 @@ export class CBookWindow {
     }
 
     // метод инициализации обработчиков событий компонента
-    attachEvents() { 
+    attachEvents() {
         // инициализация используемых представлений
         this.view = {
             window: $$('bookWindow'),
             windowLabel: $$('bookWindowLabel'),
             windowCancelBtn: $$('bookWindowCancelBtn'),
+            windowConfirmBtn: $$('bookWindowConfirmBtn'),
             form: $$('bookWindowForm')
         }
 
-        // обрабтка закрытия окна
+        // обработка закрытия окна
         this.view.windowCancelBtn.attachEvent('onItemClick', () => {
             this.view.window.hide()
+        })
+
+        // обработка события "принять"
+        this.view.windowConfirmBtn.attachEvent('onItemClick', () => {
+            switch (this.type) {
+                case BOOK_WINDOW_TYPE.create:
+                    bookModel.createBook(this.fetch()).then(() => {
+                        this.onChange()
+                        this.hide()
+                    })
+                    break;
+                case BOOK_WINDOW_TYPE.update:
+                    bookModel.updateBook(this.fetch()).then(() => {
+                        this.onChange()
+                        this.hide()
+                    })
+                    break;
+                case BOOK_WINDOW_TYPE.delete:
+                    bookModel.deleteBook(this.fetch()).then(() => {
+                        this.onChange()
+                        this.hide()
+                    })
+                    break;
+            }
         })
     }
 
     // метод вызова модального окна
     switch(type) {
-        switch (this.isShow) {
+        switch (this.view.window.isVisible()) {
             case true:
                 this.hide()
                 break;
@@ -56,15 +83,28 @@ export class CBookWindow {
                 this.view.windowLabel.setHTML('Удаление книги')
                 break;
             default:
-                console.error('Неизвестный тип отображения окна для рабоыт с сущностью книги');
+                console.error('Неизвестный тип отображения окна для работы с сущностью книги');
                 return;
         }
 
+        this.type = type
         this.view.window.show()
     }
 
     // метод сокрытия окна
-    hide() { }
+    hide() {
+        this.view.window.hide()
+    }
+
+    // метод получения сущности из формы окна
+    fetch() {
+        return this.view.form.getValues()
+    }
+
+    // метод размещения сущности в форме окна
+    parse(values) {
+        this.view.form.setValues(values)
+    }
 }
 
 // типы отображения модального окна для работы с сущностью книги

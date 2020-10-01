@@ -10,6 +10,7 @@ export function BookTabView() {
                 id: 'bookTabDatatable',
                 select: true,
                 columns: [
+                    { id: 'ID', hidden: true },
                     { id: 'isbn', header: 'ISBN', fillspace: true, },
                     { id: 'name', header: 'Название', fillspace: true, },
                     { id: 'author', header: 'Автор', fillspace: true, },
@@ -17,11 +18,7 @@ export function BookTabView() {
                     { id: 'year', header: 'Год издания', fillspace: true, },
                     { id: 'status', header: 'Статус', fillspace: true, },
                 ],
-                data: [
-                    { isbn: 'isbn1', name: 'name', author: 'author', publisher: 'publisher', year: 'year', status: 'status', },
-                    { isbn: 'isbn2', name: 'name', author: 'author', publisher: 'publisher', year: 'year', status: 'status', },
-                    { isbn: 'isbn3', name: 'name', author: 'author', publisher: 'publisher', year: 'year', status: 'status', },
-                ],
+                data: [],
                 onContext: {},
             },
         ]

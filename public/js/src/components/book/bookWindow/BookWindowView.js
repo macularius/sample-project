@@ -34,26 +34,32 @@ export default function BookWindowView(type) {
                 {
                     view: 'text',
                     label: 'ISBN',
+                    name: 'isbn',
                 },
                 {
                     view: 'text',
                     label: 'Название',
+                    name: 'name',
                 },
                 {
                     view: 'text',
                     label: 'Автор',
+                    name: 'author',
                 },
                 {
                     view: 'text',
                     label: 'Издательство',
+                    name: 'publisher',
                 },
                 {
                     view: 'text',
                     label: 'Статус',
+                    name: 'status',
                 },
                 {
                     view: 'text',
                     label: 'Год издания',
+                    name: 'year',
                 },
                 {
                     cols: [
@@ -65,7 +71,7 @@ export default function BookWindowView(type) {
                         {
                             view: 'button',
                             id: 'bookWindowCancelBtn',
-                            value: 'Отменить',
+                            value: 'Отмена',
                         },
                     ]
                 },
