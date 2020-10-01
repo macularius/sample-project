@@ -1,7 +1,7 @@
 import { BOOK_CONTEXT_MENU } from "./CBookTab.js";
 
 // возвращает webix конфигурации таба для работы с книгами
-export function BookTabView(windowConfig) {
+export function BookTabView() {
     return {
         id: 'bookTab',
         rows: [
