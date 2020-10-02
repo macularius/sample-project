@@ -1,10 +1,12 @@
 import EmployeeWindowView from "./EmployeeWindowView.js"
+import employeeModel from "../../../models/employeeModel.js"
 
 // компонент окна для работы с сущностью сотрудника
 export class CEmployeeWindow {
     constructor() {
-        this.view
-        this.isShow = false
+        this.view       // объект для быстрого доступа к представлениям
+        this.type       // тип текущего отображения окна
+        this.onChange   // callback функция при CUD операциях над сотрудником
     }
 
     // метод инициализации компонента
@@ -22,6 +24,7 @@ export class CEmployeeWindow {
             window: $$('employeeWindow'),
             windowLabel: $$('employeeWindowLabel'),
             windowCancelBtn: $$('employeeWindowCancelBtn'),
+            windowConfirmBtn: $$('employeeWindowConfirmBtn'),
             form: $$('employeeWindowForm')
         }
 
@@ -29,11 +32,35 @@ export class CEmployeeWindow {
         this.view.windowCancelBtn.attachEvent('onItemClick', () => {
             this.view.window.hide()
         })
+
+        // обработка события "принять"
+        this.view.windowConfirmBtn.attachEvent('onItemClick', () => {
+            switch (this.type) {
+                case EMPLOYEE_WINDOW_TYPE.create:
+                    employeeModel.createEmployee(this.fetch()).then(() => {
+                        this.onChange()
+                        this.hide()
+                    })
+                    break;
+                case EMPLOYEE_WINDOW_TYPE.update:
+                    employeeModel.updateEmployee(this.fetch()).then(() => {
+                        this.onChange()
+                        this.hide()
+                    })
+                    break;
+                case EMPLOYEE_WINDOW_TYPE.delete:
+                    employeeModel.deleteEmployee(this.fetch()).then(() => {
+                        this.onChange()
+                        this.hide()
+                    })
+                    break;
+            }
+        })
     }
 
     // метод вызова модального окна
     switch(type) {
-        switch (this.isShow) {
+        switch (this.view.window.isVisible()) {
             case true:
                 this.hide()
                 break;
@@ -60,14 +87,23 @@ export class CEmployeeWindow {
                 break;
         }
 
+        this.type = type
         this.view.window.show()
-        this.isShow = true
     }
 
     // метод сокрытия окна
     hide() { 
         this.view.window.hide()
-        this.isShow = false
+    }
+
+    // метод получения сущности из формы окна
+    fetch() {
+        return this.view.form.getValues()
+    }
+
+    // метод размещения сущности в форме окна
+    parse(values) {
+        this.view.form.setValues(values)
     }
 }
 

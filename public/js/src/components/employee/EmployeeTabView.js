@@ -18,12 +18,18 @@ export function EmployeeTabView() {
                     { id: 'phoneNumber', header: 'Телефонный номер', fillspace: true, },
                     { id: 'email', header: 'Email', fillspace: true, },
                 ],
-                data: [
-                    { ID: 1, lastname: 'lastname', firstname: 'firstname', middlename: 'middlename', position: 'position', phoneNumber: 'phone_number', email: 'email', },
-                    { ID: 2, lastname: 'lastname', firstname: 'firstname', middlename: 'middlename', position: 'position', phoneNumber: 'phone_number', email: 'email', },
-                    { ID: 3, lastname: 'lastname', firstname: 'firstname', middlename: 'middlename', position: 'position', phoneNumber: 'phone_number', email: 'email', },
-                ],
-                onContext: {},
+                data: [],
+                onContext: {
+                    // обработка вызова контекстного меню при остутствии данных
+                    webix_view:function(e, id){
+                        id = this.locate(e.target|| e.srcElement);
+                        if(!id){
+                            $$("employeeTabDatatableContextMenu").setContext({ obj:webix.$$(e)});
+                            $$("employeeTabDatatableContextMenu").show(e);
+                            webix.html.preventEvent(e);
+                        }
+                    }
+                },
             },
         ]
     }

@@ -2,7 +2,7 @@ import { EMPLOYEE_WINDOW_TYPE } from "./CEmployeeWindow.js";
 
 // возвращает webix конфигурации окна для работы с сущностью сотрудника
 export default function EmployeeWindowView(type) {
-    let headText = 'Сотрудник'
+    let headText = 'Сотрудник' // текст заголовка модального окна
 
     switch (type) {
         case EMPLOYEE_WINDOW_TYPE.create:
@@ -33,27 +33,33 @@ export default function EmployeeWindowView(type) {
             elements: [
                 {
                     view: 'text',
-                    label: 'ISBN',
+                    label: 'Фамилия',
+                    name: 'lastname',
                 },
                 {
                     view: 'text',
-                    label: 'Название',
+                    label: 'Имя',
+                    name: 'firstname',
                 },
                 {
                     view: 'text',
-                    label: 'Автор',
+                    label: 'Отчество',
+                    name: 'middlename',
                 },
                 {
                     view: 'text',
-                    label: 'Издательство',
+                    label: 'Должность',
+                    name: 'position',
                 },
                 {
                     view: 'text',
-                    label: 'Статус',
+                    label: 'Телефонный номер',
+                    name: 'phoneNumber',
                 },
                 {
                     view: 'text',
-                    label: 'Год издания',
+                    label: 'Электронная почта',
+                    name: 'email',
                 },
                 {
                     cols: [

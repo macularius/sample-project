@@ -1,6 +1,6 @@
 import { BOOK_CONTEXT_MENU } from "./CBookTab.js";
 
-// возвращает webix конфигурации таба для работы с книгами
+// возвращает webix конфигурацию таба для работы с книгами
 export function BookTabView() {
     return {
         id: 'bookTab',
@@ -11,7 +11,7 @@ export function BookTabView() {
                 select: true,
                 columns: [
                     { id: 'ID', hidden: true },
-                    { id: 'isbn', header: 'ISBN', fillspace: true, },
+                    { id: 'ISBN', header: 'ISBN', fillspace: true, },
                     { id: 'name', header: 'Название', fillspace: true, },
                     { id: 'author', header: 'Автор', fillspace: true, },
                     { id: 'publisher', header: 'Издательство', fillspace: true, },
@@ -19,17 +19,38 @@ export function BookTabView() {
                     { id: 'status', header: 'Статус', fillspace: true, },
                 ],
                 data: [],
-                onContext: {},
+                onContext: {
+                    // обработка вызова контекстного меню при остутствии данных
+                    webix_view:function(e, id){
+                        id = this.locate(e.target|| e.srcElement);
+                        if(!id){
+                            $$("bookTabDatatableContextMenu").setContext({ obj:webix.$$(e)});
+                            $$("bookTabDatatableContextMenu").show(e);
+                            webix.html.preventEvent(e);
+                        }
+                    }
+                },
             },
         ]
     }
 }
 
-// возвращает webix конфигурации контекстного меню таба
-export function BookTabContextMenu() {
+// возвращает webix конфигурацию контекстного меню таба
+export function BookTabContextMenu(employees) {
     return {
         view: 'contextmenu',
         id: 'bookTabDatatableContextMenu',
-        data: [BOOK_CONTEXT_MENU.toEvent, BOOK_CONTEXT_MENU.toEmployee, BOOK_CONTEXT_MENU.add, BOOK_CONTEXT_MENU.edit, BOOK_CONTEXT_MENU.remove],
+        data: [
+            {
+                value: BOOK_CONTEXT_MENU.give,
+                id: BOOK_CONTEXT_MENU.give,
+                submenu: employees,
+            },
+            BOOK_CONTEXT_MENU.toEvent,
+            BOOK_CONTEXT_MENU.toEmployee,
+            BOOK_CONTEXT_MENU.add,
+            BOOK_CONTEXT_MENU.edit,
+            BOOK_CONTEXT_MENU.remove
+        ],
     }
 }

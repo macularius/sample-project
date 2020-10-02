@@ -4,7 +4,6 @@ export class Employee {
         this.ID = id
         this.lastname = lastname
         this.firstname = firstname
-        this.lastname = lastname
         this.middlename = middlename
         this.position = position
         this.phoneNumber = phoneNumber

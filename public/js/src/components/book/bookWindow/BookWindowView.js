@@ -1,8 +1,8 @@
 import { BOOK_WINDOW_TYPE } from './CBookWindow.js';
 
-// возвращает webix конфигурации окна для работы с сущностью книги
+// возвращает webix конфигурацию окна для работы с сущностью книги
 export default function BookWindowView(type) {
-    let headText = 'Книга'
+    let headText = 'Книга' // текст заголовка модального окна
 
     switch (type) {
         case BOOK_WINDOW_TYPE.create:
@@ -34,7 +34,7 @@ export default function BookWindowView(type) {
                 {
                     view: 'text',
                     label: 'ISBN',
-                    name: 'isbn',
+                    name: 'ISBN',
                 },
                 {
                     view: 'text',

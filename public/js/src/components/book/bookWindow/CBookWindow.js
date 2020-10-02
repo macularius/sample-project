@@ -4,9 +4,9 @@ import bookModel from "./../../../models/bookModel.js"
 // компонент окна для работы с сущностью книги
 export class CBookWindow {
     constructor() {
-        this.view
-        this.type
-        this.onChange
+        this.view       // объект для быстрого доступа к представлениям
+        this.type       // тип текущего отображения окна
+        this.onChange   // callback функция при CUD операциях над книгой
     }
 
     // метод инициализации компонента
