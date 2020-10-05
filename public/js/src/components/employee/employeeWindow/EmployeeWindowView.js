@@ -26,7 +26,8 @@ export default function EmployeeWindowView(type) {
             css: 'webix_template'
         },
         modal: true,
-        position:"center",
+        position:'center',
+        width: 400,
         body: {
             view: 'form',
             id: 'employeeWindowForm',
@@ -35,31 +36,39 @@ export default function EmployeeWindowView(type) {
                     view: 'text',
                     label: 'Фамилия',
                     name: 'lastname',
+                    labelWidth: 150,
                 },
                 {
                     view: 'text',
                     label: 'Имя',
                     name: 'firstname',
+                    labelWidth: 150,
                 },
                 {
                     view: 'text',
                     label: 'Отчество',
                     name: 'middlename',
+                    labelWidth: 150,
                 },
                 {
-                    view: 'text',
+                    view:'richselect',
+                    id: 'employeeWindowFormPosition',
                     label: 'Должность',
                     name: 'position',
+                    labelWidth: 150,
+                    options:[]
                 },
                 {
                     view: 'text',
                     label: 'Телефонный номер',
                     name: 'phoneNumber',
+                    labelWidth: 150,
                 },
                 {
                     view: 'text',
                     label: 'Электронная почта',
                     name: 'email',
+                    labelWidth: 150,
                 },
                 {
                     cols: [

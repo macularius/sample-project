@@ -18,15 +18,27 @@ export class CEmployeeWindow {
     }
 
     // метод инициализации обработчиков событий компонента
-    attachEvents() { 
+    attachEvents() {
         // инициализация используемых представлений
         this.view = {
             window: $$('employeeWindow'),
             windowLabel: $$('employeeWindowLabel'),
             windowCancelBtn: $$('employeeWindowCancelBtn'),
             windowConfirmBtn: $$('employeeWindowConfirmBtn'),
-            form: $$('employeeWindowForm')
+            form: $$('employeeWindowForm'),
+            formPosition: $$('employeeWindowFormPosition'),
         }
+
+        // подгрузка должностей
+        employeeModel.getPositions().then((positions) => {
+            positions.map((position) => {
+                position.id = position.ID
+                position.value = position.name
+            })
+
+            this.view.formPosition.define('options', positions)
+            this.view.formPosition.refresh()
+        })
 
         // обрабтка закрытия окна
         this.view.windowCancelBtn.attachEvent('onItemClick', () => {
@@ -92,12 +104,14 @@ export class CEmployeeWindow {
     }
 
     // метод сокрытия окна
-    hide() { 
+    hide() {
         this.view.window.hide()
     }
 
     // метод получения сущности из формы окна
     fetch() {
+        console.log(this.view.form.getValues());
+
         return this.view.form.getValues()
     }
 

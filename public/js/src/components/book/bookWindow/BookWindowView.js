@@ -27,6 +27,7 @@ export default function BookWindowView(type) {
         },
         modal: true,
         position:"center",
+        width: 400,
         body: {
             view: 'form',
             id: 'bookWindowForm',
@@ -35,31 +36,37 @@ export default function BookWindowView(type) {
                     view: 'text',
                     label: 'ISBN',
                     name: 'ISBN',
+                    labelWidth: 150,
                 },
                 {
                     view: 'text',
                     label: 'Название',
                     name: 'name',
+                    labelWidth: 150,
                 },
                 {
                     view: 'text',
                     label: 'Автор',
                     name: 'author',
+                    labelWidth: 150,
                 },
                 {
                     view: 'text',
                     label: 'Издательство',
                     name: 'publisher',
+                    labelWidth: 150,
                 },
                 {
                     view: 'text',
                     label: 'Статус',
                     name: 'status',
+                    labelWidth: 150,
                 },
                 {
                     view: 'text',
                     label: 'Год издания',
                     name: 'year',
+                    labelWidth: 150,
                 },
                 {
                     cols: [

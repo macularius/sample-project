@@ -10,21 +10,21 @@ export function BookTabView() {
                 id: 'bookTabDatatable',
                 select: true,
                 columns: [
-                    { id: 'ID', hidden: true },
-                    { id: 'ISBN', header: 'ISBN', fillspace: true, },
-                    { id: 'name', header: 'Название', fillspace: true, },
-                    { id: 'author', header: 'Автор', fillspace: true, },
-                    { id: 'publisher', header: 'Издательство', fillspace: true, },
-                    { id: 'year', header: 'Год издания', fillspace: true, },
-                    { id: 'status', header: 'Статус', fillspace: true, },
+                    { id: 'ID', header: ['', { content: "textFilter" }], hidden: true },
+                    { id: 'ISBN', header: ['ISBN', { content: "textFilter" }], fillspace: true, },
+                    { id: 'name', header: ['Название', { content: "textFilter" }], fillspace: true, },
+                    { id: 'author', header: ['Автор', { content: "textFilter" }], fillspace: true, },
+                    { id: 'publisher', header: ['Издательство', { content: "textFilter" }], fillspace: true, },
+                    { id: 'year', header: ['Год издания', { content: "textFilter" }], fillspace: true, },
+                    { id: 'status', header: ['Статус', { content: "textFilter" }], fillspace: true, },
                 ],
                 data: [],
                 onContext: {
                     // обработка вызова контекстного меню при остутствии данных
-                    webix_view:function(e, id){
-                        id = this.locate(e.target|| e.srcElement);
-                        if(!id){
-                            $$("bookTabDatatableContextMenu").setContext({ obj:webix.$$(e)});
+                    webix_view: function (e, id) {
+                        id = this.locate(e.target || e.srcElement);
+                        if (!id) {
+                            $$("bookTabDatatableContextMenu").setContext({ obj: webix.$$(e) });
                             $$("bookTabDatatableContextMenu").show(e);
                             webix.html.preventEvent(e);
                         }
@@ -46,8 +46,6 @@ export function BookTabContextMenu(employees) {
                 id: BOOK_CONTEXT_MENU.give,
                 submenu: employees,
             },
-            BOOK_CONTEXT_MENU.toEvent,
-            BOOK_CONTEXT_MENU.toEmployee,
             BOOK_CONTEXT_MENU.add,
             BOOK_CONTEXT_MENU.edit,
             BOOK_CONTEXT_MENU.remove

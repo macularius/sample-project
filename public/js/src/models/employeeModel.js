@@ -1,5 +1,6 @@
 import Model from "../../helpers/model.js";
 import { Employee } from "./entities/employee.js";
+import { Position } from "./entities/position.js";
 
 /// EmployeeModel объект для работы(CRUD) с данными
 class EmployeeModel extends Model {
@@ -62,6 +63,16 @@ class EmployeeModel extends Model {
         return new Promise((resolve, reject) => {
             this.data.delete(employee.id)
             resolve()
+        })
+    }
+
+    // получение должностей
+    getPositions() {
+        return new Promise((resolve, reject) => {
+            resolve([
+                new Position(1, 'Прогарммист'),
+                new Position(2, 'Старший программист')
+            ])
         })
     }
 }

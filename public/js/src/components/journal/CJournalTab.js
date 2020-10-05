@@ -9,7 +9,10 @@ export class CJournalTab {
     }
 
     // метод инициализации компонента
-    init() { }
+    init(toBook, toEmployee) {
+        this.toBook = toBook // функция перехода к книге, возвращает ссылку на CBookTab
+        this.toEmployee = toEmployee // функция перехода к сотруднику, возвращает ссылку на CEmployeeTab
+    }
 
     // метод получения webix конфигурации компонента
     config() {
@@ -51,7 +54,8 @@ export class CJournalTab {
                         console.error('Incorrect ID of item:', selected.ID)
                         return
                     }
-                    this.toBook(selected.ID)
+                    let cBookTab = this.toBook()
+                    cBookTab.showByBookID(selected.book.ID)
                     break;
                 case EVENT_CONTEXT_MENU.toEmployee: // переход к сотруднику
                     if (!selected) {
@@ -62,7 +66,9 @@ export class CJournalTab {
                         console.error('Incorrect ID of item:', selected.ID)
                         return
                     }
-                    this.toEmployee(selected.ID)
+
+                    let cEmployeeTab = this.toEmployee()
+                    cEmployeeTab.showByEmployeeID(selected.employee.ID)
                     break;
                 default:
                     console.error(`Неизвестное значение пункта меню: ${item}.`);
@@ -79,8 +85,8 @@ export class CJournalTab {
                 event.bookString = `[${event.book.ISBN}] ${event.book.name}`
                 event.employeeString = `${event.employee.lastname} ${event.employee.firstname}`
 
-            
-                event.dateString =  webix.i18n.dateFormatStr(event.date)
+
+                event.dateString = webix.i18n.dateFormatStr(event.date)
             })
 
             this.view.datatable.clearAll()

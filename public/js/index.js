@@ -3,33 +3,43 @@ import { CBookTab } from './src/components/book/CBookTab.js';
 import { CEmployeeTab } from './src/components/employee/CEmployeeTab.js';
 import { CJournalTab } from './src/components/journal/CJournalTab.js';
 
+// галвный компонент приложения
 export class Application {
     constructor() {
-        this.userInfo = new CUserInfo();
-        this.bookTab = new CBookTab();
-        this.employeeTab = new CEmployeeTab();
-        this.journalTab = new CJournalTab();
+        this.view // быстрый доступ к объектам представлений
+        this.userInfo = new CUserInfo(); // экземпляр контроллера пользовательской информации 
+        this.bookTab = new CBookTab(); // экземпляр контроллера книг
+        this.employeeTab = new CEmployeeTab(); // экземпляр контроллера сотрудников
+        this.journalTab = new CJournalTab(); // экземпляр контроллера событий
     }
 
+    // метод инициализации главного компонента
     init() {
         this.userInfo.init()
         this.bookTab.init()
         this.employeeTab.init()
-        this.journalTab.init()
+        this.journalTab.init(
+            () => { return this.dispatch(APP_TAB.booksTab) },
+            () => { return this.dispatch(APP_TAB.employeesTab) }
+        )
     }
 
-    run() {
-        webix.ui(this.config())
-        $$('main-tabbar').setValue('bookTab')
-    }
-
+    // метод вызова обработки событий
     attachEvents() {
+        this.view = {
+            tabbar: $$('main-tabbar'),
+            multiviews: $$('main-views'),
+        }
+
+        this.dispatch(APP_TAB.journalTab)
+
         this.userInfo.attachEvents()
         this.bookTab.attachEvents()
         this.employeeTab.attachEvents()
         this.journalTab.attachEvents()
     }
 
+    // метод отрисовки главной конфигурации представления
     config() {
         return {
             rows: [
@@ -56,7 +66,7 @@ export class Application {
                 // содержимое табов
                 {
                     view: "multiview",
-                    id: "main-views", 
+                    id: "main-views",
                     cells: [
                         this.bookTab.config(),
                         this.employeeTab.config(),
@@ -66,11 +76,43 @@ export class Application {
             ],
         }
     }
+
+    // метод диспетчеризации переключения между табами
+    dispatch(tab) {
+        let tabObj
+
+        switch (tab) {
+            case APP_TAB.booksTab:
+                tabObj = this.bookTab
+                break;
+            case APP_TAB.employeesTab:
+                tabObj = this.employeeTab
+                break;
+            case APP_TAB.journalTab:
+                tabObj = this.journalTab
+                break;
+            default:
+                console.error('Incorrect tab: ', tab);                
+                return;
+        }
+        
+        this.view.tabbar.setValue(tab)
+        this.view.multiviews.setValue(tab)
+
+        return tabObj
+    }
+}
+
+// константы перечисления табов(id представления)
+export const APP_TAB = {
+    booksTab: 'bookTab',
+    employeesTab: 'employeeTab',
+    journalTab: 'journalTab',
 }
 
 webix.ready(() => {
     let app = new Application();
     app.init()
-    app.run()
+    webix.ui(app.config())
     app.attachEvents()
 })
