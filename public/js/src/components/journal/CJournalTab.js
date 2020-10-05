@@ -39,42 +39,47 @@ export class CJournalTab {
 
         // обработка события нажатия на пункт контекстного меню
         this.view.datatableContextMenu.attachEvent('onMenuItemClick', (id) => {
-            // получение значения пункта, на которое произошло нажатие
-            let item = this.view.datatableContextMenu.getItem(id).value
-            // получение выделенного элемента
-            let selected = this.view.datatable.getSelectedItem()
-
-            switch (item) {
-                case EVENT_CONTEXT_MENU.toBook: // переход к книге
-                    if (!selected) {
-                        webix.message('Выделите строку')
-                        return
-                    }
-                    if (!selected.ID) {
-                        console.error('Incorrect ID of item:', selected.ID)
-                        return
-                    }
-                    let cBookTab = this.toBook()
-                    cBookTab.showByBookID(selected.book.ID)
-                    break;
-                case EVENT_CONTEXT_MENU.toEmployee: // переход к сотруднику
-                    if (!selected) {
-                        webix.message('Выделите строку')
-                        return
-                    }
-                    if (!selected.ID) {
-                        console.error('Incorrect ID of item:', selected.ID)
-                        return
-                    }
-
-                    let cEmployeeTab = this.toEmployee()
-                    cEmployeeTab.showByEmployeeID(selected.employee.ID)
-                    break;
-                default:
-                    console.error(`Неизвестное значение пункта меню: ${item}.`);
-                    break;
-            }
+            this.handleContextMenu(id)
         });
+    }
+
+    // обработка выбора в контекстном меню
+    handleContextMenu(id) {
+        // получение значения пункта, на которое произошло нажатие
+        let item = this.view.datatableContextMenu.getItem(id).value
+        // получение выделенного элемента
+        let selected = this.view.datatable.getSelectedItem()
+
+        switch (item) {
+            case EVENT_CONTEXT_MENU.toBook: // переход к книге
+                if (!selected) {
+                    webix.message('Выделите строку')
+                    return
+                }
+                if (!selected.ID) {
+                    console.error('Incorrect ID of item:', selected.ID)
+                    return
+                }
+                let cBookTab = this.toBook()
+                cBookTab.showByBookID(selected.book.ID)
+                break;
+            case EVENT_CONTEXT_MENU.toEmployee: // переход к сотруднику
+                if (!selected) {
+                    webix.message('Выделите строку')
+                    return
+                }
+                if (!selected.ID) {
+                    console.error('Incorrect ID of item:', selected.ID)
+                    return
+                }
+
+                let cEmployeeTab = this.toEmployee()
+                cEmployeeTab.showByEmployeeID(selected.employee.ID)
+                break;
+            default:
+                console.error(`Неизвестное значение пункта меню: ${item}.`);
+                break;
+        }
     }
 
     // функция обновления таблицы книг
