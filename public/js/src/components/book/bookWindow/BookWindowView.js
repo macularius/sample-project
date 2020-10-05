@@ -16,7 +16,7 @@ export default function BookWindowView(type) {
             break;
     }
 
-    return { 
+    return {
         view: 'window',
         id: 'bookWindow',
         head: {
@@ -26,7 +26,7 @@ export default function BookWindowView(type) {
             css: 'webix_template'
         },
         modal: true,
-        position:"center",
+        position: "center",
         width: 400,
         body: {
             view: 'form',
@@ -36,36 +36,42 @@ export default function BookWindowView(type) {
                     view: 'text',
                     label: 'ISBN',
                     name: 'ISBN',
+                    required: true,
                     labelWidth: 150,
                 },
                 {
                     view: 'text',
                     label: 'Название',
                     name: 'name',
+                    required: true,
                     labelWidth: 150,
                 },
                 {
                     view: 'text',
                     label: 'Автор',
                     name: 'author',
+                    required: true,
                     labelWidth: 150,
                 },
                 {
                     view: 'text',
                     label: 'Издательство',
                     name: 'publisher',
+                    required: true,
                     labelWidth: 150,
                 },
                 {
                     view: 'text',
                     label: 'Статус',
                     name: 'status',
+                    required: true,
                     labelWidth: 150,
                 },
                 {
                     view: 'text',
                     label: 'Год издания',
                     name: 'year',
+                    required: true,
                     labelWidth: 150,
                 },
                 {

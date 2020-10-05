@@ -1,7 +1,7 @@
-import { CUserInfo } from './src/components/userInfo/CUserInfo.js';
-import { CBookTab } from './src/components/book/CBookTab.js';
-import { CEmployeeTab } from './src/components/employee/CEmployeeTab.js';
-import { CJournalTab } from './src/components/journal/CJournalTab.js';
+import { CUserInfo } from './userInfo/CUserInfo.js';
+import { CBookTab } from './book/CBookTab.js';
+import { CEmployeeTab } from './employee/CEmployeeTab.js';
+import { CJournalTab } from './journal/CJournalTab.js';
 
 // галвный компонент приложения
 export class Application {
@@ -31,7 +31,7 @@ export class Application {
             multiviews: $$('main-views'),
         }
 
-        this.dispatch(APP_TAB.journalTab)
+        this.dispatch(APP_TAB.booksTab)
 
         this.userInfo.attachEvents()
         this.bookTab.attachEvents()

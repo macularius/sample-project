@@ -47,6 +47,12 @@ export class CEmployeeWindow {
 
         // обработка события "принять"
         this.view.windowConfirmBtn.attachEvent('onItemClick', () => {
+            // валидация введенных данных по обязательным полям
+            if (!this.view.form.validate()) {
+                webix.message('Заполните поля отмеченные *', 'error')
+                return;
+            }
+
             switch (this.type) {
                 case EMPLOYEE_WINDOW_TYPE.create:
                     employeeModel.createEmployee(this.fetch()).then(() => {
