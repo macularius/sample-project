@@ -10,7 +10,9 @@ export class CEmployeeWindow {
     }
 
     // метод инициализации компонента
-    init() { }
+    init(onChange) { 
+        this.onChange = onChange
+    }
 
     // метод получения webix конфигурации компонента
     config() {

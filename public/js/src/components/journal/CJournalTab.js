@@ -1,6 +1,7 @@
 import { JournalTabView, EventTabContextMenu } from "./JournalTabView.js"
 import eventModel from "../../models/eventModel.js"
 
+// класс таба "Журнал событий"
 export class CJournalTab {
     constructor() {
         this.view       // объект для быстрого доступа к представлениям
@@ -39,14 +40,14 @@ export class CJournalTab {
 
         // обработка события нажатия на пункт контекстного меню
         this.view.datatableContextMenu.attachEvent('onMenuItemClick', (id) => {
-            this.handleContextMenu(id)
+            // получение значения пункта, на которое произошло нажатие
+            let item = this.view.datatableContextMenu.getItem(id).value
+            this.handleContextMenu(item)
         });
     }
 
     // обработка выбора в контекстном меню
-    handleContextMenu(id) {
-        // получение значения пункта, на которое произошло нажатие
-        let item = this.view.datatableContextMenu.getItem(id).value
+    handleContextMenu(item) {
         // получение выделенного элемента
         let selected = this.view.datatable.getSelectedItem()
 
@@ -82,7 +83,7 @@ export class CJournalTab {
         }
     }
 
-    // функция обновления таблицы книг
+    // функция обновления таблицы событий
     refreshTable() {
         eventModel.getEvents().then((events) => {
             // преобразование даты к строке

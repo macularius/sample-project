@@ -3,19 +3,19 @@ import { CEmployeeWindow, EMPLOYEE_WINDOW_TYPE } from "./employeeWindow/CEmploye
 import { Employee } from "../../models/entities/employee.js";
 import employeeModel from "../../models/employeeModel.js";
 
+// класс таба "Сотрудники"
 export class CEmployeeTab {
     constructor() {
         this.view       // объект для быстрого доступа к представлениям
         this.window     // экземпляр окна для работы с книгами
-        this.toEvents   // функция перехода к событиям
-        this.toBooks    // функция перехода к книгам
     }
 
     // метод инициализации компонента
     init() {
         this.window = new CEmployeeWindow(); // инициализация компонента окна
-        this.window.onChange = () => { this.refreshTable() } // установка метода, который будет вызван после нажатия на кнопку confirm
-        this.window.init() // вызова инициализации компонента окна
+        this.window.init(
+            () => { this.refreshTable() }
+        ) // вызова инициализации компонента окна
     }
 
     // метод получения webix конфигурации компонента
@@ -47,14 +47,14 @@ export class CEmployeeTab {
 
         // обработка события нажатия на пункт контекстного меню
         this.view.datatableContextMenu.attachEvent('onMenuItemClick', (id) => {
-            this.handleContextMenu(id)
+            // получение значения пункта, на которое произошло нажатие
+            let item = this.view.datatableContextMenu.getItem(id).value
+            this.handleContextMenu(item)
         });
     }
 
     // обработка выбора в контекстном меню
-    handleContextMenu(id) {
-        // получение значения пункта, на которое произошло нажатие
-        let item = this.view.datatableContextMenu.getItem(id).value
+    handleContextMenu(item) {
         // получение выделенного элемента
         let selected = this.view.datatable.getSelectedItem()
 
@@ -114,7 +114,7 @@ export class CEmployeeTab {
     // метод отображения таба с фильтрацией по сотруднику
     showByEmployeeID(employeeID) {
         employeeModel.getEmployeeByID(employeeID).then((employee) => {
-            // рпименение фильтров
+            // применение фильтров
             this.view.datatable.getFilter('lastname').value = employee.lastname;
             this.view.datatable.getFilter('firstname').value = employee.firstname;
             this.view.datatable.getFilter('middlename').value = employee.middlename;

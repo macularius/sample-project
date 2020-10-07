@@ -10,7 +10,9 @@ export class CBookWindow {
     }
 
     // метод инициализации компонента
-    init() { }
+    init(onChange) { 
+        this.onChange = onChange // callback функция при CUD операциях над книгой
+    }
 
     // метод получения webix конфигурации компонента
     config() {

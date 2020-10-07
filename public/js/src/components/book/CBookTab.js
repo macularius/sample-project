@@ -14,8 +14,9 @@ export class CBookTab {
     // метод инициализации компонента
     init() {
         this.window = new CBookWindow(); // инициализация компонента окна
-        this.window.onChange = () => { this.refreshTable() } // установка метода, который будет вызван после нажатия на кнопку confirm
-        this.window.init() // вызова инициализации компонента окна
+        this.window.init(
+            () => { this.refreshTable() }
+        ) // вызова инициализации компонента окна
     }
 
     // метод получения webix конфигурации компонента
@@ -53,21 +54,23 @@ export class CBookTab {
         this.refreshTable()
 
         // обработка события нажатия на пункт контекстного меню
-        this.view.datatableContextMenu.attachEvent('onMenuItemClick', (id) => {
+        this.view.datatableContextMenu.attachEvent('onMenuItemClick', (itemID) => {
+            // получение значения пункта, на которое произошло нажатие
+            
+
             // проверка вложенности выбранного пункта меню
-            if (!this.view.datatableContextMenu.getItem(id)) {
-                this.handleSubMenu(id)
+            if (!this.view.datatableContextMenu.getItem(itemID)) {
+                this.handleSubMenu(itemID)
             } else {
-                this.handleContextMenu(id)
+                let item = this.view.datatableContextMenu.getItem(itemID).value
+                this.handleContextMenu(item)
             }
 
         });
     }
 
     // обработка выбора в контекстном меню
-    handleContextMenu(id) {
-        // получение значения пункта, на которое произошло нажатие
-        let item = this.view.datatableContextMenu.getItem(id).value
+    handleContextMenu(item) {
         // получение выделенного элемента
         let selected = this.view.datatable.getSelectedItem()
 
@@ -111,31 +114,23 @@ export class CBookTab {
     }
 
     // обработка выбора в submenu
-    handleSubMenu(id) {
-        let item = $$(this.view.datatableContextMenu.getItem(BOOK_CONTEXT_MENU.give).value)
-        switch (item) {
-            case BOOK_CONTEXT_MENU.give:
-                // получения сотрудника из submenu
-                let submenu = $$(this.view.datatableContextMenu.getItem(BOOK_CONTEXT_MENU.give).submenu)
-                let employee = submenu.getItem(id)
+    handleSubMenu(empItem) {
+        // получения сотрудника из submenu
+        let submenu = $$(this.view.datatableContextMenu.getItem(BOOK_CONTEXT_MENU.give).submenu)
+        let employee = submenu.getItem(empItem)
 
-                // получение выделенного элемента
-                let book = this.view.datatable.getSelectedItem()
-                if (!book) {
-                    webix.message('Выделите строку')
-                    return
-                }
-                if (!book.ID) {
-                    console.error('Incorrect ID of item:', book.ID)
-                    return
-                }
-
-                bookModel.giveBook(book.ID, employee.ID)
-                break;
-            default:
-                console.error(`Неизвестное значение пункта меню: ${item}.`);
-                break;
+        // получение выделенного элемента
+        let book = this.view.datatable.getSelectedItem()
+        if (!book) {
+            webix.message('Выделите строку')
+            return
         }
+        if (!book.ID) {
+            console.error('Incorrect ID of item:', book.ID)
+            return
+        }
+
+        bookModel.giveBook(book.ID, employee.ID)
     }
 
     // функция обновления таблицы книг
