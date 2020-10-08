@@ -1,4 +1,4 @@
-module sample-project2
+module sample-project
 
 go 1.14
 
