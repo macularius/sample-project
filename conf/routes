@@ -9,6 +9,28 @@ module:testrunner
 
 GET     /                                       CIndex.Index
 
+POST    /user/logout                            CAuth.Logout
+GET     /user/employee                          CAuth.GetCurrentEmployee
+
+GET     /book/all                               CBook.GetAll
+GET     /book/:id                               CBook.GetByID
+POST    /book/create                            CBook.Create
+POST    /book/update                            CBook.Update
+POST    /book/delete                            CBook.Delete
+POST    /book/give                              CBook.Give
+
+GET     /employee/all                           CEmployee.GetAll
+GET     /employee/:id                           CEmployee.GetByID
+GET     /employee/position/all                  CEmployee.GetAllPostions
+POST    /employee/create                        CEmployee.Create
+POST    /employee/update                        CEmployee.Update
+POST    /employee/delete                        CEmployee.Delete
+
+GET     /event/all                              CEmployee.GetAll
+GET     /event/byBook/:id                       CEmployee.GetByBookID
+GET     /event/byEmployee/:id                   CEmployee.GetByEmployeeID
+POST    /event/create                           CEmployee.Create
+
 # Ignore favicon requests
 GET     /favicon.ico                            404
 

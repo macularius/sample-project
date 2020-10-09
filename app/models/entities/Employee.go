@@ -9,4 +9,5 @@ type Employee struct {
 	Position    string `json:"position"`     // должность
 	PhoneNumber string `json:"phone_number"` // телефонный номер
 	Email       string `json:"email"`        // почтовый адрес
+	IsArchive   int64  `json:"is_archive"`   // признак архивности
 }
