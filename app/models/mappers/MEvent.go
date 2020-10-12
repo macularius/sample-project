@@ -2,6 +2,7 @@ package mappers
 
 import (
 	"database/sql"
+	"sample-project/app/models/entities"
 	"time"
 
 	"github.com/revel/revel"
@@ -14,6 +15,16 @@ type EventDBType struct {
 	Fk_employee int64      // FK на сотрудника
 	Fk_type     int64      // FK на тип события
 	C_date      *time.Time // дата события
+}
+
+// ToType функция преобразования типа бд к типу сущности
+func (dbt *EventDBType) ToType() (e *entities.Event) {
+	e = new(entities.Event)
+
+	e.ID = dbt.Pk_id
+	e.Date = dbt.C_date
+
+	return
 }
 
 // MEvent маппер событий

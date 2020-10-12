@@ -1,6 +1,7 @@
 package event_provider
 
 import (
+	"database/sql"
 	"sample-project/app/models/entities"
 	"sample-project/app/models/mappers"
 )
@@ -8,8 +9,25 @@ import (
 // PEvent провайдер контроллера событий
 type PEvent struct {
 	eventMapper    *mappers.MEvent
-	employeeMapper *mappers.MBook
-	bookMapper     *mappers.MEmployee
+	employeeMapper *mappers.MEmployee
+	bookMapper     *mappers.MBook
+}
+
+// Init
+func (p *PEvent) Init(db *sql.DB) (err error) {
+	// инициализация маппера событий
+	p.eventMapper = new(mappers.MEvent)
+	p.eventMapper.Init(db)
+
+	// инициализация маппера сотрудников
+	p.employeeMapper = new(mappers.MEmployee)
+	p.employeeMapper.Init(db)
+
+	// инициализация маппера книг
+	p.bookMapper = new(mappers.MBook)
+	p.bookMapper.Init(db)
+
+	return
 }
 
 // GetEventByBookID метод получения события по id книги

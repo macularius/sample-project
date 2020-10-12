@@ -2,6 +2,7 @@ package mappers
 
 import (
 	"database/sql"
+	"sample-project/app/models/entities"
 	"time"
 
 	"github.com/revel/revel"
@@ -10,13 +11,28 @@ import (
 // BookDBType тип сущности "книга" бд
 type BookDBType struct {
 	Pk_id        int64      // идентификатор
-	Fk_status    string     // статус книги
+	Fk_status    int64      // статус книги
 	C_isbn       int64      // уникальный идентификатор книги
 	C_name       string     // название книги
 	C_author     *string    // автор
 	C_publisher  *string    // издательство
 	C_year       *time.Time // год изданиия
 	C_is_archive int64      // признак архивности
+}
+
+// ToType функция преобразования типа бд к типу сущности
+func (dbt *BookDBType) ToType() (b *entities.Book) {
+	b = new(entities.Book)
+
+	b.ID = dbt.Pk_id
+	b.ISBN = dbt.C_isbn
+	b.Name = dbt.C_name
+	b.Author = dbt.C_author
+	b.Publisher = dbt.C_publisher
+	b.Year = dbt.C_year
+	b.IsArchive = dbt.C_is_archive
+
+	return
 }
 
 // MBook маппер книг
@@ -122,7 +138,7 @@ func (m *MBook) SelectByID(id int64) (b *BookDBType, err error) {
 }
 
 // Insert добавление книги
-func (m *MBook) Insert(book BookDBType) (id int64, err error) {
+func (m *MBook) Insert(book *BookDBType) (id int64, err error) {
 	var (
 		query string   // строка запроса
 		row   *sql.Row // выборка данных
@@ -169,7 +185,7 @@ func (m *MBook) Insert(book BookDBType) (id int64, err error) {
 }
 
 // Update изменение книги
-func (m *MBook) Update(book BookDBType) (err error) {
+func (m *MBook) Update(book *BookDBType) (err error) {
 	var (
 		query string // строка запроса
 	)
@@ -202,7 +218,7 @@ func (m *MBook) Update(book BookDBType) (err error) {
 }
 
 // Delete удаление книги (архивирование)
-func (m *MBook) Delete(book BookDBType) (err error) {
+func (m *MBook) Delete(book *BookDBType) (err error) {
 	var (
 		query string // строка запроса
 	)

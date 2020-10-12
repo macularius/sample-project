@@ -1,6 +1,7 @@
 package employee_provider
 
 import (
+	"database/sql"
 	"sample-project/app/models/entities"
 	"sample-project/app/models/mappers"
 )
@@ -8,6 +9,15 @@ import (
 // PEmployee провайдер контроллера сотрудников
 type PEmployee struct {
 	employeeMapper *mappers.MEmployee
+}
+
+// Init
+func (p *PEmployee) Init(db *sql.DB) (err error) {
+	// инициализация маппера сотрудников
+	p.employeeMapper = new(mappers.MEmployee)
+	p.employeeMapper.Init(db)
+
+	return
 }
 
 // GetEmployeeByID метод получения сотрудника по id

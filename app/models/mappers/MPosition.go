@@ -2,6 +2,7 @@ package mappers
 
 import (
 	"database/sql"
+	"sample-project/app/models/entities"
 
 	"github.com/revel/revel"
 )
@@ -10,6 +11,16 @@ import (
 type PositionDBType struct {
 	Pk_id  int64  // идентификатор
 	C_name string // название должности
+}
+
+// ToType функция преобразования типа бд к типу сущности
+func (dbt *PositionDBType) ToType() (p *entities.Position) {
+	p = new(entities.Position)
+
+	p.ID = dbt.Pk_id
+	p.Name = dbt.C_name
+
+	return
 }
 
 // MPosition маппер должностей

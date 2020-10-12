@@ -2,6 +2,7 @@ package mappers
 
 import (
 	"database/sql"
+	"sample-project/app/models/entities"
 
 	"github.com/revel/revel"
 )
@@ -9,14 +10,29 @@ import (
 // EmployeeDBType тип сущности "сотрудник" бд
 type EmployeeDBType struct {
 	Pk_id          int64  // идентификатор
-	Fk_position    string // FK на должность
-	Fk_user        string // FK на пользователя
+	Fk_position    int64  // FK на должность
+	Fk_user        int64  // FK на пользователя
 	C_lastname     string // фамилия
 	C_firstname    string // имя
 	C_middlename   string // отчество
 	C_phone_number string // телефонный номер
 	C_email        string // почтовый адрес
 	C_is_archive   int64  // признак архивности
+}
+
+// ToType функция преобразования типа бд к типу сущности
+func (dbt *EmployeeDBType) ToType() (e *entities.Employee) {
+	e = new(entities.Employee)
+
+	e.ID = dbt.Pk_id
+	e.Lastname = dbt.C_lastname
+	e.Firstname = dbt.C_firstname
+	e.Middlename = dbt.C_middlename
+	e.PhoneNumber = dbt.C_phone_number
+	e.Email = dbt.C_email
+	e.IsArchive = dbt.C_is_archive
+
+	return
 }
 
 // MEmployee маппер сотрудников
