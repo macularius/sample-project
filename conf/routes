@@ -21,10 +21,11 @@ POST    /book/give                              CBook.Give
 
 GET     /employee/all                           CEmployee.GetAll
 GET     /employee/:id                           CEmployee.GetByID
-GET     /employee/position/all                  CEmployee.GetAllPostions
 POST    /employee/create                        CEmployee.Create
 POST    /employee/update                        CEmployee.Update
 POST    /employee/delete                        CEmployee.Delete
+
+GET     /position/all                           CPosition.GetAll
 
 GET     /event/all                              CEmployee.GetAll
 GET     /event/byBook/:id                       CEmployee.GetByBookID
