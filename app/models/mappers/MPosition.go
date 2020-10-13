@@ -14,11 +14,21 @@ type PositionDBType struct {
 }
 
 // ToType функция преобразования типа бд к типу сущности
-func (dbt *PositionDBType) ToType() (p *entities.Position) {
+func (dbt *PositionDBType) ToType() (p *entities.Position, err error) {
 	p = new(entities.Position)
 
 	p.ID = dbt.Pk_id
 	p.Name = dbt.C_name
+
+	return
+}
+
+// FromType функция преобразования типа бд из типа сущности
+func (dbt *PositionDBType) FromType(p *entities.Position) (err error) {
+	dbt = &PositionDBType{
+		Pk_id:  p.ID,
+		C_name: p.Name,
+	}
 
 	return
 }
