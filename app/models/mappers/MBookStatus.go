@@ -38,6 +38,7 @@ func (m *MBookStatus) StatusByID(id int64) (status string, err error) {
 	err = row.Scan(&status)
 	if err != nil {
 		if err == sql.ErrNoRows {
+			err = nil
 			return
 		}
 
@@ -70,6 +71,7 @@ func (m *MBookStatus) IDByStatus(status string) (id int64, err error) {
 	err = row.Scan(&status)
 	if err != nil {
 		if err == sql.ErrNoRows {
+			err = nil
 			return
 		}
 

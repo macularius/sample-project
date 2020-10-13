@@ -4,11 +4,14 @@ import (
 	"database/sql"
 	"sample-project/app/models/entities"
 	"sample-project/app/models/mappers"
+
+	"github.com/revel/revel"
 )
 
 // PEmployee провайдер контроллера сотрудников
 type PEmployee struct {
-	employeeMapper *mappers.MEmployee
+	employeeMapper  *mappers.MEmployee
+	positionsMapper *mappers.MPosition
 }
 
 // Init
@@ -17,35 +20,150 @@ func (p *PEmployee) Init(db *sql.DB) (err error) {
 	p.employeeMapper = new(mappers.MEmployee)
 	p.employeeMapper.Init(db)
 
+	// инициализация маппера должностей
+	p.positionsMapper = new(mappers.MPosition)
+	p.positionsMapper.Init(db)
+
 	return
 }
 
 // GetEmployeeByID метод получения сотрудника по id
-func (p *PEmployee) GetEmployeeByID(id int64) (b *entities.Employee, err error) {
+func (p *PEmployee) GetEmployeeByID(id int64) (e *entities.Employee, err error) {
+	var (
+		edbt *mappers.EmployeeDBType
+	)
+
+	// получение данных книг
+	edbt, err = p.employeeMapper.SelectByID(id)
+	if err != nil {
+		revel.AppLog.Errorf("PEmployee.GetEmployeeByID : p.employeeMapper.SelectByID, %s\n", err)
+		return
+	}
+
+	// преобразование типа бд к типу сущности
+	e, err = edbt.ToType()
+	if err != nil {
+		revel.AppLog.Errorf("PEmployee.GetEmployeeByID : edbt.ToType, %s\n", err)
+		return
+	}
+
+	// получение значения должности по ключу
+	e.Position, err = p.positionsMapper.PositionNameByID(edbt.Fk_position)
+	if err != nil {
+		revel.AppLog.Errorf("PEmployee.GetEmployeeByID : p.positionsMapper.PositionNameByID, %s\n", err)
+		return
+	}
+
 	return
 }
 
 // GetEmployees метод получения сотрудников
-func (p *PEmployee) GetEmployees() (bs []*entities.Employee, err error) {
+func (p *PEmployee) GetEmployees() (es []*entities.Employee, err error) {
+	var (
+		edbts []*mappers.EmployeeDBType
+		e     *entities.Employee
+	)
+
+	// получение данных книг
+	edbts, err = p.employeeMapper.SelectAll()
+	if err != nil {
+		revel.AppLog.Errorf("PEmployee.GetEmployees : p.employeeMapper.SelectAll, %s\n", err)
+		return
+	}
+
+	for _, edbt := range edbts {
+		// преобразование к типу сущности
+		e, err = edbt.ToType()
+		if err != nil {
+			revel.AppLog.Errorf("PEmployee.GetEmployees : edbt.ToType, %s\n", err)
+			return
+		}
+
+		// получение значения должности по ключу
+		e.Position, err = p.positionsMapper.PositionNameByID(edbt.Fk_position)
+		if err != nil {
+			revel.AppLog.Errorf("PEmployee.GetEmployees : p.positionsMapper.PositionNameByID, %s\n", err)
+			return
+		}
+
+		es = append(es, e)
+	}
+
 	return
 }
 
 // CreateEmployee метод создания сотрудника
-func (p *PEmployee) CreateEmployee(employee *entities.Employee) (b *entities.Employee, err error) {
-	return
+func (p *PEmployee) CreateEmployee(employee *entities.Employee) (e *entities.Employee, err error) {
+	var (
+		edbt *mappers.EmployeeDBType
+	)
+
+	// инициализация структур бд из струткур сущности
+	err = edbt.FromType(*employee)
+	if err != nil {
+		revel.AppLog.Errorf("PEmployee.CreateEmployee : edbt.FromType, %s\n", err)
+		return
+	}
+
+	// получение внешнего ключа на статус
+	edbt.Fk_position, err = p.positionsMapper.IDByPositionName(employee.Position)
+	if err != nil {
+		revel.AppLog.Errorf("PEmployee.CreateEmployee : p.bookStatusMapper.IDByPositionName, %s\n", err)
+		return
+	}
+
+	return employee, nil
 }
 
 // UpdateEmployee метод обновления сотрудника
-func (p *PEmployee) UpdateEmployee(employee *entities.Employee) (b *entities.Employee, err error) {
-	return
+func (p *PEmployee) UpdateEmployee(employee *entities.Employee) (e *entities.Employee, err error) {
+	var (
+		edbt *mappers.EmployeeDBType
+	)
+
+	// инициализация структуры бд из струткуры сущности
+	err = edbt.FromType(*employee)
+	if err != nil {
+		revel.AppLog.Errorf("PEmployee.UpdateEmployee : edbt.FromType, %s\n", err)
+		return
+	}
+
+	// получение внешнего ключа на должность
+	edbt.Fk_position, err = p.positionsMapper.IDByPositionName(employee.Position)
+	if err != nil {
+		revel.AppLog.Errorf("PEmployee.UpdateEmployee : p.positionsMapper.IDByPositionName, %s\n", err)
+		return
+	}
+
+	// добавление сотрудника
+	err = p.employeeMapper.Update(edbt)
+	if err != nil {
+		revel.AppLog.Errorf("PEmployee.UpdateEmployee : p.employeeMapper.Update, %s\n", err)
+		return
+	}
+
+	return employee, nil
 }
 
 // DeleteEmployee метод удаления сотрудника
 func (p *PEmployee) DeleteEmployee(employee *entities.Employee) (err error) {
-	return
-}
+	var (
+		edbt *mappers.EmployeeDBType
+	)
 
-// GetPositions метод удаления сотрудника
-func (p *PEmployee) GetPositions() (ps []*entities.Position, err error) {
+	// инициализация структуры бд из струткуры сущности
+	err = edbt.FromType(*employee)
+	if err != nil {
+		revel.AppLog.Errorf("PEmployee.DeleteEmployee : edbt.FromType, %s\n", err)
+		return
+	}
+
+	// удаление сотрудника
+	err = p.employeeMapper.Delete(edbt)
+	if err != nil {
+		revel.AppLog.Errorf("PEmployee.DeleteEmployee : p.employeeMapper.Update, %s\n", err)
+		return
+	}
+
 	return
 }

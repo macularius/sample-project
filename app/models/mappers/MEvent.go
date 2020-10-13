@@ -54,6 +54,7 @@ func (m *MEvent) SelectAll() (edbts []*EventDBType, err error) {
 	rows, err = m.db.Query(query)
 	if err != nil {
 		if err == sql.ErrNoRows {
+			err = nil
 			return
 		}
 
@@ -103,6 +104,7 @@ func (m *MEvent) SelectByBookID(id int64) (edbts []*EventDBType, err error) {
 	rows, err = m.db.Query(query)
 	if err != nil {
 		if err == sql.ErrNoRows {
+			err = nil
 			return
 		}
 
@@ -152,6 +154,7 @@ func (m *MEvent) SelectByEmployeeID(id int64) (edbts []*EventDBType, err error) 
 	rows, err = m.db.Query(query)
 	if err != nil {
 		if err == sql.ErrNoRows {
+			err = nil
 			return
 		}
 
@@ -214,6 +217,7 @@ func (m *MEvent) Insert(event EventDBType) (id int64, err error) {
 	err = row.Scan(&id)
 	if err != nil {
 		if err == sql.ErrNoRows {
+			err = nil
 			return
 		}
 

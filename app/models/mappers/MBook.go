@@ -38,6 +38,7 @@ func (dbt *BookDBType) ToType() (b *entities.Book, err error) {
 // допускается, что dbt is nil
 func (dbt *BookDBType) FromType(b entities.Book) (err error) {
 	dbt = &BookDBType{
+		Pk_id:       b.ID,
 		C_isbn:      b.ISBN,
 		C_name:      b.Name,
 		C_author:    b.Author,
@@ -83,6 +84,7 @@ func (m *MBook) SelectAll() (bs []*BookDBType, err error) {
 	rows, err = m.db.Query(query)
 	if err != nil {
 		if err == sql.ErrNoRows {
+			err = nil
 			return
 		}
 
@@ -140,6 +142,7 @@ func (m *MBook) SelectByID(id int64) (b *BookDBType, err error) {
 	err = row.Scan(&b.Pk_id, &b.Fk_status, &b.C_name, &b.C_isbn, &b.C_author, &b.C_publisher, &b.C_year, &b.C_is_archive)
 	if err != nil {
 		if err == sql.ErrNoRows {
+			err = nil
 			return
 		}
 
@@ -187,6 +190,7 @@ func (m *MBook) Insert(book *BookDBType) (id int64, err error) {
 	err = row.Scan(&id)
 	if err != nil {
 		if err == sql.ErrNoRows {
+			err = nil
 			return
 		}
 
@@ -220,6 +224,7 @@ func (m *MBook) Update(book *BookDBType) (err error) {
 	_, err = m.db.Exec(query, book.Pk_id, book.Fk_status, book.C_name, book.C_isbn, book.C_author, book.C_publisher, book.C_year)
 	if err != nil {
 		if err == sql.ErrNoRows {
+			err = nil
 			return
 		}
 
@@ -247,6 +252,7 @@ func (m *MBook) Delete(book *BookDBType) (err error) {
 	_, err = m.db.Exec(query, book.Pk_id)
 	if err != nil {
 		if err == sql.ErrNoRows {
+			err = nil
 			return
 		}
 

@@ -11,7 +11,6 @@ import (
 type EmployeeDBType struct {
 	Pk_id          int64  // идентификатор
 	Fk_position    int64  // FK на должность
-	Fk_user        int64  // FK на пользователя
 	C_lastname     string // фамилия
 	C_firstname    string // имя
 	C_middlename   string // отчество
@@ -21,7 +20,7 @@ type EmployeeDBType struct {
 }
 
 // ToType функция преобразования типа бд к типу сущности
-func (dbt *EmployeeDBType) ToType() (e *entities.Employee) {
+func (dbt *EmployeeDBType) ToType() (e *entities.Employee, err error) {
 	e = new(entities.Employee)
 
 	e.ID = dbt.Pk_id
@@ -34,9 +33,28 @@ func (dbt *EmployeeDBType) ToType() (e *entities.Employee) {
 	return
 }
 
+// FromType функция преобразования типа сущности к типу бд
+// допускается, что dbt is nil
+func (dbt *EmployeeDBType) FromType(e entities.Employee) (err error) {
+	dbt = &EmployeeDBType{
+		C_lastname:     e.Lastname,
+		C_firstname:    e.Firstname,
+		C_middlename:   e.Middlename,
+		C_phone_number: e.PhoneNumber,
+		C_email:        e.Email,
+	}
+
+	return
+}
+
 // MEmployee маппер сотрудников
 type MEmployee struct {
 	db *sql.DB
+}
+
+// Init
+func (m *MEmployee) Init(db *sql.DB) {
+	m.db = db
 }
 
 // SelectAll получение всех сотрудников
@@ -50,14 +68,12 @@ func (m *MEmployee) SelectAll() (es []*EmployeeDBType, err error) {
 	query = `
 		SELECT
 			pk_id,
-			fk_user,
 			fk_position,
 			c_name,
 			c_lastname,
 			c_middlename,
 			c_phone_number,
-			c_email,
-			c_is_archive
+			c_email
 		FROM "library".t_employees;	
 	`
 
@@ -65,6 +81,7 @@ func (m *MEmployee) SelectAll() (es []*EmployeeDBType, err error) {
 	rows, err = m.db.Query(query)
 	if err != nil {
 		if err == sql.ErrNoRows {
+			err = nil
 			return
 		}
 
@@ -78,7 +95,15 @@ func (m *MEmployee) SelectAll() (es []*EmployeeDBType, err error) {
 		e := new(EmployeeDBType)
 
 		// считывание строки выборки
-		err = rows.Scan(&e.Pk_id, &e.Fk_user, &e.Fk_position, &e.C_firstname, &e.C_lastname, &e.C_middlename, &e.C_phone_number, &e.C_email, &e.C_is_archive)
+		err = rows.Scan(
+			&e.Pk_id,          // pk_id
+			&e.Fk_position,    // fk_position
+			&e.C_firstname,    // c_name
+			&e.C_lastname,     // c_lastname
+			&e.C_middlename,   // c_middlename
+			&e.C_phone_number, // c_phone_number
+			&e.C_email,        // c_email
+		)
 		if err != nil {
 			revel.AppLog.Errorf("MEmployee.SelectAll : rows.Scan, %s\n", err)
 			continue
@@ -104,14 +129,12 @@ func (m *MEmployee) SelectByID(id int64) (e *EmployeeDBType, err error) {
 	query = `
 		SELECT
 			pk_id,
-			fk_user,
 			fk_position,
 			c_name,
 			c_lastname,
 			c_middlename,
 			c_phone_number,
-			c_email,
-			c_is_archive
+			c_email
 		FROM "library".t_employees
 		WHERE pk_id = $1;
 	`
@@ -120,9 +143,18 @@ func (m *MEmployee) SelectByID(id int64) (e *EmployeeDBType, err error) {
 	row = m.db.QueryRow(query, id)
 
 	// считывание строки выборки
-	err = row.Scan(&e.Pk_id, &e.Fk_user, &e.Fk_position, &e.C_firstname, &e.C_lastname, &e.C_middlename, &e.C_phone_number, &e.C_email, &e.C_is_archive)
+	err = row.Scan(
+		&e.Pk_id,          // pk_id
+		&e.Fk_position,    // fk_position
+		&e.C_firstname,    // c_name
+		&e.C_lastname,     // c_lastname
+		&e.C_middlename,   // c_middlename
+		&e.C_phone_number, // c_phone_number
+		&e.C_email,        // c_email
+	)
 	if err != nil {
 		if err == sql.ErrNoRows {
+			err = nil
 			return
 		}
 
@@ -134,7 +166,7 @@ func (m *MEmployee) SelectByID(id int64) (e *EmployeeDBType, err error) {
 }
 
 // Insert добавление сотрудника
-func (m *MEmployee) Insert(employee EmployeeDBType) (id int64, err error) {
+func (m *MEmployee) Insert(employee *EmployeeDBType) (id int64, err error) {
 	var (
 		query string   // строка запроса
 		row   *sql.Row // выборка данных
@@ -143,7 +175,6 @@ func (m *MEmployee) Insert(employee EmployeeDBType) (id int64, err error) {
 	// запрос
 	query = `
 		INSERT INTO "library".t_employees(
-			fk_user,
 			fk_position,
 			c_firstname,
 			c_lastname,
@@ -153,7 +184,6 @@ func (m *MEmployee) Insert(employee EmployeeDBType) (id int64, err error) {
 			c_is_archive
 		)
 		VALUES(
-			0,	-- fk_user
 			0,	-- fk_position
 			'',	-- c_firstname
 			'',	-- c_lastname
@@ -168,20 +198,19 @@ func (m *MEmployee) Insert(employee EmployeeDBType) (id int64, err error) {
 	// выполнение запроса
 	row = m.db.QueryRow(query,
 		employee.Pk_id,          // pk_id
-		employee.Fk_user,        // fk_user
 		employee.Fk_position,    // fk_position
 		employee.C_firstname,    // c_firstname
 		employee.C_lastname,     // c_lastname
 		employee.C_middlename,   // c_middlename
 		employee.C_phone_number, // c_phone_number
 		employee.C_email,        // c_email
-		employee.C_is_archive,   // c_is_archive
 	)
 
 	// считывание id
 	err = row.Scan(&id)
 	if err != nil {
 		if err == sql.ErrNoRows {
+			err = nil
 			return
 		}
 
@@ -193,7 +222,7 @@ func (m *MEmployee) Insert(employee EmployeeDBType) (id int64, err error) {
 }
 
 // Update изменение сотрудника
-func (m *MEmployee) Update(employee EmployeeDBType) (err error) {
+func (m *MEmployee) Update(employee *EmployeeDBType) (err error) {
 	var (
 		query string // строка запроса
 	)
@@ -202,31 +231,28 @@ func (m *MEmployee) Update(employee EmployeeDBType) (err error) {
 	query = `
 		UPDATE "library".t_employees
 			SET 
-				fk_user = $2,
-				fk_position = $3,
-				c_firstname = $4,
-				c_lastname = $5,
-				c_middlename = $6,
-				c_phone_number = $7,
-				c_email = $8,
-				c_is_archive = $9
+				fk_position = $2,
+				c_firstname = $3,
+				c_lastname = $4,
+				c_middlename = $5,
+				c_phone_number = $6,
+				c_email = $7
 		WHERE pk_id = $1;
 	`
 
 	// выполнение запроса
 	_, err = m.db.Exec(query,
 		employee.Pk_id,          // pk_id
-		employee.Fk_user,        // fk_user
 		employee.Fk_position,    // fk_position
 		employee.C_firstname,    // c_firstname
 		employee.C_lastname,     // c_lastname
 		employee.C_middlename,   // c_middlename
 		employee.C_phone_number, // c_phone_number
 		employee.C_email,        // c_email
-		employee.C_is_archive,   // c_is_archive
 	)
 	if err != nil {
 		if err == sql.ErrNoRows {
+			err = nil
 			return
 		}
 
@@ -238,7 +264,7 @@ func (m *MEmployee) Update(employee EmployeeDBType) (err error) {
 }
 
 // Delete удаление сотрудника
-func (m *MEmployee) Delete(employee EmployeeDBType) (err error) {
+func (m *MEmployee) Delete(employee *EmployeeDBType) (err error) {
 	var (
 		query string // строка запроса
 	)
@@ -254,6 +280,7 @@ func (m *MEmployee) Delete(employee EmployeeDBType) (err error) {
 	_, err = m.db.Exec(query, employee.Pk_id)
 	if err != nil {
 		if err == sql.ErrNoRows {
+			err = nil
 			return
 		}
 

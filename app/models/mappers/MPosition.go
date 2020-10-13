@@ -28,6 +28,11 @@ type MPosition struct {
 	db *sql.DB
 }
 
+// Init
+func (m *MPosition) Init(db *sql.DB) {
+	m.db = db
+}
+
 // SelectAll получение всех должностей
 func (m *MPosition) SelectAll() (pdbts []*PositionDBType, err error) {
 	var (
@@ -47,6 +52,7 @@ func (m *MPosition) SelectAll() (pdbts []*PositionDBType, err error) {
 	rows, err = m.db.Query(query)
 	if err != nil {
 		if err == sql.ErrNoRows {
+			err = nil
 			return
 		}
 
@@ -68,6 +74,72 @@ func (m *MPosition) SelectAll() (pdbts []*PositionDBType, err error) {
 
 		// добавление сущности в массив
 		pdbts = append(pdbts, pdbt)
+	}
+
+	return
+}
+
+// PositionNameByID получение должности по id
+func (m *MPosition) PositionNameByID(id int64) (positionName string, err error) {
+	var (
+		query string   // строка запроса
+		row   *sql.Row // выборка данных
+	)
+
+	// запрос
+	query = `
+		SELECT
+			c_name
+		FROM "library".ref_position
+		WHERE pk_id = $1;
+	`
+
+	// выполнение запроса
+	row = m.db.QueryRow(query, id)
+
+	// считывание строки выборки
+	err = row.Scan(&positionName)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			err = nil
+			return
+		}
+
+		revel.AppLog.Errorf("MPosition.PositionNameByID : row.Scan, %s\n", err)
+		return
+	}
+
+	return
+}
+
+// PositionNameByID получение должности по id
+func (m *MPosition) IDByPositionName(positionName string) (id int64, err error) {
+	var (
+		query string   // строка запроса
+		row   *sql.Row // выборка данных
+	)
+
+	// запрос
+	query = `
+		SELECT
+			pk_id
+		FROM "library".ref_position
+		WHERE c_name = $1;
+	`
+
+	// выполнение запроса
+	row = m.db.QueryRow(query, positionName)
+
+	// считывание строки выборки
+	err = row.Scan(&id)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			err = nil
+			return
+		}
+
+		revel.AppLog.Errorf("MPosition.IDByPositionName : row.Scan, %s\n", err)
+		return
 	}
 
 	return

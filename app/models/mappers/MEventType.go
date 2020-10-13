@@ -38,6 +38,7 @@ func (m *MEventType) EventByID(id int64) (eventType string, err error) {
 	err = row.Scan(&eventType)
 	if err != nil {
 		if err == sql.ErrNoRows {
+			err = nil
 			return
 		}
 
@@ -70,6 +71,7 @@ func (m *MEventType) IDByEventType(eventType string) (id int64, err error) {
 	err = row.Scan(&eventType)
 	if err != nil {
 		if err == sql.ErrNoRows {
+			err = nil
 			return
 		}
 
