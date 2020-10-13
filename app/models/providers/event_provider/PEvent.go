@@ -62,14 +62,14 @@ func (p *PEvent) Create(event *entities.Event, bookID, employeeID int64) (e *ent
 	}
 
 	// получение книги
-	bdbt, err = p.bookMapper.SelectByID(bookID)
+	bdbt, err = p.bookMapper.SelectByID(edbt.Fk_book)
 	if err != nil {
 		revel.AppLog.Errorf("PEvent.Create : p.bookMapper.SelectByID, %s\n", err)
 		return
 	}
 
 	// получение сотрудника
-	empdbt, err = p.employeeMapper.SelectByID(employeeID)
+	empdbt, err = p.employeeMapper.SelectByID(edbt.Fk_employee)
 	if err != nil {
 		revel.AppLog.Errorf("PEvent.Create : p.employeeMapper.SelectByID, %s\n", err)
 		return
