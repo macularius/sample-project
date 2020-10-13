@@ -17,7 +17,6 @@ GET     /book/:id                               CBook.GetByID
 POST    /book/create                            CBook.Create
 POST    /book/update                            CBook.Update
 POST    /book/delete                            CBook.Delete
-POST    /book/give                              CBook.Give
 
 GET     /employee/all                           CEmployee.GetAll
 GET     /employee/:id                           CEmployee.GetByID
@@ -27,10 +26,10 @@ POST    /employee/delete                        CEmployee.Delete
 
 GET     /position/all                           CPosition.GetAll
 
-GET     /event/all                              CEmployee.GetAll
-GET     /event/byBook/:id                       CEmployee.GetByBookID
-GET     /event/byEmployee/:id                   CEmployee.GetByEmployeeID
-POST    /event/create                           CEmployee.Create
+GET     /event/all                              CEvent.GetAll
+GET     /event/byBook/:id                       CEvent.GetByBookID
+GET     /event/byEmployee/:id                   CEvent.GetByEmployeeID
+POST    /event/create                           CEvent.Create
 
 # Ignore favicon requests
 GET     /favicon.ico                            404

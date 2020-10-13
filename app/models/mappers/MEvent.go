@@ -18,7 +18,7 @@ type EventDBType struct {
 }
 
 // ToType функция преобразования типа бд к типу сущности
-func (dbt *EventDBType) ToType() (e *entities.Event) {
+func (dbt *EventDBType) ToType() (e *entities.Event, err error) {
 	e = new(entities.Event)
 
 	e.ID = dbt.Pk_id
@@ -27,9 +27,24 @@ func (dbt *EventDBType) ToType() (e *entities.Event) {
 	return
 }
 
+// FromType функция преобразования типа бд из типа сущности
+func (dbt *EventDBType) FromType(e *entities.Event) (err error) {
+	dbt = &EventDBType{
+		Pk_id:  e.ID,
+		C_date: e.Date,
+	}
+
+	return
+}
+
 // MEvent маппер событий
 type MEvent struct {
 	db *sql.DB
+}
+
+// Init
+func (m *MEvent) Init(db *sql.DB) {
+	m.db = db
 }
 
 // SelectAll получение всех событий
@@ -182,7 +197,7 @@ func (m *MEvent) SelectByEmployeeID(id int64) (edbts []*EventDBType, err error) 
 }
 
 // Insert добавление события
-func (m *MEvent) Insert(event EventDBType) (id int64, err error) {
+func (m *MEvent) Insert(event *EventDBType) (id int64, err error) {
 	var (
 		query string   // строка запроса
 		row   *sql.Row // выборка данных
