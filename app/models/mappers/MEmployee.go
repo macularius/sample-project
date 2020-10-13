@@ -30,7 +30,6 @@ func (dbt *EmployeeDBType) ToType() (e *entities.Employee) {
 	e.Middlename = dbt.C_middlename
 	e.PhoneNumber = dbt.C_phone_number
 	e.Email = dbt.C_email
-	e.IsArchive = dbt.C_is_archive
 
 	return
 }

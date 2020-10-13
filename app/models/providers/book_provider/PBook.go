@@ -41,7 +41,11 @@ func (p *PBook) GetBookByID(id int64) (b *entities.Book, err error) {
 	}
 
 	// преобразование к типу сущности
-	b = bdbt.ToType()
+	b, err = bdbt.ToType()
+	if err != nil {
+		revel.AppLog.Errorf("PBook.GetBookByID : bdbt.ToType, %s\n", err)
+		return
+	}
 
 	// получение значения статуса по ключу
 	b.Status, err = p.bookStatusMapper.StatusByID(bdbt.Fk_status)
@@ -89,13 +93,11 @@ func (p *PBook) CreateBook(book *entities.Book) (b *entities.Book, err error) {
 		bdbt *mappers.BookDBType
 	)
 
-	// формирование структуры бд
-	bdbt = &mappers.BookDBType{
-		C_isbn:      book.ISBN,
-		C_name:      book.Name,
-		C_author:    book.Author,
-		C_publisher: book.Publisher,
-		C_year:      book.Year,
+	// инициализация структуры бд из струткуры сущности
+	err = bdbt.FromType(book)
+	if err != nil {
+		revel.AppLog.Errorf("PBook.CreateBook : bdbt.FromType, %s\n", err)
+		return
 	}
 
 	// получение внешнего ключа на статус
@@ -121,13 +123,11 @@ func (p *PBook) UpdateBook(book *entities.Book) (b *entities.Book, err error) {
 		bdbt *mappers.BookDBType
 	)
 
-	// формирование структуры бд
-	bdbt = &mappers.BookDBType{
-		C_isbn:      book.ISBN,
-		C_name:      book.Name,
-		C_author:    book.Author,
-		C_publisher: book.Publisher,
-		C_year:      book.Year,
+	// инициализация структуры бд из струткуры сущности
+	err = bdbt.FromType(book)
+	if err != nil {
+		revel.AppLog.Errorf("PBook.UpdateBook : bdbt.FromType, %s\n", err)
+		return
 	}
 
 	// получение внешнего ключа на статус
@@ -153,13 +153,11 @@ func (p *PBook) DeleteBook(book *entities.Book) (err error) {
 		bdbt *mappers.BookDBType
 	)
 
-	// формирование структуры бд
-	bdbt = &mappers.BookDBType{
-		C_isbn:      book.ISBN,
-		C_name:      book.Name,
-		C_author:    book.Author,
-		C_publisher: book.Publisher,
-		C_year:      book.Year,
+	// инициализация структуры бд из струткуры сущности
+	err = bdbt.FromType(book)
+	if err != nil {
+		revel.AppLog.Errorf("PBook.DeleteBook : bdbt.FromType, %s\n", err)
+		return
 	}
 
 	// получение внешнего ключа на статус

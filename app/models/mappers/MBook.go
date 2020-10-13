@@ -21,7 +21,7 @@ type BookDBType struct {
 }
 
 // ToType функция преобразования типа бд к типу сущности
-func (dbt *BookDBType) ToType() (b *entities.Book) {
+func (dbt *BookDBType) ToType() (b *entities.Book, err error) {
 	b = new(entities.Book)
 
 	b.ID = dbt.Pk_id
@@ -30,7 +30,20 @@ func (dbt *BookDBType) ToType() (b *entities.Book) {
 	b.Author = dbt.C_author
 	b.Publisher = dbt.C_publisher
 	b.Year = dbt.C_year
-	b.IsArchive = dbt.C_is_archive
+
+	return
+}
+
+// FromType функция преобразования типа сущности к типу бд
+// допускается, что dbt is nil
+func (dbt *BookDBType) FromType(b entities.Book) (err error) {
+	dbt = &BookDBType{
+		C_isbn:      b.ISBN,
+		C_name:      b.Name,
+		C_author:    b.Author,
+		C_publisher: b.Publisher,
+		C_year:      b.Year,
+	}
 
 	return
 }
