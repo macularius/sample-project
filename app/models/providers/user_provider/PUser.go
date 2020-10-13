@@ -2,7 +2,10 @@ package user_provider
 
 import (
 	"database/sql"
+	"sample-project/app/models/entities"
 	"sample-project/app/models/mappers"
+
+	"github.com/revel/revel"
 )
 
 // PUser провайдер контроллера пользователей
@@ -19,12 +22,24 @@ func (p *PUser) Init(db *sql.DB) (err error) {
 	return
 }
 
-// Login
-func (p *PUser) Login() (flag bool, err error) {
-	return
-}
+// Validate метод
+func (p *PUser) Validate(user *entities.User, password string) (flag bool, err error) {
+	var (
+		udbt *mappers.UserDBType
+	)
 
-// Logout
-func (p *PUser) Logout() (err error) {
+	// проверка существования пользователя
+	udbt, err = p.userMapper.SelectUserByLogin(user.Login)
+	if err != nil {
+		revel.AppLog.Errorf("PUser.Validate : p.userMapper.SelectUserByLogin, %s\n", err)
+		return
+	}
+
+	flag, err = p.userMapper.CheckPassword(udbt, password)
+	if err != nil {
+		revel.AppLog.Errorf("PUser.Validate : p.userMapper.CheckPassword, %s\n", err)
+		return
+	}
+
 	return
 }

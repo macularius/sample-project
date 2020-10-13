@@ -45,7 +45,7 @@ func (m *MUser) Init(db *sql.DB) {
 }
 
 // Inser добавление пользователя
-func (m *MUser) Insert(u UserDBType, password string) (id int64, err error) {
+func (m *MUser) Insert(u *UserDBType, password string) (id int64, err error) {
 	var (
 		query string   // строка запроса
 		row   *sql.Row // выборка данных
@@ -74,7 +74,7 @@ func (m *MUser) Insert(u UserDBType, password string) (id int64, err error) {
 			return
 		}
 
-		revel.AppLog.Errorf("MUser.Inser : row.Scan, %s\n", err)
+		revel.AppLog.Errorf("MUser.Insert : row.Scan, %s\n", err)
 		return
 	}
 
@@ -154,7 +154,7 @@ func (m *MUser) SelectUserByLogin(login string) (u *UserDBType, err error) {
 }
 
 // CheckPassword проверка пароля пользователя
-func (m *MUser) CheckPassword(user UserDBType, password string) (f bool, err error) {
+func (m *MUser) CheckPassword(user *UserDBType, password string) (f bool, err error) {
 	var (
 		query string                        // строка запроса
 		row   *sql.Row                      // выборка данных
