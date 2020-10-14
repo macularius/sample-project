@@ -2,11 +2,18 @@ package event_provider
 
 import (
 	"database/sql"
+	"errors"
 	"sample-project/app/models/entities"
 	"sample-project/app/models/mappers"
 	"time"
 
 	"github.com/revel/revel"
+)
+
+// объявление переменных пакета
+var (
+	ErrBookIsNotExist     = errors.New("в структуре события отсутствует книга")
+	ErrEmployeeIsNotExist = errors.New("в структуре события отсутствует сотрудник")
 )
 
 // PEvent провайдер контроллера событий
@@ -34,7 +41,7 @@ func (p *PEvent) Init(db *sql.DB) (err error) {
 }
 
 // GetEventByBookID метод создания события
-func (p *PEvent) Create(event *entities.Event, bookID, employeeID int64) (e *entities.Event, err error) {
+func (p *PEvent) Create(event *entities.Event) (e *entities.Event, err error) {
 	var (
 		edbt   *mappers.EventDBType
 		bdbt   *mappers.BookDBType
@@ -47,8 +54,22 @@ func (p *PEvent) Create(event *entities.Event, bookID, employeeID int64) (e *ent
 		revel.AppLog.Errorf("PEvent.Create : edbt.FromType, %s\n", err)
 		return
 	}
-	edbt.Fk_book = bookID
-	edbt.Fk_employee = employeeID
+
+	// валидация книги
+	if event.Book == nil {
+		err = ErrBookIsNotExist
+		revel.AppLog.Errorf("PEvent.Create, %s\n", err)
+		return
+	}
+	edbt.Fk_book = event.Book.ID
+
+	// валидация сотрудника
+	if event.Employee == nil {
+		err = ErrEmployeeIsNotExist
+		revel.AppLog.Errorf("PEvent.Create, %s\n", err)
+		return
+	}
+	edbt.Fk_employee = event.Employee.ID
 
 	// фиксация времени
 	t := time.Now()
