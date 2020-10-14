@@ -39,6 +39,6 @@ func (c *CEvent) Create() revel.Result {
 }
 
 // fetchPostEvent метод получения сущности из post параметров
-func (c *CEmployee) fetchPostEvent() (es entities.Event, err error) {
+func (c *CEvent) fetchPostEvent() (es entities.Event, err error) {
 	return
 }

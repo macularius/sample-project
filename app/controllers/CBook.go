@@ -149,7 +149,7 @@ func (c *CBook) Delete() revel.Result {
 	// удаление сущности
 	err = c.provider.DeleteBook(book)
 	if err != nil {
-		revel.AppLog.Errorf("CBook.Create : c.provider.UpdateBook, %s\n", err)
+		revel.AppLog.Errorf("CBook.Create : c.provider.DeleteBook, %s\n", err)
 		return c.RenderJSON(Failed(err.Error()))
 	}
 
