@@ -18,33 +18,28 @@ func (c *CEmployee) Before() (result revel.Result, rc CEmployee) {
 	return
 }
 
-// GetEmployeeByID получение сотрудника по id
-func (c *CEmployee) GetEmployeeByID() revel.Result {
+// GetAll получение всех сотрудников
+func (c *CEmployee) GetAll() revel.Result {
 	return nil
 }
 
-// GetEmployees получение всех сотрудников
-func (c *CEmployee) GetEmployees() revel.Result {
+// GetByID получение сотрудника по id
+func (c *CEmployee) GetByID() revel.Result {
 	return nil
 }
 
-// CreateEmployee создание сотрудника
-func (c *CEmployee) CreateEmployee() revel.Result {
+// Create создание сотрудника
+func (c *CEmployee) Create() revel.Result {
 	return nil
 }
 
 // UpdateEmployee изменение сотрудника
-func (c *CEmployee) UpdateEmployee() revel.Result {
+func (c *CEmployee) Update() revel.Result {
 	return nil
 }
 
 // DeleteEmployee удаление сотрудника
-func (c *CEmployee) DeleteEmployee() revel.Result {
-	return nil
-}
-
-// GetPositions получение должностей
-func (c *CEmployee) GetPositions() revel.Result {
+func (c *CEmployee) Delete() revel.Result {
 	return nil
 }
 

@@ -26,3 +26,8 @@ func (c *CAuth) Login() revel.Result {
 func (c *CAuth) Logout() revel.Result {
 	return nil
 }
+
+// GetCurrentEmployee
+func (c *CAuth) GetCurrentEmployee() revel.Result {
+	return nil
+}

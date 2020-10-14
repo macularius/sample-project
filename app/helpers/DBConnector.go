@@ -51,33 +51,41 @@ type dbConnector struct{}
 
 // GetDBConnection получение экземпляра подключения к базе
 func (c *dbConnector) GetDBConnection() (db *sql.DB, err error) {
+	var (
+		dbname   string // название бд
+		addr     string // адрес хоста бд
+		user     string // имя пользователя субд
+		password string // пароль пользователя субд
+		ok       bool   // флаг успешности получения настройки
+	)
+
 	// получение названия бд
-	if dbname, ok := revel.Config.String("db.dbname"); !ok {
+	if dbname, ok = revel.Config.String("db.dbname"); !ok {
 		err = ErrFailedConnection
 		revel.AppLog.Errorf("Не удалось получить имя бд из файла конфигурации: %v\n", err)
 		return
 	}
 	// получение адреса бд
-	if addr, ok := revel.Config.String("db.addr"); !ok {
+	if addr, ok = revel.Config.String("db.addr"); !ok {
 		err = ErrFailedConnection
 		revel.AppLog.Errorf("Не удалось получить адрес бд из файла конфигурации: %v\n", err)
 		return
 	}
 	// получение пользователя бд
-	if user, ok := revel.Config.String("db.user"); !ok {
+	if user, ok = revel.Config.String("db.user"); !ok {
 		err = ErrFailedConnection
 		revel.AppLog.Errorf("Не удалось получить пользователя из файла конфигурации: %v\n", err)
 		return
 	}
 	// получение пароля пользователя бд
-	if password, ok := revel.Config.String("db.password"); !ok {
+	if password, ok = revel.Config.String("db.password"); !ok {
 		err = ErrFailedConnection
 		revel.AppLog.Errorf("Не удалось получить пароль из файла конфигурации: %v\n", err)
 		return
 	}
 
 	// формирование строки подключения к базе
-	connStr := fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=verify-full", user, password, addr, name)
+	connStr := fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=verify-full", user, password, addr, dbname)
 	// создание соединения бд
 	db, err = sql.Open("postgres", connStr)
 	if err != nil {

@@ -17,7 +17,7 @@ func (c *CPosition) Before() (result revel.Result, rc CPosition) {
 	return
 }
 
-// GetEmployees получение всех должностей
-func (c *CPosition) GetEmployees() revel.Result {
+// GetAll получение всех должностей
+func (c *CPosition) GetAll() revel.Result {
 	return nil
 }

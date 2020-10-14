@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"sample-project/app/models/entities"
 	"sample-project/app/models/providers/employee_provider"
 
 	"github.com/revel/revel"
@@ -17,17 +18,27 @@ func (c *CEvent) Before() (result revel.Result, rc CEvent) {
 	return
 }
 
-// GetEventByBookID получение сотрудника по id
-func (c *CEvent) GetEventByBookID() revel.Result {
+// GetAll получение всех событий
+func (c *CEvent) GetAll() revel.Result {
 	return nil
 }
 
-// GetEventByEmployeeID получение сотрудника по id
-func (c *CEvent) GetEventByEmployeeID() revel.Result {
+// GetByBookID получение событий по id книги
+func (c *CEvent) GetByBookID() revel.Result {
 	return nil
 }
 
-// GetEvents получение всех сотрудников
-func (c *CEvent) GetEvents() revel.Result {
+// GetByEmployeeID получение событий по id сотрудникаы
+func (c *CEvent) GetByEmployeeID() revel.Result {
 	return nil
+}
+
+// Create создание события
+func (c *CEvent) Create() revel.Result {
+	return nil
+}
+
+// fetchPostEvent метод получения сущности из post параметров
+func (c *CEmployee) fetchPostEvent() (es entities.Event, err error) {
+	return
 }
