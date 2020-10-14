@@ -1,5 +1,5 @@
 import Model from "../../helpers/model.js";
-import { Event } from "../../models/entities/event.js";
+import { Event } from "./entities/event.js";
 
 /// EventModel объект для работы(CRUD) с данными
 class EventModel extends Model {
