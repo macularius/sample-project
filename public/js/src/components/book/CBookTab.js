@@ -1,6 +1,7 @@
 import { BookTabView, BookTabContextMenu } from "./BookTabView.js"
 import { CBookWindow, BOOK_WINDOW_TYPE } from "./bookWindow/CBookWindow.js";
 import bookModel from "../../models/bookModel.js";
+import eventModel from "../../models/eventModel.js";
 import employeeModel from "../../models/employeeModel.js";
 import { Book } from "../../models/entities/book.js";
 
@@ -130,7 +131,7 @@ export class CBookTab {
             return
         }
 
-        bookModel.giveBook(book.ID, employee.ID)
+        eventModel.createEvent(book.ID, employee.ID)
     }
 
     // функция обновления таблицы книг

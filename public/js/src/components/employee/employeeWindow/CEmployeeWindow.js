@@ -1,5 +1,5 @@
 import EmployeeWindowView from "./EmployeeWindowView.js"
-import employeeModel from "../../../models/employeeModel.js"
+import positionModel from "../../../models/positionModel.js"
 
 // компонент окна для работы с сущностью сотрудника
 export class CEmployeeWindow {
@@ -32,7 +32,7 @@ export class CEmployeeWindow {
         }
 
         // подгрузка должностей
-        employeeModel.getPositions().then((positions) => {
+        positionModel.getPositions().then((positions) => {
             positions.map((position) => {
                 position.id = position.ID
                 position.value = position.name

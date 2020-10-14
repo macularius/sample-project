@@ -2,9 +2,9 @@ package controllers
 
 // ServerResponse структура ответа сервера
 type ServerResponse struct {
-	Status       ResponseStatus
-	ErrorMessage string
-	Data         interface{}
+	Status       ResponseStatus `json:"status"` // статус ответа
+	ErrorMessage string         `json:"error"`  // текст ошибки
+	Data         interface{}    `json:"data"`   // данные
 }
 
 // ResponseStatus тип статуса ответа сервера

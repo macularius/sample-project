@@ -1,5 +1,4 @@
 import Model from "../../helpers/model.js";
-import { Employee } from "./entities/employee.js";
 
 // AuthModel объект для авторизации
 class AuthModel extends Model {
@@ -14,11 +13,7 @@ class AuthModel extends Model {
 
     // плучение сотруднкиа текущего пользователя
     getCurrentEmployee() {
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                resolve(new Employee(1, 'Коваценко', 'Игорь', 'Николаевич', 'инженер-программист', '', ''))
-            }, 5000);
-        })
+        return this.get('/user/employee')
     }
 }
 const authModel  = new AuthModel();
