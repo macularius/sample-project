@@ -107,6 +107,33 @@ export class CJournalTab {
             this.view.datatable.refresh()
         })
     }
+    
+    // метод отображения таба с фильтрацией по книге и сотруднику
+    showByBookID(bookID, employeeID) {
+        eventModel.getLastGiveEventByBookID(bookID, employeeID).then((event) => {
+            // проверка наличия данных
+            if (!event) {
+                return
+            }
+
+            // применение фильтров
+            this.view.datatable.getFilter('bookString').value = `[${event.book.ISBN}] ${event.book.name}`
+            this.view.datatable.getFilter('employeeString').value = `${event.employee.lastname} ${event.employee.firstname}`
+            this.view.datatable.getFilter('type').value = event.type
+            this.view.datatable.getFilter('dateString').value = webix.i18n.dateFormatStr(event.date)
+            this.view.datatable.filterByAll()
+
+            // выделение нужной строки
+            for (let rowID = 0; rowID < this.view.datatable.serialize().length; rowID++) {
+                let item = this.view.datatable.serialize()[rowID]
+
+                if (item.ID === bookID) {
+                    this.view.datatable.select(item.id)
+                    break
+                }
+            }
+        })
+    }
 }
 
 // допустимые значения пунктов контекстного меню таба Книги

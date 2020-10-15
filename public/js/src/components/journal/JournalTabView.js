@@ -10,10 +10,11 @@ export function JournalTabView() {
                 id: 'eventTabDatatable',
                 select: true,
                 columns: [
-                    { id: 'bookString', header: 'Книга', fillspace: true, },
-                    { id: 'employeeString', header: 'Сотрудник', fillspace: true, },
-                    { id: 'type', header: 'Тип события', fillspace: true, },
-                    { id: 'dateString', header: 'Дата события', fillspace: true, },
+                    { id: 'ID', header: ['', { content: "textFilter" }], hidden: true },
+                    { id: 'bookString', header: ['Книга', { content: "textFilter" }], fillspace: true, },
+                    { id: 'employeeString', header: ['Сотрудник', { content: "textFilter" }], fillspace: true, },
+                    { id: 'type', header: ['Тип события', { content: "textFilter" }], fillspace: true, },
+                    { id: 'dateString', header: ['Дата события', { content: "textFilter" }], fillspace: true, },
                 ],
                 data: [],
                 onContext: {

@@ -2,26 +2,32 @@ import { EmployeeTabView, EmployeeTabContextMenu } from "./EmployeeTabView.js";
 import { CEmployeeWindow, EMPLOYEE_WINDOW_TYPE } from "./employeeWindow/CEmployeeWindow.js";
 import { Employee } from "../../models/entities/employee.js";
 import employeeModel from "../../models/employeeModel.js";
+import { CLibraryCard } from "./library card/ClibraryCard.js";
 
 // класс таба "Сотрудники"
 export class CEmployeeTab {
     constructor() {
-        this.view       // объект для быстрого доступа к представлениям
-        this.window     // экземпляр окна для работы с книгами
+        this.view           // объект для быстрого доступа к представлениям
+        this.window         // экземпляр окна для работы с книгами
+        this.libraryCard    // экземпляр окна читательского билета
     }
 
     // метод инициализации компонента
-    init() {
+    init(toBook, toEvent) {
         this.window = new CEmployeeWindow(); // инициализация компонента окна
         this.window.init(
             () => { this.refreshTable() }
         ) // вызова инициализации компонента окна
+
+        this.libraryCard = new CLibraryCard(); // инициализация компонента окна
+        this.libraryCard.init(toBook, toEvent) // вызова инициализации компонента окна
     }
 
     // метод получения webix конфигурации компонента
     config() {
         // т.к. window и popup расположены не в дереве приложения, а поверх слоев, его нужно отрисовывать отдельно
         webix.ui(this.window.config())
+        webix.ui(this.libraryCard.config())
         webix.ui(EmployeeTabContextMenu())
 
         // вызов функции представления
@@ -38,6 +44,9 @@ export class CEmployeeTab {
 
         // инициализация обработчиков событий модального окна
         this.window.attachEvents()
+
+        // инициализация обработчиков событий окна читательского билета
+        this.libraryCard.attachEvents()
 
         // прикрепление контекстного меню к таблице
         this.view.datatableContextMenu.attachTo(this.view.datatable)
@@ -59,6 +68,10 @@ export class CEmployeeTab {
         let selected = this.view.datatable.getSelectedItem()
 
         switch (item) {
+            case EMPLOYEE_CONTEXT_MENU.libraryCard: // читательский билет
+                this.libraryCard.refreshTable()
+                this.libraryCard.switch()
+                break;
             case EMPLOYEE_CONTEXT_MENU.add: // добавление сотрудника
                 this.window.parse(new Employee())
                 this.window.switch(EMPLOYEE_WINDOW_TYPE.create)
@@ -153,6 +166,7 @@ export class CEmployeeTab {
 
 // допустимые значения пунктов контекстного меню таба Книги
 export const EMPLOYEE_CONTEXT_MENU = {
+    libraryCard: 'Читательский билет',
     add: 'Добавить',
     edit: 'Изменить',
     remove: 'Удалить'

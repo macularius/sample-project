@@ -23,7 +23,7 @@ SET row_security = off;
 -- Name: library; Type: DATABASE; Schema: -; Owner: -
 --
 
-CREATE DATABASE library WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'ru_RU.UTF-8' LC_CTYPE = 'ru_RU.UTF-8';
+CREATE DATABASE library;
 
 
 \connect library

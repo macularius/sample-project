@@ -41,6 +41,7 @@ export function EmployeeTabContextMenu() {
         view: 'contextmenu',
         id: 'employeeTabDatatableContextMenu',
         data: [
+            EMPLOYEE_CONTEXT_MENU.libraryCard, 
             EMPLOYEE_CONTEXT_MENU.add, 
             EMPLOYEE_CONTEXT_MENU.edit, 
             EMPLOYEE_CONTEXT_MENU.remove

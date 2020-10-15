@@ -17,10 +17,13 @@ export class Application {
     init() {
         this.userInfo.init()
         this.bookTab.init()
-        this.employeeTab.init()
+        this.employeeTab.init(
+            () => { return this.dispatch(APP_TAB.booksTab) }, // toBook
+            () => { return this.dispatch(APP_TAB.journalTab) } // toEvent
+        )
         this.journalTab.init(
-            () => { return this.dispatch(APP_TAB.booksTab) },
-            () => { return this.dispatch(APP_TAB.employeesTab) }
+            () => { return this.dispatch(APP_TAB.booksTab) }, // toBook
+            () => { return this.dispatch(APP_TAB.employeesTab) } // toEvent
         )
     }
 

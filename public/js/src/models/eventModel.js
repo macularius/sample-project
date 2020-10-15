@@ -47,6 +47,26 @@ class EventModel extends Model {
 
         return this.post('/event/create', event)
     }
+
+    // получение последнего события выдачи по сотруднику и книге
+    getLastGiveEventByBookID(bookID, employeeID) {
+        // формирование объекта события для запроа
+        let event = new Event()
+        event.book = new Book()
+        event.book.ID = bookID
+        event.type = EVENT_TYPE.take
+
+        return new Promise((resolve, reject) => {
+            resolve(new Event(
+                1,
+                new Book(1, 'isbn1', 'name1', 'author1', 'publisher1', '2020', 'status'),
+                new Employee(1, 'lastname1', 'firstname1', 'middlename1', 'position1', 'number1', 'email1'),
+                'выдача',
+                new Date(Date.now())
+            ))
+        })
+        return this.post('/event/give/last', event)
+    }
 }
 const eventModel = new EventModel();
 export default eventModel

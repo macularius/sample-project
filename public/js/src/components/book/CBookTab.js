@@ -61,12 +61,11 @@ export class CBookTab {
 
         // обработка события нажатия на пункт контекстного меню
         this.view.datatableContextMenu.attachEvent('onMenuItemClick', (itemID) => {
-            // получение значения пункта, на которое произошло нажатие
-
             // проверка вложенности выбранного пункта меню
             if (!this.view.datatableContextMenu.getItem(itemID)) {
                 this.handleSubMenu(itemID)
             } else {
+                // получение значения пункта, на которое произошло нажатие
                 let item = this.view.datatableContextMenu.getItem(itemID).value
                 this.handleContextMenu(item)
             }
