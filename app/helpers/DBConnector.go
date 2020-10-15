@@ -52,23 +52,16 @@ type dbConnector struct{}
 // GetDBConnection получение экземпляра подключения к базе
 func (c *dbConnector) GetDBConnection() (db *sql.DB, err error) {
 	var (
-		dbname   string // название бд
-		addr     string // адрес хоста бд
+		dbspec   string // строка подключения к бд
 		user     string // имя пользователя субд
 		password string // пароль пользователя субд
 		ok       bool   // флаг успешности получения настройки
 	)
 
-	// получение названия бд
-	if dbname, ok = revel.Config.String("db.dbname"); !ok {
+	// получение строки подключения
+	if dbspec, ok = revel.Config.String("db.spec"); !ok {
 		err = ErrFailedConnection
-		revel.AppLog.Errorf("Не удалось получить имя бд из файла конфигурации: %v\n", err)
-		return
-	}
-	// получение адреса бд
-	if addr, ok = revel.Config.String("db.addr"); !ok {
-		err = ErrFailedConnection
-		revel.AppLog.Errorf("Не удалось получить адрес бд из файла конфигурации: %v\n", err)
+		revel.AppLog.Errorf("Не удалось получить строку подключения к бд из файла конфигурации: %v\n", err)
 		return
 	}
 	// получение пользователя бд
@@ -85,11 +78,20 @@ func (c *dbConnector) GetDBConnection() (db *sql.DB, err error) {
 	}
 
 	// формирование строки подключения к базе
-	connStr := fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=verify-full", user, password, addr, dbname)
+	connStr := fmt.Sprintf("postgres://%s:%s@%s", user, password, dbspec)
+	revel.AppLog.Debugf("postgres://%s:%s@%s", user, password, dbspec)
 	// создание соединения бд
 	db, err = sql.Open("postgres", connStr)
 	if err != nil {
 		revel.AppLog.Errorf("Не удалось установить соединение с базой данных: %v\n", err)
+		return
 	}
+
+	err = db.Ping()
+	if err != nil {
+		revel.AppLog.Errorf("Не удалось выполнить тестовое подключение: %v\n", err)
+		return
+	}
+
 	return
 }

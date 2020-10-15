@@ -10,7 +10,7 @@ export class CBookWindow {
     }
 
     // метод инициализации компонента
-    init(onChange) { 
+    init(onChange) {
         this.onChange = onChange // callback функция при CUD операциях над книгой
     }
 
@@ -27,7 +27,15 @@ export class CBookWindow {
             windowLabel: $$('bookWindowLabel'),
             windowCancelBtn: $$('bookWindowCancelBtn'),
             windowConfirmBtn: $$('bookWindowConfirmBtn'),
-            form: $$('bookWindowForm')
+            form: $$('bookWindowForm'),
+            formfields:  {
+                ISBN: $$('bookWindowFormISBN'),
+                name: $$('bookWindowFormName'),
+                author: $$('bookWindowFormAuthor'),
+                publisher: $$('bookWindowFormPublisher'),
+                status: $$('bookWindowFormStatus'),
+                year: $$('bookWindowFormYear'),
+            }
         }
 
         // обработка закрытия окна
@@ -83,12 +91,21 @@ export class CBookWindow {
         switch (type) {
             case BOOK_WINDOW_TYPE.create:
                 this.view.windowLabel.setHTML('Добавление книги')
+                this.view.formfields.status.hide()
+                this.view.window.resize()
                 break;
             case BOOK_WINDOW_TYPE.update:
                 this.view.windowLabel.setHTML('Редактирование книги')
                 break;
             case BOOK_WINDOW_TYPE.delete:
                 this.view.windowLabel.setHTML('Удаление книги')
+                this.view.formfields.ISBN.disable()
+                this.view.formfields.name.disable()
+                this.view.formfields.author.disable()
+                this.view.formfields.publisher.disable()
+                this.view.formfields.status.disable()
+                this.view.formfields.year.disable()
+                this.view.window.resize()
                 break;
             default:
                 console.error('Неизвестный тип отображения окна для работы с сущностью книги');

@@ -23,10 +23,12 @@ func (m *MEventType) EventByID(id int64) (eventType string, err error) {
 		row   *sql.Row // выборка данных
 	)
 
+	revel.AppLog.Debugf("MEventType.EventByID, id: %+v\n", id)
+
 	// запрос
 	query = `
 		SELECT
-			c_name
+			c_value
 		FROM "library".ref_event_types
 		WHERE pk_id = $1;
 	`
@@ -61,14 +63,14 @@ func (m *MEventType) IDByEventType(eventType string) (id int64, err error) {
 		SELECT
 			pk_id
 		FROM "library".ref_event_types
-		WHERE c_name = $1;
+		WHERE c_value = $1;
 	`
 
 	// выполнение запроса
-	row = m.db.QueryRow(query, id)
+	row = m.db.QueryRow(query, eventType)
 
 	// считывание строки выборки
-	err = row.Scan(&eventType)
+	err = row.Scan(&id)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			err = nil

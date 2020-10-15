@@ -26,7 +26,7 @@ func (m *MBookStatus) StatusByID(id int64) (status string, err error) {
 	// запрос
 	query = `
 		SELECT
-			c_name
+			c_value
 		FROM "library".ref_statuses
 		WHERE pk_id = $1;
 	`
@@ -56,19 +56,21 @@ func (m *MBookStatus) IDByStatus(status string) (id int64, err error) {
 		row   *sql.Row // выборка данных
 	)
 
+	revel.AppLog.Debugf("MBookStatus.IDByStatus, status: %+v\n", status)
+
 	// запрос
 	query = `
 		SELECT
 			pk_id
 		FROM "library".ref_statuses
-		WHERE c_name = $1;
+		WHERE c_value = $1;
 	`
 
 	// выполнение запроса
-	row = m.db.QueryRow(query, id)
+	row = m.db.QueryRow(query, status)
 
 	// считывание строки выборки
-	err = row.Scan(&status)
+	err = row.Scan(&id)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			err = nil

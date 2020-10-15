@@ -86,12 +86,19 @@ export class CJournalTab {
     // функция обновления таблицы событий
     refreshTable() {
         eventModel.getEvents().then((events) => {
+            // проверка наличия данных
+            if (!events) {
+                return
+            }
+
             // преобразование даты к строке
             events.map((event) => {
+                if (!event) {
+                    return
+                }
+
                 event.bookString = `[${event.book.ISBN}] ${event.book.name}`
                 event.employeeString = `${event.employee.lastname} ${event.employee.firstname}`
-
-
                 event.dateString = webix.i18n.dateFormatStr(event.date)
             })
 

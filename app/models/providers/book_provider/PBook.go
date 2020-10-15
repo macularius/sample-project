@@ -99,16 +99,9 @@ func (p *PBook) CreateBook(book *entities.Book) (b *entities.Book, err error) {
 	)
 
 	// инициализация структуры бд из струткуры сущности
-	err = bdbt.FromType(*book)
+	bdbt, err = bdbt.FromType(*book)
 	if err != nil {
 		revel.AppLog.Errorf("PBook.CreateBook : bdbt.FromType, %s\n", err)
-		return
-	}
-
-	// получение внешнего ключа на статус
-	bdbt.Fk_status, err = p.bookStatusMapper.IDByStatus(book.Status)
-	if err != nil {
-		revel.AppLog.Errorf("PBook.CreateBook : p.bookStatusMapper.IDByStatus, %s\n", err)
 		return
 	}
 
@@ -129,7 +122,7 @@ func (p *PBook) UpdateBook(book *entities.Book) (b *entities.Book, err error) {
 	)
 
 	// инициализация структуры бд из струткуры сущности
-	err = bdbt.FromType(*book)
+	bdbt, err = bdbt.FromType(*book)
 	if err != nil {
 		revel.AppLog.Errorf("PBook.UpdateBook : bdbt.FromType, %s\n", err)
 		return
@@ -142,7 +135,7 @@ func (p *PBook) UpdateBook(book *entities.Book) (b *entities.Book, err error) {
 		return
 	}
 
-	// добавление книги
+	// обновление книги
 	err = p.bookMapper.Update(bdbt)
 	if err != nil {
 		revel.AppLog.Errorf("PBook.UpdateBook : p.bookMapper.Update, %s\n", err)
@@ -159,7 +152,7 @@ func (p *PBook) DeleteBook(book *entities.Book) (err error) {
 	)
 
 	// инициализация структуры бд из струткуры сущности
-	err = bdbt.FromType(*book)
+	bdbt, err = bdbt.FromType(*book)
 	if err != nil {
 		revel.AppLog.Errorf("PBook.DeleteBook : bdbt.FromType, %s\n", err)
 		return

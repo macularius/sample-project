@@ -1,9 +1,9 @@
 import { BookTabView, BookTabContextMenu } from "./BookTabView.js"
-import { CBookWindow, BOOK_WINDOW_TYPE } from "./bookWindow/CBookWindow.js";
-import bookModel from "../../models/bookModel.js";
-import eventModel from "../../models/eventModel.js";
-import employeeModel from "../../models/employeeModel.js";
-import { Book } from "../../models/entities/book.js";
+import { CBookWindow, BOOK_WINDOW_TYPE } from "./bookWindow/CBookWindow.js"
+import bookModel from "../../models/bookModel.js"
+import eventModel from "../../models/eventModel.js"
+import employeeModel from "../../models/employeeModel.js"
+import { Book, BOOK_STATUS } from "../../models/entities/book.js"
 
 // класс таба "Книги"
 export class CBookTab {
@@ -14,7 +14,7 @@ export class CBookTab {
 
     // метод инициализации компонента
     init() {
-        this.window = new CBookWindow(); // инициализация компонента окна
+        this.window = new CBookWindow() // инициализация компонента окна
         this.window.init(
             () => { this.refreshTable() }
         ) // вызова инициализации компонента окна
@@ -27,6 +27,11 @@ export class CBookTab {
         // отложенное заполнение массива сотрудников в сабменю
         let names = []
         employeeModel.getEmployees().then((employees) => {
+            // проверка наличия данных
+            if (!employees) {
+                return
+            }
+
             employees.map((employee) => {
                 names.push({ ID: employee.ID, value: `${employee.lastname} ${employee.firstname}` })
             })
@@ -57,7 +62,6 @@ export class CBookTab {
         // обработка события нажатия на пункт контекстного меню
         this.view.datatableContextMenu.attachEvent('onMenuItemClick', (itemID) => {
             // получение значения пункта, на которое произошло нажатие
-            
 
             // проверка вложенности выбранного пункта меню
             if (!this.view.datatableContextMenu.getItem(itemID)) {
@@ -67,7 +71,7 @@ export class CBookTab {
                 this.handleContextMenu(item)
             }
 
-        });
+        })
     }
 
     // обработка выбора в контекстном меню
@@ -79,21 +83,33 @@ export class CBookTab {
             case BOOK_CONTEXT_MENU.add: // добавление книги
                 this.window.parse(new Book())
                 this.window.switch(BOOK_WINDOW_TYPE.create)
-                break;
+                break
             case BOOK_CONTEXT_MENU.edit: // редактирование выделленой книги
+                // проверка выделенного элемента
                 if (!selected) {
                     webix.message('Выделите строку')
                     return
                 }
+                // проверка наличия поля ID у выделенного элемента
                 if (!selected.ID) {
                     console.error('Incorrect ID of item:', selected.ID)
                     return
                 }
                 bookModel.getBookByID(selected.ID).then((book) => {
+                    // проверка наличия данных
+                    if (!book) {
+                        return
+                    }
+
+                    // преобразование даты издания
+                    let time = new Date(book.year)
+                    book.year = time.getFullYear()
+
+                    // заполнение полей окна данными книги
                     this.window.parse(book)
                     this.window.switch(BOOK_WINDOW_TYPE.update)
                 })
-                break;
+                break
             case BOOK_CONTEXT_MENU.remove: // удаление выделенной книги
                 if (!selected) {
                     webix.message('Выделите строку')
@@ -104,13 +120,48 @@ export class CBookTab {
                     return
                 }
                 bookModel.getBookByID(selected.ID).then((book) => {
+                    // проверка наличия данных
+                    if (!book) {
+                        return
+                    }
+
+                    // преобразование даты издания
+                    let time = new Date(book.year)
+                    book.year = time.getFullYear()
+
+                    // заполнение полей окна данными книги
                     this.window.parse(book)
                     this.window.switch(BOOK_WINDOW_TYPE.delete)
                 })
-                break;
+                break
+            
+            case BOOK_CONTEXT_MENU.take: // добавление книги
+                // получение выделенного элемента
+                let book = this.view.datatable.getSelectedItem()
+                if (!book) {
+                    webix.message('Выделите строку')
+                    return
+                }
+                if (!book.ID) {
+                    console.error('Incorrect ID of item:', book.ID)
+                    return
+                }
+
+                // проверка статуса книги
+                if (book.status === BOOK_STATUS.available) {
+                    webix.message('Книга не выдана')
+                    return
+                }
+
+                eventModel.createTakeEvent(book.ID).then(() => {
+                    this.refreshTable()
+                })
+                break
+            case BOOK_CONTEXT_MENU.give:
+                break
             default:
-                console.error(`Неизвестное значение пункта меню: ${item}.`);
-                break;
+                console.error(`Неизвестное значение пункта меню: ${item}.`)
+                break
         }
     }
 
@@ -131,7 +182,15 @@ export class CBookTab {
             return
         }
 
-        eventModel.createEvent(book.ID, employee.ID)
+        // проверка статуса книги
+        if (book.status === BOOK_STATUS.notAvailable) {
+            webix.message('Книга уже выдана')
+            return
+        }
+
+        eventModel.createGiveEvent(book.ID, employee.ID).then(() => {
+            this.refreshTable()
+        })
     }
 
     // функция обновления таблицы книг
@@ -142,6 +201,16 @@ export class CBookTab {
             return
         } else {
             bookModel.getBooks().then((books) => {
+                // проверка наличия данных
+                if (books) {
+                    // преобразование даты издания
+                    books.map((book) => {
+                        let time = new Date(book.year)
+                        book.year = time.getFullYear()
+                    })
+                }
+
+                // заполнение таблицы окна данными книги
                 this.view.datatable.clearAll()
                 this.view.datatable.parse(books)
             })
@@ -151,9 +220,14 @@ export class CBookTab {
     // метод отображения таба с фильтрацией по книге
     showByBookID(bookID) {
         bookModel.getBookByID(bookID).then((book) => {
+            // проверка наличия данных
+            if (!book) {
+                return
+            }
+
             // применение фильтров
-            this.view.datatable.getFilter('ISBN').value = book.ISBN;
-            this.view.datatable.filterByAll();
+            this.view.datatable.getFilter('ISBN').value = book.ISBN
+            this.view.datatable.filterByAll()
 
             // выделение нужной строки
             for (let rowID = 0; rowID < this.view.datatable.serialize().length; rowID++) {
@@ -171,6 +245,7 @@ export class CBookTab {
 // допустимые значения пунктов контекстного меню таба Книги
 export const BOOK_CONTEXT_MENU = {
     give: 'Выдать',
+    take: 'Сдать',
     add: 'Добавить',
     edit: 'Изменить',
     remove: 'Удалить'

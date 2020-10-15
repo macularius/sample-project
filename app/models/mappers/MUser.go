@@ -25,7 +25,7 @@ func (dbt *UserDBType) ToType() (u *entities.User, err error) {
 
 // FromType функция преобразования типа сущности к типу бд
 // допускается, что dbt is nil
-func (dbt *UserDBType) FromType(u entities.User) (err error) {
+func (_ *UserDBType) FromType(u entities.User) (dbt *UserDBType, err error) {
 	dbt = &UserDBType{
 		Pk_id:   u.ID,
 		C_login: u.Login,

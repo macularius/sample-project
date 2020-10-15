@@ -18,6 +18,11 @@ export class CUserInfo {
         if (!(this.currentEmployee = getCookie('current_employee'))) {
             // отложенное обновление информации о пользователе
             authModel.getCurrentEmployee().then((emp) => {
+                // проверка наличия данных
+                if (!emp) {
+                    return
+                }
+
                 this.currentEmployee = emp
                 this.refreshEmployeeLabel(emp)
             })

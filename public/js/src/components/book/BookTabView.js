@@ -46,6 +46,7 @@ export function BookTabContextMenu(employees) {
                 id: BOOK_CONTEXT_MENU.give,
                 submenu: employees,
             },
+            BOOK_CONTEXT_MENU.take,
             BOOK_CONTEXT_MENU.add,
             BOOK_CONTEXT_MENU.edit,
             BOOK_CONTEXT_MENU.remove

@@ -73,6 +73,11 @@ export class CEmployeeTab {
                     return
                 }
                 employeeModel.getEmployeeByID(selected.ID).then((employee) => {
+                    // проверка наличия данных
+                    if (!employee) {
+                        return
+                    }
+
                     this.window.parse(employee)
                     this.window.switch(EMPLOYEE_WINDOW_TYPE.update)
                 })
@@ -86,7 +91,12 @@ export class CEmployeeTab {
                     console.error('Incorrect ID of item:', selected.ID)
                     return
                 }
-                employeeModel.getBookByID(selected.ID).then((employee) => {
+                employeeModel.getEmployeeByID(selected.ID).then((employee) => {
+                    // проверка наличия данных
+                    if (!employee) {
+                        return
+                    }
+
                     this.window.parse(employee)
                     this.window.switch(EMPLOYEE_WINDOW_TYPE.delete)
                 })
@@ -114,6 +124,11 @@ export class CEmployeeTab {
     // метод отображения таба с фильтрацией по сотруднику
     showByEmployeeID(employeeID) {
         employeeModel.getEmployeeByID(employeeID).then((employee) => {
+            // проверка наличия данных
+            if (!employee) {
+                return
+            }
+
             // применение фильтров
             this.view.datatable.getFilter('lastname').value = employee.lastname;
             this.view.datatable.getFilter('firstname').value = employee.firstname;

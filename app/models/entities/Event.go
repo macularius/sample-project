@@ -10,3 +10,11 @@ type Event struct {
 	Type     string     `json:"type"`     // тип события
 	Date     *time.Time `json:"date"`     // дата события
 }
+
+// EventType тип события
+type EventType string
+
+const (
+	EVENT_TYPE_GIVE EventType = "выдача"
+	EVENT_TYPE_TAKE EventType = "сдача"
+)

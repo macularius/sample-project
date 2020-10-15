@@ -17,8 +17,8 @@ type CEvent struct {
 	provider *event_provider.PEvent
 }
 
-// Before интерцептор контроллера CEvent
-func (c *CEvent) Before() (result revel.Result, rc CEvent) {
+// Init интерцептор контроллера CEvent
+func (c *CEvent) Init() revel.Result {
 	var (
 		connector helpers.IDBConnector // экземпляр коннектора, для получения экземпляра соединения с бд
 		db        *sql.DB              // экземпляр соединения с бд
@@ -28,24 +28,24 @@ func (c *CEvent) Before() (result revel.Result, rc CEvent) {
 	// получение экземпляра соединения с бд
 	connector, err = helpers.GetConnector()
 	if err != nil {
-		revel.AppLog.Errorf("CEvent.Before : connector.GetDBConnection, %s\n", err)
-		return
+		revel.AppLog.Errorf("CEvent.Init : connector.GetDBConnection, %s\n", err)
+		return c.RenderJSON(Failed(err.Error()))
 	}
 	db, err = connector.GetDBConnection()
 	if err != nil {
-		revel.AppLog.Errorf("CEvent.Before : connector.GetDBConnection, %s\n", err)
-		return
+		revel.AppLog.Errorf("CEvent.Init : connector.GetDBConnection, %s\n", err)
+		return c.RenderJSON(Failed(err.Error()))
 	}
 
 	// инициализация провайдера
 	c.provider = new(event_provider.PEvent)
 	err = c.provider.Init(db)
 	if err != nil {
-		revel.AppLog.Errorf("CEvent.Before : c.provider.Init, %s\n", err)
-		return
+		revel.AppLog.Errorf("CEvent.Init : c.provider.Init, %s\n", err)
+		return c.RenderJSON(Failed(err.Error()))
 	}
 
-	return
+	return nil
 }
 
 // Destroy контроллера CEvent
@@ -64,6 +64,7 @@ func (c *CEvent) GetAll() revel.Result {
 		revel.AppLog.Errorf("CEvent.GetAll : c.provider.GetEvents, %s\n", err)
 		return c.RenderJSON(Failed(err.Error()))
 	}
+	revel.AppLog.Debugf("CEvent.GetAll : c.provider.GetEvents, events: %+v\n", events)
 
 	// рендер положительного результата
 	return c.RenderJSON(Succes(events))
@@ -77,6 +78,7 @@ func (c *CEvent) GetByBookID(id int64) revel.Result {
 		revel.AppLog.Errorf("CEvent.GetByBookID : c.provider.GetEventByBookID, %s\n", err)
 		return c.RenderJSON(Failed(err.Error()))
 	}
+	revel.AppLog.Debugf("CEvent.GetByBookID : c.provider.GetEventByBookID, events: %+v\n", events)
 
 	// рендер положительного результата
 	return c.RenderJSON(Succes(events))
@@ -90,6 +92,7 @@ func (c *CEvent) GetByEmployeeID(id int64) revel.Result {
 		revel.AppLog.Errorf("CEvent.GetByEmployeeID : c.provider.GetEventByEmployeeID, %s\n", err)
 		return c.RenderJSON(Failed(err.Error()))
 	}
+	revel.AppLog.Debugf("CEvent.GetByEmployeeID : c.provider.GetEventByEmployeeID, events: %+v\n", events)
 
 	// рендер положительного результата
 	return c.RenderJSON(Succes(events))
@@ -115,6 +118,7 @@ func (c *CEvent) Create() revel.Result {
 		revel.AppLog.Errorf("CEvent.Create : c.provider.Create, %s\n", err)
 		return c.RenderJSON(Failed(err.Error()))
 	}
+	revel.AppLog.Debugf("CEvent.Create : c.provider.Create, event: %+v\n", event)
 
 	// рендер положительного результата
 	return c.RenderJSON(Succes(event))
@@ -139,6 +143,8 @@ func (c *CEvent) fetchPostEvent() (e *entities.Event, err error) {
 		revel.AppLog.Errorf("CEvent.fetchPostEmployee : json.Unmarshal, %s\n", err)
 		return
 	}
+
+	revel.AppLog.Debugf("CEvent.fetchPostEvent, event: %+v\n", e)
 
 	return
 }

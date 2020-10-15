@@ -8,3 +8,9 @@ export class Event {
         this.date = date
     }
 }
+
+// допустимые типы события
+export let EVENT_TYPE = {
+    give: 'выдача',
+    take: 'сдача',
+}

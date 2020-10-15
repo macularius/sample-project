@@ -5,7 +5,7 @@
 -- Dumped from database version 11.8 (Ubuntu 11.8-1.pgdg18.04+1)
 -- Dumped by pg_dump version 12.0
 
--- Started on 2020-10-09 17:28:23
+-- Started on 2020-10-15 11:16:01
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -259,7 +259,6 @@ ALTER SEQUENCE library.t_books_pk_id_seq OWNED BY library.t_books.pk_id;
 
 CREATE TABLE library.t_employees (
     pk_id integer NOT NULL,
-    fk_user integer NOT NULL,
     fk_position integer NOT NULL,
     c_firstname character varying(50) NOT NULL,
     c_lastname character varying(50) NOT NULL,
@@ -365,7 +364,8 @@ ALTER SEQUENCE library.t_event_pk_id_seq OWNED BY library.t_event.pk_id;
 CREATE TABLE library.t_users (
     pk_id integer NOT NULL,
     c_login character varying(50) NOT NULL,
-    c_password character varying(50) NOT NULL
+    c_password character varying(50) NOT NULL,
+    fk_employee integer NOT NULL
 );
 
 
@@ -672,21 +672,12 @@ ALTER TABLE ONLY library.t_books
 
 
 --
--- TOC entry 2871 (class 2606 OID 1200376)
+-- TOC entry 2870 (class 2606 OID 1200376)
 -- Name: t_employees t_employees_fk_position; Type: FK CONSTRAINT; Schema: library; Owner: -
 --
 
 ALTER TABLE ONLY library.t_employees
     ADD CONSTRAINT t_employees_fk_position FOREIGN KEY (fk_position) REFERENCES library.ref_positions(pk_id) ON UPDATE CASCADE ON DELETE RESTRICT;
-
-
---
--- TOC entry 2870 (class 2606 OID 1200371)
--- Name: t_employees t_employees_fk_user; Type: FK CONSTRAINT; Schema: library; Owner: -
---
-
-ALTER TABLE ONLY library.t_employees
-    ADD CONSTRAINT t_employees_fk_user FOREIGN KEY (fk_user) REFERENCES library.t_users(pk_id) ON UPDATE CASCADE ON DELETE RESTRICT;
 
 
 --
@@ -716,7 +707,16 @@ ALTER TABLE ONLY library.t_event
     ADD CONSTRAINT t_event_fk_event_types FOREIGN KEY (fk_event_type) REFERENCES library.ref_event_types(pk_id) ON UPDATE CASCADE ON DELETE RESTRICT;
 
 
--- Completed on 2020-10-09 17:28:24
+--
+-- TOC entry 2871 (class 2606 OID 1200393)
+-- Name: t_users t_users_fk_employee; Type: FK CONSTRAINT; Schema: library; Owner: -
+--
+
+ALTER TABLE ONLY library.t_users
+    ADD CONSTRAINT t_users_fk_employee FOREIGN KEY (fk_employee) REFERENCES library.t_employees(pk_id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+
+-- Completed on 2020-10-15 11:16:03
 
 --
 -- PostgreSQL database dump complete

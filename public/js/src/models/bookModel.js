@@ -18,16 +18,28 @@ class BookModel extends Model {
 
     // создание книги
     createBook(book) {
+        // преобразование года в дату
+        let date = new Date(book.year, 0)
+        book.year = new Date(date.getTime() - date.getTimezoneOffset() * 60000)
+
         return this.post('/book/create', book)
     }
 
     // изменение книги
     updateBook(book) {
+        // преобразование года в дату
+        let date = new Date(book.year, 0)
+        book.year = new Date(date.getTime() - date.getTimezoneOffset() * 60000)
+
         return this.post('/book/update', book)
     }
 
     // удаление книги
     deleteBook(book) {
+        // преобразование года в дату
+        let date = new Date(book.year, 0)
+        book.year = new Date(date.getTime() - date.getTimezoneOffset() * 60000)
+        
         return this.post('/book/delete', book)
     }
 }

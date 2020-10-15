@@ -1,5 +1,6 @@
 import EmployeeWindowView from "./EmployeeWindowView.js"
 import positionModel from "../../../models/positionModel.js"
+import employeeModel from "../../../models/employeeModel.js";
 
 // компонент окна для работы с сущностью сотрудника
 export class CEmployeeWindow {
@@ -28,18 +29,25 @@ export class CEmployeeWindow {
             windowCancelBtn: $$('employeeWindowCancelBtn'),
             windowConfirmBtn: $$('employeeWindowConfirmBtn'),
             form: $$('employeeWindowForm'),
-            formPosition: $$('employeeWindowFormPosition'),
+            formfields:  {
+                lastname: $$('employeeWindowFormLastname'),
+                firstname: $$('employeeWindowFormFirstname'),
+                middlename: $$('employeeWindowFormMiddlename'),
+                position: $$('employeeWindowFormPosition'),
+                phoneNumber: $$('employeeWindowFormPhoneNumber'),
+                email: $$('employeeWindowFormEmail'),
+            }
         }
 
         // подгрузка должностей
         positionModel.getPositions().then((positions) => {
             positions.map((position) => {
-                position.id = position.ID
+                position.id = position.name
                 position.value = position.name
             })
 
-            this.view.formPosition.define('options', positions)
-            this.view.formPosition.refresh()
+            this.view.formfields.position.define('options', positions)
+            this.view.formfields.position.refresh()
         })
 
         // обрабтка закрытия окна
@@ -100,7 +108,14 @@ export class CEmployeeWindow {
                 this.view.windowLabel.setHTML('Редактирование сотрудника')
                 break;
             case EMPLOYEE_WINDOW_TYPE.delete:
+                this.view.formfields.lastname.disable()
+                this.view.formfields.firstname.disable()
+                this.view.formfields.middlename.disable()
+                this.view.formfields.position.disable()
+                this.view.formfields.phoneNumber.disable()
+                this.view.formfields.email.disable()
                 this.view.windowLabel.setHTML('Удаление сотрудника')
+                this.view.window.resize()
                 break;
             default:
                 console.error('Неизвестный тип отображения окна для работы с сущностью сотрудника');

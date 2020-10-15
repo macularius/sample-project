@@ -24,7 +24,7 @@ func (dbt *PositionDBType) ToType() (p *entities.Position, err error) {
 }
 
 // FromType функция преобразования типа бд из типа сущности
-func (dbt *PositionDBType) FromType(p *entities.Position) (err error) {
+func (_ *PositionDBType) FromType(p *entities.Position) (dbt *PositionDBType, err error) {
 	dbt = &PositionDBType{
 		Pk_id:  p.ID,
 		C_name: p.Name,
@@ -55,7 +55,7 @@ func (m *MPosition) SelectAll() (pdbts []*PositionDBType, err error) {
 		SELECT
 			pk_id,
 			c_name
-		FROM "library".ref_position;	
+		FROM "library".ref_positions;	
 	`
 
 	// выполнение запроса
@@ -100,7 +100,7 @@ func (m *MPosition) PositionNameByID(id int64) (positionName string, err error) 
 	query = `
 		SELECT
 			c_name
-		FROM "library".ref_position
+		FROM "library".ref_positions
 		WHERE pk_id = $1;
 	`
 
@@ -133,7 +133,7 @@ func (m *MPosition) IDByPositionName(positionName string) (id int64, err error) 
 	query = `
 		SELECT
 			pk_id
-		FROM "library".ref_position
+		FROM "library".ref_positions
 		WHERE c_name = $1;
 	`
 

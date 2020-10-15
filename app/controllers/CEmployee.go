@@ -17,8 +17,8 @@ type CEmployee struct {
 	provider *employee_provider.PEmployee
 }
 
-// Before интерцептор контроллера CEmployee
-func (c *CEmployee) Before() (result revel.Result, rc CEmployee) {
+// Init интерцептор контроллера CEmployee
+func (c *CEmployee) Init() revel.Result {
 	var (
 		connector helpers.IDBConnector // экземпляр коннектора, для получения экземпляра соединения с бд
 		db        *sql.DB              // экземпляр соединения с бд
@@ -28,24 +28,24 @@ func (c *CEmployee) Before() (result revel.Result, rc CEmployee) {
 	// получение экземпляра соединения с бд
 	connector, err = helpers.GetConnector()
 	if err != nil {
-		revel.AppLog.Errorf("CEmployee.Before : connector.GetDBConnection, %s\n", err)
-		return
+		revel.AppLog.Errorf("CEmployee.Init : connector.GetDBConnection, %s\n", err)
+		return c.RenderJSON(Failed(err.Error()))
 	}
 	db, err = connector.GetDBConnection()
 	if err != nil {
-		revel.AppLog.Errorf("CEmployee.Before : connector.GetDBConnection, %s\n", err)
-		return
+		revel.AppLog.Errorf("CEmployee.Init : connector.GetDBConnection, %s\n", err)
+		return c.RenderJSON(Failed(err.Error()))
 	}
 
 	// инициализация провайдера
 	c.provider = new(employee_provider.PEmployee)
 	err = c.provider.Init(db)
 	if err != nil {
-		revel.AppLog.Errorf("CEmployee.Before : c.provider.Init, %s\n", err)
-		return
+		revel.AppLog.Errorf("CEmployee.Init : c.provider.Init, %s\n", err)
+		return c.RenderJSON(Failed(err.Error()))
 	}
 
-	return
+	return nil
 }
 
 // Destroy контроллера CEmployee
@@ -64,6 +64,7 @@ func (c *CEmployee) GetAll() revel.Result {
 		revel.AppLog.Errorf("CEmployee.GetAll : c.provider.GetEmployees, %s\n", err)
 		return c.RenderJSON(Failed(err.Error()))
 	}
+	revel.AppLog.Debugf("CEmployee.GetAll, employees: %v\n", employees)
 
 	// рендер положительного результата
 	return c.RenderJSON(Succes(employees))
@@ -102,6 +103,7 @@ func (c *CEmployee) Create() revel.Result {
 		revel.AppLog.Errorf("CEmployee.Create : c.provider.CreateEmployee, %s\n", err)
 		return c.RenderJSON(Failed(err.Error()))
 	}
+	revel.AppLog.Debugf("CEmployee.Create : c.provider.CreateEmployee, employee: %v\n", employee)
 
 	// рендер положительного результата
 	return c.RenderJSON(Succes(employee))
@@ -117,16 +119,17 @@ func (c *CEmployee) Update() revel.Result {
 	// формирование сущности для обновления из post параметров
 	employee, err = c.fetchPostEmployee()
 	if err != nil {
-		revel.AppLog.Errorf("CEmployee.Create : c.fetchPostEmployee, %s\n", err)
+		revel.AppLog.Errorf("CEmployee.Update : c.fetchPostEmployee, %s\n", err)
 		return c.RenderJSON(Failed(err.Error()))
 	}
 
 	// обновление сущности
 	employee, err = c.provider.UpdateEmployee(employee)
 	if err != nil {
-		revel.AppLog.Errorf("CEmployee.Create : c.provider.UpdateEmployee, %s\n", err)
+		revel.AppLog.Errorf("CEmployee.Update : c.provider.UpdateEmployee, %s\n", err)
 		return c.RenderJSON(Failed(err.Error()))
 	}
+	revel.AppLog.Debugf("CEmployee.Update : c.provider.UpdateEmployee, employee: %v\n", employee)
 
 	// рендер положительного результата
 	return c.RenderJSON(Succes(employee))
@@ -142,16 +145,17 @@ func (c *CEmployee) Delete() revel.Result {
 	// формирование сущности для удаления из post параметров
 	employee, err = c.fetchPostEmployee()
 	if err != nil {
-		revel.AppLog.Errorf("CEmployee.Create : c.fetchPostEmployee, %s\n", err)
+		revel.AppLog.Errorf("CEmployee.Delete : c.fetchPostEmployee, %s\n", err)
 		return c.RenderJSON(Failed(err.Error()))
 	}
 
 	// удаление сущности
 	err = c.provider.DeleteEmployee(employee)
 	if err != nil {
-		revel.AppLog.Errorf("CEmployee.Create : c.provider.DeleteEmployee, %s\n", err)
+		revel.AppLog.Errorf("CEmployee.Delete : c.provider.DeleteEmployee, %s\n", err)
 		return c.RenderJSON(Failed(err.Error()))
 	}
+	revel.AppLog.Debugf("CEmployee.Delete : c.provider.DeleteEmployee, employee: %v\n", employee)
 
 	// рендер положительного результата
 	return c.RenderJSON(Succes(nil))
@@ -176,6 +180,8 @@ func (c *CEmployee) fetchPostEmployee() (e *entities.Employee, err error) {
 		revel.AppLog.Errorf("CEmployee.fetchPostEmployee : json.Unmarshal, %s\n", err)
 		return
 	}
+
+	revel.AppLog.Debugf("CEmployee.fetchPostEmployee, employees: %v\n", e)
 
 	return
 }

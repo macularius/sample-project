@@ -17,8 +17,8 @@ type CBook struct {
 	provider *book_provider.PBook
 }
 
-// Before интерцептор контроллера CBook
-func (c *CBook) Before() (result revel.Result, rc CBook) {
+// Init интерцептор контроллера CBook
+func (c *CBook) Init() revel.Result {
 	var (
 		connector helpers.IDBConnector // экземпляр коннектора, для получения экземпляра соединения с бд
 		db        *sql.DB              // экземпляр соединения с бд
@@ -28,24 +28,24 @@ func (c *CBook) Before() (result revel.Result, rc CBook) {
 	// получение экземпляра соединения с бд
 	connector, err = helpers.GetConnector()
 	if err != nil {
-		revel.AppLog.Errorf("CBook.Before : connector.GetDBConnection, %s\n", err)
-		return
+		revel.AppLog.Errorf("CBook.Init : connector.GetDBConnection, %s\n", err)
+		return c.RenderJSON(Failed(err.Error()))
 	}
 	db, err = connector.GetDBConnection()
 	if err != nil {
-		revel.AppLog.Errorf("CBook.Before : connector.GetDBConnection, %s\n", err)
-		return
+		revel.AppLog.Errorf("CBook.Init : connector.GetDBConnection, %s\n", err)
+		return c.RenderJSON(Failed(err.Error()))
 	}
 
 	// инициализация провайдера
 	c.provider = new(book_provider.PBook)
 	err = c.provider.Init(db)
 	if err != nil {
-		revel.AppLog.Errorf("CBook.Before : c.provider.Init, %s\n", err)
-		return
+		revel.AppLog.Errorf("CBook.Init : c.provider.Init, %s\n", err)
+		return c.RenderJSON(Failed(err.Error()))
 	}
 
-	return
+	return nil
 }
 
 // Destroy контроллера CBook
@@ -64,6 +64,7 @@ func (c *CBook) GetAll() revel.Result {
 		revel.AppLog.Errorf("CBook.GetAll : c.provider.GetBooks, %s\n", err)
 		return c.RenderJSON(Failed(err.Error()))
 	}
+	revel.AppLog.Debugf("CBook.GetAll : c.provider.GetBooks, books: %+v\n", books)
 
 	// рендер положительного результата
 	return c.RenderJSON(Succes(books))
@@ -77,6 +78,7 @@ func (c *CBook) GetByID(id int64) revel.Result {
 		revel.AppLog.Errorf("CBook.GetByID : c.provider.GetBookByID, %s\n", err)
 		return c.RenderJSON(Failed(err.Error()))
 	}
+	revel.AppLog.Debugf("CBook.GetByID : c.provider.GetBookByID, book: %+v\n", book)
 
 	// рендер положительного результата
 	return c.RenderJSON(Succes(book))
@@ -102,6 +104,7 @@ func (c *CBook) Create() revel.Result {
 		revel.AppLog.Errorf("CBook.Create : c.provider.CreateBook, %s\n", err)
 		return c.RenderJSON(Failed(err.Error()))
 	}
+	revel.AppLog.Debugf("CBook.Create : c.provider.CreateBook, book: %+v\n", book)
 
 	// рендер положительного результата
 	return c.RenderJSON(Succes(book))
@@ -127,6 +130,7 @@ func (c *CBook) Update() revel.Result {
 		revel.AppLog.Errorf("CBook.Create : c.provider.UpdateBook, %s\n", err)
 		return c.RenderJSON(Failed(err.Error()))
 	}
+	revel.AppLog.Debugf("CBook.Update : c.provider.UpdateBook, book: %+v\n", book)
 
 	// рендер положительного результата
 	return c.RenderJSON(Succes(book))
@@ -152,6 +156,7 @@ func (c *CBook) Delete() revel.Result {
 		revel.AppLog.Errorf("CBook.Create : c.provider.DeleteBook, %s\n", err)
 		return c.RenderJSON(Failed(err.Error()))
 	}
+	revel.AppLog.Debugf("CBook.Delete : c.provider.DeleteBook, book: %+v\n", book)
 
 	// рендер положительного результата
 	return c.RenderJSON(Succes(nil))
@@ -176,6 +181,8 @@ func (c *CBook) fetchPostBook() (b *entities.Book, err error) {
 		revel.AppLog.Errorf("CBook.fetchPostBook : json.Unmarshal, %s\n", err)
 		return
 	}
+
+	revel.AppLog.Debugf("CBook.fetchPostBook, book: %+v\n", b)
 
 	return
 }

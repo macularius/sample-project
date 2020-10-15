@@ -12,7 +12,7 @@ import (
 type BookDBType struct {
 	Pk_id        int64      // идентификатор
 	Fk_status    int64      // статус книги
-	C_isbn       int64      // уникальный идентификатор книги
+	C_isbn       string     // уникальный идентификатор книги
 	C_name       string     // название книги
 	C_author     *string    // автор
 	C_publisher  *string    // издательство
@@ -36,7 +36,7 @@ func (dbt *BookDBType) ToType() (b *entities.Book, err error) {
 
 // FromType функция преобразования типа сущности к типу бд
 // допускается, что dbt is nil
-func (dbt *BookDBType) FromType(b entities.Book) (err error) {
+func (_ *BookDBType) FromType(b entities.Book) (dbt *BookDBType, err error) {
 	dbt = &BookDBType{
 		Pk_id:       b.ID,
 		C_isbn:      b.ISBN,
@@ -77,7 +77,8 @@ func (m *MBook) SelectAll() (bs []*BookDBType, err error) {
 			c_publisher,
 			c_year,
 			c_is_archive
-		FROM "library".t_books;
+		FROM "library".t_books
+		WHERE c_is_archive = 0;
 	`
 
 	// выполнение запроса
@@ -117,7 +118,6 @@ func (m *MBook) SelectByID(id int64) (b *BookDBType, err error) {
 		query string   // строка запроса
 		row   *sql.Row // выборка данных
 	)
-
 	b = new(BookDBType)
 
 	// запрос
@@ -132,7 +132,8 @@ func (m *MBook) SelectByID(id int64) (b *BookDBType, err error) {
 			c_year,
 			c_is_archive
 		FROM "library".t_books
-		WHERE pk_id = $1;
+		WHERE pk_id = $1 and
+			  c_is_archive = 0;
 	`
 
 	// выполнение запроса
@@ -160,6 +161,8 @@ func (m *MBook) Insert(book *BookDBType) (id int64, err error) {
 		row   *sql.Row // выборка данных
 	)
 
+	revel.AppLog.Debugf("MBook.Insert, book: %+v\n", book)
+
 	// запрос
 	query = `
 		INSERT INTO "library".t_books(
@@ -172,19 +175,19 @@ func (m *MBook) Insert(book *BookDBType) (id int64, err error) {
 			c_is_archive
 		)
 		values(
-			$1,	-- fk_status
-			$2,	-- c_name
-			$3,	-- c_isbn
-			$4,	-- c_author
-			$5,	-- c_publisher
-			$6,	-- c_year
-			$7	-- c_is_archive
+			1,	-- fk_status
+			$1,	-- c_name
+			$2,	-- c_isbn
+			$3,	-- c_author
+			$4,	-- c_publisher
+			$5,	-- c_year
+			$6	-- c_is_archive
 		)
 		returning pk_id;
 	`
 
 	// выполнение запроса
-	row = m.db.QueryRow(query, book.Fk_status, book.C_name, book.C_isbn, book.C_author, book.C_publisher, book.C_year, book.C_is_archive)
+	row = m.db.QueryRow(query, book.C_name, book.C_isbn, book.C_author, book.C_publisher, book.C_year, book.C_is_archive)
 
 	// считывание id
 	err = row.Scan(&id)
@@ -206,6 +209,8 @@ func (m *MBook) Update(book *BookDBType) (err error) {
 	var (
 		query string // строка запроса
 	)
+
+	revel.AppLog.Debugf("MBook.Update, book: %+v\n", book)
 
 	// запрос
 	query = `
@@ -240,6 +245,8 @@ func (m *MBook) Delete(book *BookDBType) (err error) {
 	var (
 		query string // строка запроса
 	)
+
+	revel.AppLog.Debugf("MBook.Delete, book: %+v\n", book)
 
 	// запрос
 	query = `

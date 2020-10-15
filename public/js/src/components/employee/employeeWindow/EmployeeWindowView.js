@@ -34,6 +34,7 @@ export default function EmployeeWindowView(type) {
             elements: [
                 {
                     view: 'text',
+                    id: 'employeeWindowFormLastname',
                     label: 'Фамилия',
                     name: 'lastname',
                     required: true,
@@ -41,6 +42,7 @@ export default function EmployeeWindowView(type) {
                 },
                 {
                     view: 'text',
+                    id: 'employeeWindowFormFirstname',
                     label: 'Имя',
                     name: 'firstname',
                     required: true,
@@ -48,6 +50,7 @@ export default function EmployeeWindowView(type) {
                 },
                 {
                     view: 'text',
+                    id: 'employeeWindowFormMiddlename',
                     label: 'Отчество',
                     name: 'middlename',
                     labelWidth: 150,
@@ -63,12 +66,14 @@ export default function EmployeeWindowView(type) {
                 },
                 {
                     view: 'text',
+                    id: 'employeeWindowFormPhoneNumber',
                     label: 'Телефонный номер',
-                    name: 'phoneNumber',
+                    name: 'phone_number',
                     labelWidth: 150,
                 },
                 {
                     view: 'text',
+                    id: 'employeeWindowFormEmail',
                     label: 'Электронная почта',
                     name: 'email',
                     labelWidth: 150,

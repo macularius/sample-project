@@ -34,6 +34,7 @@ export default function BookWindowView(type) {
             elements: [
                 {
                     view: 'text',
+                    id: 'bookWindowFormISBN',
                     label: 'ISBN',
                     name: 'ISBN',
                     required: true,
@@ -41,6 +42,7 @@ export default function BookWindowView(type) {
                 },
                 {
                     view: 'text',
+                    id: 'bookWindowFormName',
                     label: 'Название',
                     name: 'name',
                     required: true,
@@ -48,6 +50,7 @@ export default function BookWindowView(type) {
                 },
                 {
                     view: 'text',
+                    id: 'bookWindowFormAuthor',
                     label: 'Автор',
                     name: 'author',
                     required: true,
@@ -55,6 +58,7 @@ export default function BookWindowView(type) {
                 },
                 {
                     view: 'text',
+                    id: 'bookWindowFormPublisher',
                     label: 'Издательство',
                     name: 'publisher',
                     required: true,
@@ -62,13 +66,15 @@ export default function BookWindowView(type) {
                 },
                 {
                     view: 'text',
+                    id: 'bookWindowFormStatus',
                     label: 'Статус',
                     name: 'status',
-                    required: true,
+                    disabled: true,
                     labelWidth: 150,
                 },
                 {
                     view: 'text',
+                    id: 'bookWindowFormYear',
                     label: 'Год издания',
                     name: 'year',
                     required: true,

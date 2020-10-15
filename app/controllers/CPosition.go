@@ -14,8 +14,8 @@ type CPosition struct {
 	provider *position_provider.PPosition
 }
 
-// Before интерцептор контроллера CPosition
-func (c *CPosition) Before() (result revel.Result, rc CPosition) {
+// Init интерцептор контроллера CPosition
+func (c *CPosition) Init() revel.Result {
 	var (
 		connector helpers.IDBConnector // экземпляр коннектора, для получения экземпляра соединения с бд
 		db        *sql.DB              // экземпляр соединения с бд
@@ -25,24 +25,24 @@ func (c *CPosition) Before() (result revel.Result, rc CPosition) {
 	// получение экземпляра соединения с бд
 	connector, err = helpers.GetConnector()
 	if err != nil {
-		revel.AppLog.Errorf("CPosition.Before : connector.GetDBConnection, %s\n", err)
-		return
+		revel.AppLog.Errorf("CPosition.Init : connector.GetDBConnection, %s\n", err)
+		return c.RenderJSON(Failed(err.Error()))
 	}
 	db, err = connector.GetDBConnection()
 	if err != nil {
-		revel.AppLog.Errorf("CPosition.Before : connector.GetDBConnection, %s\n", err)
-		return
+		revel.AppLog.Errorf("CPosition.Init : connector.GetDBConnection, %s\n", err)
+		return c.RenderJSON(Failed(err.Error()))
 	}
 
 	// инициализация провайдера
 	c.provider = new(position_provider.PPosition)
 	err = c.provider.Init(db)
 	if err != nil {
-		revel.AppLog.Errorf("CPosition.Before : c.provider.Init, %s\n", err)
-		return
+		revel.AppLog.Errorf("CPosition.Init : c.provider.Init, %s\n", err)
+		return c.RenderJSON(Failed(err.Error()))
 	}
 
-	return
+	return nil
 }
 
 // Destroy контроллера CPosition
@@ -61,6 +61,7 @@ func (c *CPosition) GetAll() revel.Result {
 		revel.AppLog.Errorf("CPosition.GetAll : c.provider.GetPositions, %s\n", err)
 		return c.RenderJSON(Failed(err.Error()))
 	}
+	revel.AppLog.Debugf("CPosition.GetAll : c.provider.GetPositions, positions: %v\n", positions)
 
 	// рендер положительного результата
 	return c.RenderJSON(Succes(positions))

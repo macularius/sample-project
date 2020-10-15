@@ -33,7 +33,7 @@ func (p *PEmployee) GetEmployeeByID(id int64) (e *entities.Employee, err error) 
 		edbt *mappers.EmployeeDBType
 	)
 
-	// получение данных книг
+	// получение данных сотрудника
 	edbt, err = p.employeeMapper.SelectByID(id)
 	if err != nil {
 		revel.AppLog.Errorf("PEmployee.GetEmployeeByID : p.employeeMapper.SelectByID, %s\n", err)
@@ -99,7 +99,7 @@ func (p *PEmployee) CreateEmployee(employee *entities.Employee) (e *entities.Emp
 	)
 
 	// инициализация структур бд из струткур сущности
-	err = edbt.FromType(*employee)
+	edbt, err = edbt.FromType(*employee)
 	if err != nil {
 		revel.AppLog.Errorf("PEmployee.CreateEmployee : edbt.FromType, %s\n", err)
 		return
@@ -109,6 +109,13 @@ func (p *PEmployee) CreateEmployee(employee *entities.Employee) (e *entities.Emp
 	edbt.Fk_position, err = p.positionsMapper.IDByPositionName(employee.Position)
 	if err != nil {
 		revel.AppLog.Errorf("PEmployee.CreateEmployee : p.bookStatusMapper.IDByPositionName, %s\n", err)
+		return
+	}
+
+	// добавление сотрудника
+	employee.ID, err = p.employeeMapper.Insert(edbt)
+	if err != nil {
+		revel.AppLog.Errorf("PEmployee.CreateEmployee : p.employeeMapper.Create, %s\n", err)
 		return
 	}
 
@@ -122,7 +129,7 @@ func (p *PEmployee) UpdateEmployee(employee *entities.Employee) (e *entities.Emp
 	)
 
 	// инициализация структуры бд из струткуры сущности
-	err = edbt.FromType(*employee)
+	edbt, err = edbt.FromType(*employee)
 	if err != nil {
 		revel.AppLog.Errorf("PEmployee.UpdateEmployee : edbt.FromType, %s\n", err)
 		return
@@ -135,7 +142,7 @@ func (p *PEmployee) UpdateEmployee(employee *entities.Employee) (e *entities.Emp
 		return
 	}
 
-	// добавление сотрудника
+	// обновление сотрудника
 	err = p.employeeMapper.Update(edbt)
 	if err != nil {
 		revel.AppLog.Errorf("PEmployee.UpdateEmployee : p.employeeMapper.Update, %s\n", err)
@@ -152,7 +159,7 @@ func (p *PEmployee) DeleteEmployee(employee *entities.Employee) (err error) {
 	)
 
 	// инициализация структуры бд из струткуры сущности
-	err = edbt.FromType(*employee)
+	edbt, err = edbt.FromType(*employee)
 	if err != nil {
 		revel.AppLog.Errorf("PEmployee.DeleteEmployee : edbt.FromType, %s\n", err)
 		return

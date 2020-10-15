@@ -28,7 +28,7 @@ func (dbt *EventDBType) ToType() (e *entities.Event, err error) {
 }
 
 // FromType функция преобразования типа бд из типа сущности
-func (dbt *EventDBType) FromType(e *entities.Event) (err error) {
+func (_ *EventDBType) FromType(e *entities.Event) (dbt *EventDBType, err error) {
 	dbt = &EventDBType{
 		Pk_id:  e.ID,
 		C_date: e.Date,
@@ -202,6 +202,8 @@ func (m *MEvent) Insert(event *EventDBType) (id int64, err error) {
 		query string   // строка запроса
 		row   *sql.Row // выборка данных
 	)
+
+	revel.AppLog.Debugf("MEvent.Insert, event: %+v\n", event)
 
 	// запрос
 	query = `

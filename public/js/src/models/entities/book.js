@@ -10,3 +10,9 @@ export class Book {
         this.status = status
     }
 }
+
+// допустимые статусы книги
+export let BOOK_STATUS = {
+    available: 'доступна',
+    notAvailable: 'не доступна',
+}

@@ -15,7 +15,7 @@ export function EmployeeTabView() {
                     { id: 'firstname', header: ['Имя', { content: "textFilter" }], fillspace: true, },
                     { id: 'middlename', header: ['Отчество', { content: "textFilter" }], fillspace: true, },
                     { id: 'position', header: ['Должность', { content: "textFilter" }], fillspace: true, },
-                    { id: 'phoneNumber', header: ['Телефонный номер', { content: "textFilter" }], fillspace: true, },
+                    { id: 'phone_number', header: ['Телефонный номер', { content: "textFilter" }], fillspace: true, },
                     { id: 'email', header: ['Email', { content: "textFilter" }], fillspace: true, },
                 ],
                 data: [],

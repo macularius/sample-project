@@ -43,3 +43,8 @@ func (p *PUser) Validate(user *entities.User, password string) (flag bool, err e
 
 	return
 }
+
+// GetCurrentEmployee метод
+func (p *PUser) GetCurrentEmployee() (e *entities.Employee, err error) {
+	return
+}
