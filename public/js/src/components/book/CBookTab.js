@@ -121,9 +121,14 @@ export class CBookTab {
                     console.error('id of item is ', selected.ID)
                     return
                 }
-                bookModel.getBookByID(selected.ID).then((book) => {
+                bookModel.deleteBook(selected.ID).then((book) => {
                     // проверка наличия данных
                     if (!book) {
+                        return
+                    }
+                    // проверка выданности книги
+                    if (book.type === BOOK_STATUS.notAvailable) {
+                        webix.message('Нельзя удалить выданную книгу')
                         return
                     }
 

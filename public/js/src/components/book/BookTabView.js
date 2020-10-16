@@ -11,12 +11,12 @@ export function BookTabView() {
                 select: true,
                 columns: [
                     { id: 'ID', header: ['', { content: 'textFilter' }], hidden: true },
-                    { id: 'ISBN', header: ['ISBN', { content: 'textFilter' }], fillspace: true, },
+                    { id: 'ISBN', header: ['ISBN', { content: 'textFilter' }], width: 120, },
                     { id: 'name', header: ['Название', { content: 'textFilter' }], fillspace: true, },
                     { id: 'author', header: ['Автор', { content: 'textFilter' }], fillspace: true, },
                     { id: 'publisher', header: ['Издательство', { content: 'textFilter' }], fillspace: true, },
-                    { id: 'year', header: ['Год издания', { content: 'textFilter' }], fillspace: true, },
-                    { id: 'status', header: ['Статус', { content:'selectFilter' }], fillspace: true, },
+                    { id: 'year', header: ['Год издания', { content: 'textFilter' }], width: 80, },
+                    { id: 'status', header: ['Статус', { content:'selectFilter' }], width: 120, },
                 ],
                 data: [],
                 onContext: {

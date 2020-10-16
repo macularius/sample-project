@@ -13,8 +13,8 @@ export function JournalTabView() {
                     { id: 'ID', header: ['', { content: 'textFilter' }], hidden: true },
                     { id: 'bookString', header: ['Книга', { content: 'textFilter' }], fillspace: true, },
                     { id: 'employeeString', header: ['Сотрудник', { content: 'textFilter' }], fillspace: true, },
-                    { id: 'type', header: ['Тип события', { content:'selectFilter' }], fillspace: true, },
-                    { id: 'dateString', header: ['Дата события', { content: 'textFilter' }], fillspace: true, },
+                    { id: 'type', header: ['Тип события', { content:'selectFilter' }], width: 120, },
+                    { id: 'dateString', header: ['Дата события', { content: 'textFilter' }], width: 160, },
                 ],
                 data: [],
                 onContext: {
