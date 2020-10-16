@@ -28,7 +28,7 @@ export class CBookWindow {
             windowCancelBtn: $$('bookWindowCancelBtn'),
             windowConfirmBtn: $$('bookWindowConfirmBtn'),
             form: $$('bookWindowForm'),
-            formfields:  {
+            formfields: {
                 ISBN: $$('bookWindowFormISBN'),
                 name: $$('bookWindowFormName'),
                 author: $$('bookWindowFormAuthor'),
@@ -46,7 +46,7 @@ export class CBookWindow {
         // обработка события "принять"
         this.view.windowConfirmBtn.attachEvent('onItemClick', () => {
             // валидация введенных данных по обязательным полям
-            if (!this.view.form.validate()) {
+            if (!this.validate()) {
                 webix.message('Заполните поля отмеченные *', 'error')
                 return;
             }
@@ -129,6 +129,23 @@ export class CBookWindow {
     // метод размещения сущности в форме окна
     parse(values) {
         this.view.form.setValues(values)
+    }
+
+    // функция валидации формы
+    validate() {
+        let isValid = false
+
+        // удаление пробелов в полях формы
+        this.view.formfields.ISBN.setValue(this.view.formfields.ISBN.getValue().trim())
+        this.view.formfields.name.setValue(this.view.formfields.name.getValue().trim())
+        this.view.formfields.author.setValue(this.view.formfields.author.getValue().trim())
+        this.view.formfields.publisher.setValue(this.view.formfields.publisher.getValue().trim())
+        this.view.formfields.year.setValue(this.view.formfields.year.getValue().trim())
+
+        // валидация webix
+        isValid = this.view.form.validate()
+
+        return isValid
     }
 }
 

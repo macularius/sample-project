@@ -11,7 +11,7 @@ export class CEmployeeWindow {
     }
 
     // метод инициализации компонента
-    init(onChange) { 
+    init(onChange) {
         this.onChange = onChange
     }
 
@@ -29,7 +29,7 @@ export class CEmployeeWindow {
             windowCancelBtn: $$('employeeWindowCancelBtn'),
             windowConfirmBtn: $$('employeeWindowConfirmBtn'),
             form: $$('employeeWindowForm'),
-            formfields:  {
+            formfields: {
                 lastname: $$('employeeWindowFormLastname'),
                 firstname: $$('employeeWindowFormFirstname'),
                 middlename: $$('employeeWindowFormMiddlename'),
@@ -58,7 +58,7 @@ export class CEmployeeWindow {
         // обработка события "принять"
         this.view.windowConfirmBtn.attachEvent('onItemClick', () => {
             // валидация введенных данных по обязательным полям
-            if (!this.view.form.validate()) {
+            if (!this.validate()) {
                 webix.message('Заполните поля отмеченные *', 'error')
                 return;
             }
@@ -141,6 +141,23 @@ export class CEmployeeWindow {
     // метод размещения сущности в форме окна
     parse(values) {
         this.view.form.setValues(values)
+    }
+
+    // функция валидации формы
+    validate() {
+        let isValid = false
+
+        // удаление пробелов в полях формы
+        this.view.formfields.ISBN.setValue(this.view.formfields.ISBN.getValue().trim())
+        this.view.formfields.name.setValue(this.view.formfields.name.getValue().trim())
+        this.view.formfields.author.setValue(this.view.formfields.author.getValue().trim())
+        this.view.formfields.publisher.setValue(this.view.formfields.publisher.getValue().trim())
+        this.view.formfields.year.setValue(this.view.formfields.year.getValue().trim())
+
+        // валидация webix
+        isValid = this.view.form.validate()
+
+        return isValid
     }
 }
 
