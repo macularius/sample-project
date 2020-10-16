@@ -16,6 +16,9 @@ export default class Model {
                     webix.message(xhr.status + ': ' + xhr.statusText, 'error');
                     reject()
                 } else {
+                    if (!xhr.response) {
+                        return
+                    }
                     // валидация статуса ответа сервера
                     if (!xhr.response.status) {
                         webix.message('Не удалось совершить запрос', 'error');
@@ -61,6 +64,9 @@ export default class Model {
                     webix.message(xhr.status + ': ' + xhr.statusText, 'error');
                     reject()
                 } else {
+                    if (!xhr.response) {
+                        return
+                    }
                     // валидация статуса ответа сервера
                     if (!xhr.response.status) {
                         webix.message('Не удалось совершить запрос', 'error');

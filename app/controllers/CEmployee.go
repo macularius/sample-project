@@ -25,6 +25,12 @@ func (c *CEmployee) Init() revel.Result {
 		err       error                // ошибка в ходе выполнения функции
 	)
 
+	// Проверка авторизованности
+	authorize := c.Session.GetDefault("authorize", nil, false)
+	if !authorize.(bool) {
+		return c.Redirect((*CAuth).Login)
+	}
+
 	// получение экземпляра соединения с бд
 	connector, err = helpers.GetConnector()
 	if err != nil {
