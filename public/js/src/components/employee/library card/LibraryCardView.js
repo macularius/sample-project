@@ -1,4 +1,4 @@
-import { LIBRARY_CARD_CONTEXT_MENU } from "./ClibraryCard.js"
+import { LIBRARY_CARD_CONTEXT_MENU } from './ClibraryCard.js'
 
 // возвращает webix конфигурации таба для работы с событиями
 export function LibraryCardView() {
@@ -19,9 +19,9 @@ export function LibraryCardView() {
                     id: 'libraryCardDatatable',
                     select: true,
                     columns: [
-                        { id: 'ID', header: ['', { content: "textFilter" }], hidden: true },
-                        { id: 'ISBN', header: ['ISBN', { content: "textFilter" }], width: 140, },
-                        { id: 'name', header: ['Название', { content: "textFilter" }], fillspace: true, },
+                        { id: 'ID', header: ['', { content: 'textFilter' }], hidden: true },
+                        { id: 'ISBN', header: ['ISBN', { content: 'textFilter' }], width: 140, },
+                        { id: 'name', header: ['Название', { content: 'textFilter' }], fillspace: true, },
                     ],
                     data: [],
                     onContext: {
@@ -29,8 +29,8 @@ export function LibraryCardView() {
                         webix_view: function (e, id) {
                             id = this.locate(e.target || e.srcElement);
                             if (!id) {
-                                $$("libraryCardDatatableContextMenu").setContext({ obj: webix.$$(e) });
-                                $$("libraryCardDatatableContextMenu").show(e);
+                                $$('libraryCardDatatableContextMenu').setContext({ obj: webix.$$(e) });
+                                $$('libraryCardDatatableContextMenu').show(e);
                                 webix.html.preventEvent(e);
                             }
                         }

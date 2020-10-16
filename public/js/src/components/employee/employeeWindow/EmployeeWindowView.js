@@ -1,4 +1,4 @@
-import { EMPLOYEE_WINDOW_TYPE } from "./CEmployeeWindow.js";
+import { EMPLOYEE_WINDOW_TYPE } from './CEmployeeWindow.js';
 
 // возвращает webix конфигурации окна для работы с сущностью сотрудника
 export default function EmployeeWindowView(type) {

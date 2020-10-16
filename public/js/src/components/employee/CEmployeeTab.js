@@ -1,10 +1,10 @@
-import { EmployeeTabView, EmployeeTabContextMenu } from "./EmployeeTabView.js";
-import { CEmployeeWindow, EMPLOYEE_WINDOW_TYPE } from "./employeeWindow/CEmployeeWindow.js";
-import { Employee } from "../../models/entities/employee.js";
-import employeeModel from "../../models/employeeModel.js";
-import { CLibraryCard } from "./library card/ClibraryCard.js";
+import { EmployeeTabView, EmployeeTabContextMenu } from './EmployeeTabView.js';
+import { CEmployeeWindow, EMPLOYEE_WINDOW_TYPE } from './employeeWindow/CEmployeeWindow.js';
+import { Employee } from '../../models/entities/employee.js';
+import employeeModel from '../../models/employeeModel.js';
+import { CLibraryCard } from './library card/ClibraryCard.js';
 
-// класс таба "Сотрудники"
+// класс таба 'Сотрудники'
 export class CEmployeeTab {
     constructor() {
         this.view           // объект для быстрого доступа к представлениям

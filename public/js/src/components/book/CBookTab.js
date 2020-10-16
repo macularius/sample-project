@@ -1,11 +1,11 @@
-import { BookTabView, BookTabContextMenu } from "./BookTabView.js"
-import { CBookWindow, BOOK_WINDOW_TYPE } from "./bookWindow/CBookWindow.js"
-import bookModel from "../../models/bookModel.js"
-import eventModel from "../../models/eventModel.js"
-import employeeModel from "../../models/employeeModel.js"
-import { Book, BOOK_STATUS } from "../../models/entities/book.js"
+import { BookTabView, BookTabContextMenu } from './BookTabView.js'
+import { CBookWindow, BOOK_WINDOW_TYPE } from './bookWindow/CBookWindow.js'
+import bookModel from '../../models/bookModel.js'
+import eventModel from '../../models/eventModel.js'
+import employeeModel from '../../models/employeeModel.js'
+import { Book, BOOK_STATUS } from '../../models/entities/book.js'
 
-// класс таба "Книги"
+// класс таба 'Книги'
 export class CBookTab {
     constructor() {
         this.view        // объект для быстрого доступа к представлениям

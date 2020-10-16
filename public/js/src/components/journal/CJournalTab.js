@@ -1,8 +1,8 @@
-import { JournalTabView, EventTabContextMenu } from "./JournalTabView.js"
-import eventModel from "../../models/eventModel.js"
-import FormatDate from "../../../helpers/dateFormatter.js"
+import { JournalTabView, EventTabContextMenu } from './JournalTabView.js'
+import eventModel from '../../models/eventModel.js'
+import FormatDate from '../../../helpers/dateFormatter.js'
 
-// класс таба "Журнал событий"
+// класс таба 'Журнал событий'
 export class CJournalTab {
     constructor() {
         this.view       // объект для быстрого доступа к представлениям

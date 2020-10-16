@@ -1,4 +1,4 @@
-import Model from "../../helpers/model.js";
+import Model from '../../helpers/model.js';
 
 /// PositionModel объект для работы(CRUD) с данными
 class PositionModel extends Model {

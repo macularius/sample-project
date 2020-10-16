@@ -72,8 +72,8 @@ export class Application {
                 },
                 // содержимое табов
                 {
-                    view: "multiview",
-                    id: "main-views",
+                    view: 'multiview',
+                    id: 'main-views',
                     cells: [
                         this.bookTab.config(),
                         this.employeeTab.config(),

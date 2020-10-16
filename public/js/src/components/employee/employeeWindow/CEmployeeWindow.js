@@ -1,6 +1,6 @@
-import EmployeeWindowView from "./EmployeeWindowView.js"
-import positionModel from "../../../models/positionModel.js"
-import employeeModel from "../../../models/employeeModel.js";
+import EmployeeWindowView from './EmployeeWindowView.js'
+import positionModel from '../../../models/positionModel.js'
+import employeeModel from '../../../models/employeeModel.js';
 
 // компонент окна для работы с сущностью сотрудника
 export class CEmployeeWindow {
@@ -55,7 +55,7 @@ export class CEmployeeWindow {
             this.view.window.hide()
         })
 
-        // обработка события "принять"
+        // обработка события 'принять'
         this.view.windowConfirmBtn.attachEvent('onItemClick', () => {
             // валидация введенных данных по обязательным полям
             if (!this.validate()) {

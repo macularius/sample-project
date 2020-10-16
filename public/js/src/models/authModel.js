@@ -1,4 +1,4 @@
-import Model from "../../helpers/model.js";
+import Model from '../../helpers/model.js';
 
 // AuthModel объект для авторизации
 class AuthModel extends Model {

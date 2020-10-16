@@ -1,6 +1,6 @@
-import UserInfoView from "./UserInfoView.js"
-import { getCookie } from "../../../helpers/cookies.js"
-import authModel from "../../models/authModel.js"
+import UserInfoView from './UserInfoView.js'
+import { getCookie } from '../../../helpers/cookies.js'
+import authModel from '../../models/authModel.js'
 
 // класс компонента информации о пользователе
 export class CUserInfo {
@@ -28,7 +28,7 @@ export class CUserInfo {
             })
         }
 
-        // если удалось получить текущего сотрудника, то отображаем его данные, иначе "ждем загрузку данных"
+        // если удалось получить текущего сотрудника, то отображаем его данные, иначе 'ждем загрузку данных'
         return this.currentEmployee ? UserInfoView(`${employee.lastname} ${employee.firstname}`) : UserInfoView('загрузка...')
     }
 

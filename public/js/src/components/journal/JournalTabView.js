@@ -1,4 +1,4 @@
-import { EVENT_CONTEXT_MENU } from "./CJournalTab.js";
+import { EVENT_CONTEXT_MENU } from './CJournalTab.js';
 
 // возвращает webix конфигурации таба для работы с событиями
 export function JournalTabView() {
@@ -10,11 +10,11 @@ export function JournalTabView() {
                 id: 'eventTabDatatable',
                 select: true,
                 columns: [
-                    { id: 'ID', header: ['', { content: "textFilter" }], hidden: true },
-                    { id: 'bookString', header: ['Книга', { content: "textFilter" }], fillspace: true, },
-                    { id: 'employeeString', header: ['Сотрудник', { content: "textFilter" }], fillspace: true, },
-                    { id: 'type', header: ['Тип события', { content: "textFilter" }], fillspace: true, },
-                    { id: 'dateString', header: ['Дата события', { content: "textFilter" }], fillspace: true, },
+                    { id: 'ID', header: ['', { content: 'textFilter' }], hidden: true },
+                    { id: 'bookString', header: ['Книга', { content: 'textFilter' }], fillspace: true, },
+                    { id: 'employeeString', header: ['Сотрудник', { content: 'textFilter' }], fillspace: true, },
+                    { id: 'type', header: ['Тип события', { content:'selectFilter' }], fillspace: true, },
+                    { id: 'dateString', header: ['Дата события', { content: 'textFilter' }], fillspace: true, },
                 ],
                 data: [],
                 onContext: {
@@ -22,8 +22,8 @@ export function JournalTabView() {
                     webix_view: function (e, id) {
                         id = this.locate(e.target || e.srcElement);
                         if (!id) {
-                            $$("eventTabDatatableContextMenu").setContext({ obj: webix.$$(e) });
-                            $$("eventTabDatatableContextMenu").show(e);
+                            $$('eventTabDatatableContextMenu').setContext({ obj: webix.$$(e) });
+                            $$('eventTabDatatableContextMenu').show(e);
                             webix.html.preventEvent(e);
                         }
                     }

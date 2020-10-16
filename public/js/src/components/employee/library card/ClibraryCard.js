@@ -1,8 +1,8 @@
-import { LibraryCardContextMenu, LibraryCardView } from "./LibraryCardView.js"
-import employeeModel from "../../../models/employeeModel.js"
-import eventModel from "../../../models/eventModel.js"
+import { LibraryCardContextMenu, LibraryCardView } from './LibraryCardView.js'
+import employeeModel from '../../../models/employeeModel.js'
+import eventModel from '../../../models/eventModel.js'
 
-// класс окна "Читательский билет"
+// класс окна 'Читательский билет'
 export class CLibraryCard {
     constructor() {
         this.view           // объект для быстрого доступа к представлениям
@@ -180,7 +180,7 @@ export class CLibraryCard {
     showProgress() {
         this.view.window.disable()
         this.view.window.showProgress({
-            type: "icon",
+            type: 'icon',
             hide: true
         })
     }

@@ -1,7 +1,7 @@
-import Model from "../../helpers/model.js";
-import { Book } from "./entities/book.js";
-import { Employee } from "./entities/employee.js";
-import { Event, EVENT_TYPE } from "./entities/event.js";
+import Model from '../../helpers/model.js';
+import { Book } from './entities/book.js';
+import { Employee } from './entities/employee.js';
+import { Event, EVENT_TYPE } from './entities/event.js';
 
 /// EventModel объект для работы(CRUD) с данными
 class EventModel extends Model {

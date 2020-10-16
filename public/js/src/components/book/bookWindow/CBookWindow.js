@@ -1,5 +1,5 @@
-import BookWindowView from "./BookWindowView.js"
-import bookModel from "./../../../models/bookModel.js"
+import BookWindowView from './BookWindowView.js'
+import bookModel from './../../../models/bookModel.js'
 
 // компонент окна для работы с сущностью книги
 export class CBookWindow {
@@ -43,7 +43,7 @@ export class CBookWindow {
             this.view.window.hide()
         })
 
-        // обработка события "принять"
+        // обработка события 'принять'
         this.view.windowConfirmBtn.attachEvent('onItemClick', () => {
             // валидация введенных данных по обязательным полям
             if (!this.validate()) {

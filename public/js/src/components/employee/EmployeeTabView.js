@@ -1,4 +1,4 @@
-import { EMPLOYEE_CONTEXT_MENU } from "./CEmployeeTab.js"
+import { EMPLOYEE_CONTEXT_MENU } from './CEmployeeTab.js'
 
 // возвращает webix конфигурации таба для работы с сотрудникамиы
 export function EmployeeTabView() {
@@ -10,13 +10,13 @@ export function EmployeeTabView() {
                 id: 'employeeTabDatatable',
                 select: true,
                 columns: [
-                    { id: 'ID', header: ['', { content: "textFilter" }], hidden: true },
-                    { id: 'lastname', header: ['Фамилия', { content: "textFilter" }], fillspace: true, },
-                    { id: 'firstname', header: ['Имя', { content: "textFilter" }], fillspace: true, },
-                    { id: 'middlename', header: ['Отчество', { content: "textFilter" }], fillspace: true, },
-                    { id: 'position', header: ['Должность', { content: "textFilter" }], fillspace: true, },
-                    { id: 'phone_number', header: ['Телефонный номер', { content: "textFilter" }], fillspace: true, },
-                    { id: 'email', header: ['Email', { content: "textFilter" }], fillspace: true, },
+                    { id: 'ID', header: ['', { content: 'textFilter' }], hidden: true },
+                    { id: 'lastname', header: ['Фамилия', { content: 'textFilter' }], fillspace: true, },
+                    { id: 'firstname', header: ['Имя', { content: 'textFilter' }], fillspace: true, },
+                    { id: 'middlename', header: ['Отчество', { content: 'textFilter' }], fillspace: true, },
+                    { id: 'position', header: ['Должность', { content:'selectFilter' }], fillspace: true, },
+                    { id: 'phone_number', header: ['Телефонный номер', { content: 'textFilter' }], fillspace: true, },
+                    { id: 'email', header: ['Email', { content: 'textFilter' }], fillspace: true, },
                 ],
                 data: [],
                 onContext: {
@@ -24,8 +24,8 @@ export function EmployeeTabView() {
                     webix_view: function (e, id) {
                         id = this.locate(e.target || e.srcElement);
                         if (!id) {
-                            $$("employeeTabDatatableContextMenu").setContext({ obj: webix.$$(e) });
-                            $$("employeeTabDatatableContextMenu").show(e);
+                            $$('employeeTabDatatableContextMenu').setContext({ obj: webix.$$(e) });
+                            $$('employeeTabDatatableContextMenu').show(e);
                             webix.html.preventEvent(e);
                         }
                     }

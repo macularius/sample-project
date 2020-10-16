@@ -1,4 +1,4 @@
-import { BOOK_CONTEXT_MENU } from "./CBookTab.js";
+import { BOOK_CONTEXT_MENU } from './CBookTab.js';
 
 // возвращает webix конфигурацию таба для работы с книгами
 export function BookTabView() {
@@ -10,13 +10,13 @@ export function BookTabView() {
                 id: 'bookTabDatatable',
                 select: true,
                 columns: [
-                    { id: 'ID', header: ['', { content: "textFilter" }], hidden: true },
-                    { id: 'ISBN', header: ['ISBN', { content: "textFilter" }], fillspace: true, },
-                    { id: 'name', header: ['Название', { content: "textFilter" }], fillspace: true, },
-                    { id: 'author', header: ['Автор', { content: "textFilter" }], fillspace: true, },
-                    { id: 'publisher', header: ['Издательство', { content: "textFilter" }], fillspace: true, },
-                    { id: 'year', header: ['Год издания', { content: "textFilter" }], fillspace: true, },
-                    { id: 'status', header: ['Статус', { content: "textFilter" }], fillspace: true, },
+                    { id: 'ID', header: ['', { content: 'textFilter' }], hidden: true },
+                    { id: 'ISBN', header: ['ISBN', { content: 'textFilter' }], fillspace: true, },
+                    { id: 'name', header: ['Название', { content: 'textFilter' }], fillspace: true, },
+                    { id: 'author', header: ['Автор', { content: 'textFilter' }], fillspace: true, },
+                    { id: 'publisher', header: ['Издательство', { content: 'textFilter' }], fillspace: true, },
+                    { id: 'year', header: ['Год издания', { content: 'textFilter' }], fillspace: true, },
+                    { id: 'status', header: ['Статус', { content:'selectFilter' }], fillspace: true, },
                 ],
                 data: [],
                 onContext: {
@@ -24,8 +24,8 @@ export function BookTabView() {
                     webix_view: function (e, id) {
                         id = this.locate(e.target || e.srcElement);
                         if (!id) {
-                            $$("bookTabDatatableContextMenu").setContext({ obj: webix.$$(e) });
-                            $$("bookTabDatatableContextMenu").show(e);
+                            $$('bookTabDatatableContextMenu').setContext({ obj: webix.$$(e) });
+                            $$('bookTabDatatableContextMenu').show(e);
                             webix.html.preventEvent(e);
                         }
                     }

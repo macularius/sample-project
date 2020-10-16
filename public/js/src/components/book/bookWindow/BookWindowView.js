@@ -26,7 +26,7 @@ export default function BookWindowView(type) {
             css: 'webix_template'
         },
         modal: true,
-        position: "center",
+        position: 'center',
         width: 400,
         body: {
             view: 'form',
