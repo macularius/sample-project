@@ -137,10 +137,17 @@ export class CBookWindow {
 
         // удаление пробелов в полях формы
         this.view.formfields.ISBN.setValue(this.view.formfields.ISBN.getValue().trim())
+        this.view.formfields.ISBN.setValue(this.view.formfields.ISBN.getValue().replace(/-/g, ''))
         this.view.formfields.name.setValue(this.view.formfields.name.getValue().trim())
         this.view.formfields.author.setValue(this.view.formfields.author.getValue().trim())
         this.view.formfields.publisher.setValue(this.view.formfields.publisher.getValue().trim())
         this.view.formfields.year.setValue(this.view.formfields.year.getValue().trim())
+
+        // проверка длины isbn
+        if (this.view.formfields.ISBN.getValue().length > 13) {
+            webix.message('ISBN не может превышать 13 символов', 'error')
+            return
+        }
 
         // валидация webix
         isValid = this.view.form.validate()

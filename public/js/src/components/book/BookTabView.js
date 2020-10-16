@@ -11,7 +11,7 @@ export function BookTabView() {
                 select: true,
                 columns: [
                     { id: 'ID', header: ['', { content: 'textFilter' }], hidden: true },
-                    { id: 'ISBN', header: ['ISBN', { content: 'textFilter' }], width: 120, },
+                    { id: 'ISBN', header: ['ISBN', { content: 'textFilter' }], width: 140, },
                     { id: 'name', header: ['Название', { content: 'textFilter' }], fillspace: true, },
                     { id: 'author', header: ['Автор', { content: 'textFilter' }], fillspace: true, },
                     { id: 'publisher', header: ['Издательство', { content: 'textFilter' }], fillspace: true, },
