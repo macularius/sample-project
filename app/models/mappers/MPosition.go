@@ -55,7 +55,8 @@ func (m *MPosition) SelectAll() (pdbts []*PositionDBType, err error) {
 		SELECT
 			pk_id,
 			c_name
-		FROM "library".ref_positions;	
+		FROM "library".ref_positions
+		ORDER BY pk_id;	
 	`
 
 	// выполнение запроса
@@ -101,7 +102,8 @@ func (m *MPosition) PositionNameByID(id int64) (positionName string, err error) 
 		SELECT
 			c_name
 		FROM "library".ref_positions
-		WHERE pk_id = $1;
+		WHERE pk_id = $1
+		ORDER BY pk_id;
 	`
 
 	// выполнение запроса
@@ -134,7 +136,8 @@ func (m *MPosition) IDByPositionName(positionName string) (id int64, err error) 
 		SELECT
 			pk_id
 		FROM "library".ref_positions
-		WHERE c_name = $1;
+		WHERE c_name = $1
+		ORDER BY pk_id;
 	`
 
 	// выполнение запроса

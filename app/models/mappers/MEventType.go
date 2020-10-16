@@ -30,7 +30,8 @@ func (m *MEventType) EventByID(id int64) (eventType string, err error) {
 		SELECT
 			c_value
 		FROM "library".ref_event_types
-		WHERE pk_id = $1;
+		WHERE pk_id = $1
+		ORDER BY pk_id;
 	`
 
 	// выполнение запроса
@@ -63,7 +64,8 @@ func (m *MEventType) IDByEventType(eventType string) (id int64, err error) {
 		SELECT
 			pk_id
 		FROM "library".ref_event_types
-		WHERE c_value = $1;
+		WHERE c_value = $1
+		ORDER BY pk_id;
 	`
 
 	// выполнение запроса

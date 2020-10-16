@@ -76,7 +76,8 @@ func (m *MEmployee) SelectAll() (es []*EmployeeDBType, err error) {
 			c_phone_number,
 			c_email
 		FROM "library".t_employees
-		WHERE c_is_archive = 0;
+		WHERE c_is_archive = 0
+		ORDER BY pk_id;
 	`
 
 	// выполнение запроса
@@ -139,7 +140,8 @@ func (m *MEmployee) SelectByID(id int64) (e *EmployeeDBType, err error) {
 			c_email
 		FROM "library".t_employees
 		WHERE pk_id = $1 and
-			  c_is_archive = 0;
+			c_is_archive = 0
+			ORDER BY pk_id;
 	`
 
 	// выполнение запроса

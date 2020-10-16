@@ -37,7 +37,8 @@ func (m *MLibraryCard) GetLibraryCardForEmployee(id int64) (bs []*BookDBType, er
 		FROM "library".t_books b, "library".toc_books_employees toc 
 		WHERE b.c_is_archive = 0 and 
 			b.pk_id  = toc.fk_book and
-			toc.fk_employee = $1;
+			toc.fk_employee = $1
+		ORDER BY pk_id;
 	`
 
 	// выполнение запроса

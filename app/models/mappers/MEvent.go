@@ -62,7 +62,8 @@ func (m *MEvent) SelectAll() (edbts []*EventDBType, err error) {
 			fk_employee,
 			fk_event_type,
 			c_date
-		FROM "library".t_event;	
+		FROM "library".t_event
+		ORDER BY pk_id;	
 	`
 
 	// выполнение запроса
@@ -112,7 +113,8 @@ func (m *MEvent) SelectByBookID(id int64) (edbts []*EventDBType, err error) {
 			fk_event_type,
 			c_date
 		FROM "library".t_event
-		WHERE fk_book = $1;
+		WHERE fk_book = $1
+		ORDER BY pk_id;
 	`
 
 	// выполнение запроса
@@ -162,7 +164,8 @@ func (m *MEvent) SelectByEmployeeID(id int64) (edbts []*EventDBType, err error) 
 			fk_event_type,
 			c_date
 		FROM "library".t_event
-		WHERE fk_employee = $1;
+		WHERE fk_employee = $1
+		ORDER BY pk_id;
 	`
 
 	// выполнение запроса
@@ -263,7 +266,8 @@ func (m *MEvent) SelectLastGiveEventByBookID(id int64) (edbt *EventDBType, err e
 		FROM "library".t_event e
 		WHERE fk_book = $1 and
 			e.fk_event_type = 1
-		GROUP BY e.pk_id, e.fk_book, e.fk_employee, e.fk_event_type;
+		GROUP BY e.pk_id, e.fk_book, e.fk_employee, e.fk_event_type
+		ORDER BY pk_id;
 	`
 
 	// выполнение запроса

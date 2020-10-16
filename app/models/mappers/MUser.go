@@ -96,7 +96,8 @@ func (m *MUser) SelectUserByID(id int64) (u *UserDBType, err error) {
 			pk_id,
 			c_login
 		FROM "library".t_users
-		WHERE pk_id = $1;
+		WHERE pk_id = $1
+		ORDER BY pk_id;
 	`
 
 	// выполнение запроса
@@ -132,7 +133,8 @@ func (m *MUser) SelectUserByLogin(login string) (u *UserDBType, err error) {
 			pk_id,
 			c_login
 		FROM "library".t_users
-		WHERE c_login = $1;
+		WHERE c_login = $1
+		ORDER BY pk_id;
 	`
 
 	// выполнение запроса
@@ -169,7 +171,8 @@ func (m *MUser) CheckPassword(user *UserDBType, password string) (f bool, err er
 		WHERE
 			pk_id = $1 and
 			c_login = $2 and
-			c_password = $3;
+			c_password = $3
+		ORDER BY pk_id;
 	`
 
 	// выполнение запроса

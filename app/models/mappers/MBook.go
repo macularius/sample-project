@@ -78,7 +78,8 @@ func (m *MBook) SelectAll() (bs []*BookDBType, err error) {
 			c_year,
 			c_is_archive
 		FROM "library".t_books
-		WHERE c_is_archive = 0;
+		WHERE c_is_archive = 0
+		ORDER BY pk_id;
 	`
 
 	// выполнение запроса
@@ -133,7 +134,8 @@ func (m *MBook) SelectByID(id int64) (b *BookDBType, err error) {
 			c_is_archive
 		FROM "library".t_books
 		WHERE pk_id = $1 and
-			  c_is_archive = 0;
+			c_is_archive = 0
+		ORDER BY pk_id;
 	`
 
 	// выполнение запроса
