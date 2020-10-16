@@ -23,8 +23,8 @@ func Succes(data interface{}) (response ServerResponse) {
 	response.Status = RESPONSE_STATUS_SUCCESS
 	response.Data = data
 
-	revel.AppLog.Debugf("Succes, data: %+v\n", data)
 	revel.AppLog.Debugf("Succes, response: %+v\n", response)
+	revel.AppLog.Debugf("Succes, data: %+v\n", data)
 
 	return response
 }
@@ -34,8 +34,8 @@ func Failed(err string) (response ServerResponse) {
 	response.Status = RESPONSE_STATUS_FAILED
 	response.ErrorMessage = err
 
-	revel.AppLog.Debugf("Failed, ErrorMessage: %+v\n", err)
 	revel.AppLog.Debugf("Failed, response: %+v\n", response)
+	revel.AppLog.Debugf("Failed, ErrorMessage: %+v\n", err)
 
 	return response
 }

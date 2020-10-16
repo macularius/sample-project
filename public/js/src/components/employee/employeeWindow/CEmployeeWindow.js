@@ -133,8 +133,6 @@ export class CEmployeeWindow {
 
     // метод получения сущности из формы окна
     fetch() {
-        console.log(this.view.form.getValues());
-
         return this.view.form.getValues()
     }
 

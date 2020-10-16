@@ -70,7 +70,7 @@ func (c *CEmployee) GetAll() revel.Result {
 		revel.AppLog.Errorf("CEmployee.GetAll : c.provider.GetEmployees, %s\n", err)
 		return c.RenderJSON(Failed(err.Error()))
 	}
-	revel.AppLog.Debugf("CEmployee.GetAll, employees: %v\n", employees)
+	revel.AppLog.Debugf("CEmployee.GetAll, employees: %+v\n", employees)
 
 	// рендер положительного результата
 	return c.RenderJSON(Succes(employees))

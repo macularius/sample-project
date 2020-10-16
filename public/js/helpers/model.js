@@ -2,15 +2,11 @@
 export default class Model {
     // метод для совершения get запроса
     get(url) {
-        console.log('GET')
-
         return new Promise(function (resolve, reject) {
             let xhr = new XMLHttpRequest();
             xhr.open('GET', url);
             xhr.responseType = 'json'
             xhr.onload = () => {
-                console.log(xhr.response)
-
                 // проверка статуса HTTP запроса
                 if (xhr.status != 200) {
                     webix.message(xhr.status + ': ' + xhr.statusText, 'error');
@@ -50,15 +46,11 @@ export default class Model {
 
     // метод для совершения post запроса
     post(url, params) {
-        console.log('POST', params)
-
         return new Promise(function (resolve, reject) {
             let xhr = new XMLHttpRequest();
             xhr.open('POST', url);
             xhr.responseType = 'json'
             xhr.onload = () => {
-                console.log(xhr.response)
-
                 // проверка статуса HTTP запроса
                 if (xhr.status !== 200) {
                     webix.message(xhr.status + ': ' + xhr.statusText, 'error');
