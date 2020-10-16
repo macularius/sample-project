@@ -18,11 +18,12 @@ var (
 
 // PEvent провайдер контроллера событий
 type PEvent struct {
-	eventMapper      *mappers.MEvent
-	eventTypeMapper  *mappers.MEventType
-	employeeMapper   *mappers.MEmployee
-	bookMapper       *mappers.MBook
-	bookStatusMapper *mappers.MBookStatus
+	eventMapper       *mappers.MEvent
+	eventTypeMapper   *mappers.MEventType
+	employeeMapper    *mappers.MEmployee
+	bookMapper        *mappers.MBook
+	libraryCardMapper *mappers.MLibraryCard
+	bookStatusMapper  *mappers.MBookStatus
 }
 
 // Init
@@ -47,6 +48,10 @@ func (p *PEvent) Init(db *sql.DB) (err error) {
 	p.bookStatusMapper = new(mappers.MBookStatus)
 	p.bookStatusMapper.Init(db)
 
+	// инициализация маппера читательского билета
+	p.libraryCardMapper = new(mappers.MLibraryCard)
+	p.libraryCardMapper.Init(db)
+
 	return
 }
 
@@ -68,47 +73,35 @@ func (p *PEvent) Create(event *entities.Event) (e *entities.Event, err error) {
 		return
 	}
 
+	// валидация книги
+	if event.Book == nil {
+		err = ErrBookIsNotExist
+		revel.AppLog.Errorf("PEvent.Create, %s\n", err)
+		return
+	}
+	edbt.Fk_book = event.Book.ID
+
+	// валидация сотрудника
+	if event.Employee == nil {
+		err = ErrEmployeeIsNotExist
+		revel.AppLog.Errorf("PEvent.Create, %s\n", err)
+		return
+	}
+	edbt.Fk_employee = event.Employee.ID
+
+	// фиксация времени
+	t := time.Now()
+	edbt.C_date = &t
+
 	// определение типа события
 	switch event.Type {
 	case string(entities.EVENT_TYPE_GIVE):
-		// валидация книги
-		if event.Book == nil {
-			err = ErrBookIsNotExist
-			revel.AppLog.Errorf("PEvent.Create, %s\n", err)
-			return
-		}
-		edbt.Fk_book = event.Book.ID
-
-		// валидация сотрудника
-		if event.Employee == nil {
-			err = ErrEmployeeIsNotExist
-			revel.AppLog.Errorf("PEvent.Create, %s\n", err)
-			return
-		}
-		edbt.Fk_employee = event.Employee.ID
-
-		// фиксация времени
-		t := time.Now()
-		edbt.C_date = &t
-
 		e, err = p.createGiveEvent(edbt)
 		if err != nil {
 			revel.AppLog.Errorf("PEvent.Create : p.createGiveEvent, %s\n", err)
 			return
 		}
 	case string(entities.EVENT_TYPE_TAKE):
-		// валидация книги
-		if event.Book == nil {
-			err = ErrBookIsNotExist
-			revel.AppLog.Errorf("PEvent.Create, %s\n", err)
-			return
-		}
-		edbt.Fk_book = event.Book.ID
-
-		// фиксация времени
-		t := time.Now()
-		edbt.C_date = &t
-
 		e, err = p.createTakeEvent(edbt)
 		if err != nil {
 			revel.AppLog.Errorf("PEvent.Create : p.createTakeEven, %s\n", err)
@@ -155,6 +148,13 @@ func (p *PEvent) createGiveEvent(edbt *mappers.EventDBType) (e *entities.Event, 
 	empdbt, err = p.employeeMapper.SelectByID(edbt.Fk_employee)
 	if err != nil {
 		revel.AppLog.Errorf("PEvent.createTakeEvent : p.employeeMapper.SelectByID, %s\n", err)
+		return
+	}
+
+	// добавление книги в читательский билет сотрудника
+	err = p.libraryCardMapper.AddToCard(bdbt.Pk_id, empdbt.Pk_id)
+	if err != nil {
+		revel.AppLog.Errorf("PEvent.createTakeEvent : p.libraryCardMapper.AddToCard, %s\n", err)
 		return
 	}
 
@@ -214,6 +214,13 @@ func (p *PEvent) createTakeEvent(edbt *mappers.EventDBType) (e *entities.Event, 
 	empdbt, err = p.employeeMapper.SelectByID(edbt.Fk_employee)
 	if err != nil {
 		revel.AppLog.Errorf("PEvent.Create : p.employeeMapper.SelectByID, %s\n", err)
+		return
+	}
+
+	// удаление книги из читательского билета сотрудника
+	err = p.libraryCardMapper.RemoveFromCard(bdbt.Pk_id, empdbt.Pk_id)
+	if err != nil {
+		revel.AppLog.Errorf("PEvent.createTakeEvent : p.libraryCardMapper.RemoveFromCard, %s\n", err)
 		return
 	}
 
@@ -333,6 +340,11 @@ func (p *PEvent) GetEvents() (es []*entities.Event, err error) {
 			revel.AppLog.Errorf("PEvent.GetEvents : edbt.ToType, %s\n", err)
 			return
 		}
+		e.Type, err = p.eventTypeMapper.EventByID(edbt.Fk_type)
+		if err != nil {
+			revel.AppLog.Errorf("PEvent.GetEvents : p.eventTypeMapper.EventByID, %s\n", err)
+			return
+		}
 
 		// преобразование книги к типу сущности
 		e.Book = new(entities.Book)
@@ -356,6 +368,71 @@ func (p *PEvent) GetEvents() (es []*entities.Event, err error) {
 		}
 
 		es = append(es, e)
+	}
+
+	return
+}
+
+// GetLastForBook метод получения последнего события выдачи по id книги
+func (p *PEvent) GetLastForBook(id int64) (e *entities.Event, err error) {
+	var (
+		edbt   *mappers.EventDBType
+		bdbt   *mappers.BookDBType
+		empdbt *mappers.EmployeeDBType
+	)
+
+	// получение данных событий
+	edbt, err = p.eventMapper.SelectLastGiveEventByBookID(id)
+	if err != nil {
+		revel.AppLog.Errorf("PEvent.GetEvents : p.eventMapper.SelectByBookID, %s\n", err)
+		return
+	}
+
+	// получение данных книги
+	bdbt, err = p.bookMapper.SelectByID(edbt.Fk_book)
+	if err != nil {
+		revel.AppLog.Errorf("PEvent.GetLastForBook : p.bookMapper.SelectByID, %s\n", err)
+		return
+	}
+
+	// получение данных сотрудника
+	empdbt, err = p.employeeMapper.SelectByID(edbt.Fk_employee)
+	if err != nil {
+		revel.AppLog.Errorf("PEmployee.GetLastForBook : p.employeeMapper.SelectByID, %s\n", err)
+		return
+	}
+
+	// преобразование к типу сущности
+	e, err = edbt.ToType()
+	if err != nil {
+		revel.AppLog.Errorf("PEvent.GetLastForBook : edbt.ToType, %s\n", err)
+		return
+	}
+	e.Type, err = p.eventTypeMapper.EventByID(edbt.Fk_type)
+	if err != nil {
+		revel.AppLog.Errorf("PEvent.GetLastForBook : p.eventTypeMapper.EventByID, %s\n", err)
+		return
+	}
+
+	// преобразование книги к типу сущности
+	e.Book = new(entities.Book)
+	e.Book, err = bdbt.ToType()
+	if err != nil {
+		revel.AppLog.Errorf("PEvent.GetLastForBook : bdbt.ToType, %s\n", err)
+		return
+	}
+	e.Book.Status, err = p.bookStatusMapper.StatusByID(bdbt.Fk_status)
+	if err != nil {
+		revel.AppLog.Errorf("PEvent.GetLastForBook : p.bookStatusMapper.StatusByID, %s\n", err)
+		return
+	}
+
+	// преобразование сотрудника к типу сущности
+	e.Employee = new(entities.Employee)
+	e.Employee, err = empdbt.ToType()
+	if err != nil {
+		revel.AppLog.Errorf("PEvent.GetLastForBook : empdbt.ToType, %s\n", err)
+		return
 	}
 
 	return

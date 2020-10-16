@@ -39,7 +39,7 @@ export function LibraryCardView() {
                 {
                     view: 'button',
                     id: 'libraryCardwCancelBtn',
-                    value: 'Отмена',
+                    value: 'Закрыть',
                 },
                 {
                     height: 10,

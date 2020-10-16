@@ -1,14 +1,20 @@
 import { LibraryCardContextMenu, LibraryCardView } from "./LibraryCardView.js"
-import bookModel from "../../../models/bookModel.js"
+import employeeModel from "../../../models/employeeModel.js"
+import eventModel from "../../../models/eventModel.js"
 
 // класс окна "Читательский билет"
 export class CLibraryCard {
     constructor() {
-        this.view       // объект для быстрого доступа к представлениям
+        this.view           // объект для быстрого доступа к представлениям
+        this.employee       // сотрудник, для которого тображен читательский билет
+        this.updateEventsDatatable    // функция обновления таблицы событий
+        this.updateBooksDatatable    // функция обновления таблицы книг
     }
 
     // метод инициализации компонента
-    init(toBook, toEvent) {
+    init(toBook, toEvent, updateEventsDatatable, updateBooksDatatable) {
+        this.updateEventsDatatable = updateEventsDatatable // функция обновления таблицы событий
+        this.updateBooksDatatable = updateBooksDatatable // функция обновления таблицы книг
         this.toBook = toBook // функция перехода к книге, возвращает ссылку на CBookTab
         this.toEvent = toEvent // функция перехода к событию, возвращает ссылку на CJournalTab 
     }
@@ -17,7 +23,7 @@ export class CLibraryCard {
     config() {
         // т.к. window и popup расположены не в дереве приложения, а поверх слоев, его нужно отрисовывать отдельно
         webix.ui(LibraryCardContextMenu())
-        
+
         // вызов функции представления
         return LibraryCardView()
     }
@@ -33,11 +39,11 @@ export class CLibraryCard {
             datatableContextMenu: $$('libraryCardDatatableContextMenu')
         }
 
+        // добавление функционала ProgressBar для окна читательского билета
+        webix.extend(this.view.window, webix.ProgressBar);
+
         // прикрепление контекстного меню к таблице
         this.view.datatableContextMenu.attachTo(this.view.datatable)
-
-        // загрузка первичных данных в таблицу
-        this.refreshTable()
 
         // обработка закрытия окна
         this.view.windowCancelBtn.attachEvent('onItemClick', () => {
@@ -85,8 +91,25 @@ export class CLibraryCard {
                     return
                 }
                 let cJournalTab = this.toEvent()
-                cJournalTab.showByBookID(selected.ID)
+                cJournalTab.showLastEventByBookID(selected.ID)
                 this.hide()
+                break;
+            case LIBRARY_CARD_CONTEXT_MENU.take: // сдача книги
+                if (!selected) {
+                    webix.message('Выделите строку')
+                    return
+                }
+                if (!selected.ID) {
+                    console.error('Incorrect ID of item:', selected.ID)
+                    return
+                }
+                this.showProgress()
+                eventModel.createTakeEvent(selected.ID, this.employee.ID).then(() => {
+                    this.refreshTable()
+                    this.updateEventsDatatable()
+                    this.updateBooksDatatable()
+                    this.hideProgress()
+                })
                 break;
             default:
                 console.error(`Неизвестное значение пункта меню: ${item}.`)
@@ -94,14 +117,21 @@ export class CLibraryCard {
         }
     }
 
-    // функция обновления таблицы книг
+    // функция обновления таблицы читательского билета
     refreshTable(books) {
         if (books) {
             this.view.datatable.clearAll()
             this.view.datatable.parse(books)
             return
         } else {
-            bookModel.getBooks().then((books) => {
+            // проверка установленности сотрудника в контроллере читательского билета
+            if (!this.employee || !this.employee.ID) {
+                console.error(`Не удалось обновить таблицу читательского билета, employee is ${this.employee}`)
+                return
+            }
+
+            // загрузка книг для сотрудника
+            employeeModel.getCardByEmployeeID(this.employee.ID).then((books) => {
                 // проверка наличия данных
                 if (books) {
                     // преобразование даты издания
@@ -137,7 +167,28 @@ export class CLibraryCard {
 
     // метод сокрытия окна
     hide() {
+        this.employee = undefined
         this.view.window.hide()
+    }
+
+    // установка сотрудника
+    setEmployee(employee) {
+        this.employee = employee
+    }
+
+    // блокировка окна
+    showProgress() {
+        this.view.window.disable()
+        this.view.window.showProgress({
+            type: "icon",
+            hide: true
+        })
+    }
+
+    // разблокировка окна
+    hideProgress() {
+        this.view.window.enable()
+        this.view.window.hideProgress()
     }
 }
 

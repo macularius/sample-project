@@ -16,14 +16,18 @@ export class Application {
     // метод инициализации главного компонента
     init() {
         this.userInfo.init()
-        this.bookTab.init()
+        this.bookTab.init(
+            () => { return this.journalTab.refreshTable() }, // updateEvent
+        )
         this.employeeTab.init(
             () => { return this.dispatch(APP_TAB.booksTab) }, // toBook
-            () => { return this.dispatch(APP_TAB.journalTab) } // toEvent
+            () => { return this.dispatch(APP_TAB.journalTab) }, // toEvent
+            () => { return this.journalTab.refreshTable() }, // updateEventsDatatable
+            () => { return this.bookTab.refreshTable() }, // updateBooksDatatable
         )
         this.journalTab.init(
             () => { return this.dispatch(APP_TAB.booksTab) }, // toBook
-            () => { return this.dispatch(APP_TAB.employeesTab) } // toEvent
+            () => { return this.dispatch(APP_TAB.employeesTab) }, // toEvent
         )
     }
 

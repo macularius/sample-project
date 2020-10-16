@@ -30,6 +30,11 @@ class EmployeeModel extends Model {
     deleteEmployee(employee) {
         return this.post('/employee/delete', employee)
     }
+
+    // получение книг читательского билета сотрудника по ID
+    getCardByEmployeeID(id) {
+        return this.get(`/employee/${id}/card`)
+    }
 }
 const employeeModel  = new EmployeeModel();
 export default employeeModel

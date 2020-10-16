@@ -203,8 +203,6 @@ func (m *MEvent) Insert(event *EventDBType) (id int64, err error) {
 		row   *sql.Row // выборка данных
 	)
 
-	revel.AppLog.Debugf("MEvent.Insert, event: %+v\n", event)
-
 	// запрос
 	query = `
 		INSERT INTO "library".t_event(
@@ -239,6 +237,47 @@ func (m *MEvent) Insert(event *EventDBType) (id int64, err error) {
 		}
 
 		revel.AppLog.Errorf("MEvent.Insert : row.Scan, %s\n", err)
+		return
+	}
+
+	return
+}
+
+// SelectLastGiveEventByBookID получение последнего события выдачи по ID книги
+func (m *MEvent) SelectLastGiveEventByBookID(id int64) (edbt *EventDBType, err error) {
+	var (
+		query string   // строка запроса
+		row   *sql.Row // выборка данных
+	)
+	// создание экземпляра сущности для считывания строки выборки
+	edbt = new(EventDBType)
+
+	// запрос
+	query = `
+		SELECT
+			e.pk_id,
+			e.fk_book,
+			e.fk_employee,
+			e.fk_event_type,
+			max(e.c_date)
+		FROM "library".t_event e
+		WHERE fk_book = $1 and
+			e.fk_event_type = 1
+		GROUP BY e.pk_id, e.fk_book, e.fk_employee, e.fk_event_type;
+	`
+
+	// выполнение запроса
+	row = m.db.QueryRow(query, id)
+
+	// считывание строки выборки
+	err = row.Scan(&edbt.Pk_id, &edbt.Fk_book, &edbt.Fk_employee, &edbt.Fk_type, &edbt.C_date)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			err = nil
+			return
+		}
+
+		revel.AppLog.Errorf("MEvent.SelectAll : row.Scan, %s\n", err)
 		return
 	}
 

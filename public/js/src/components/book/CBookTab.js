@@ -8,12 +8,15 @@ import { Book, BOOK_STATUS } from "../../models/entities/book.js"
 // класс таба "Книги"
 export class CBookTab {
     constructor() {
-        this.view       // объект для быстрого доступа к представлениям
-        this.window     // экземпляр окна для работы с книгами
+        this.view        // объект для быстрого доступа к представлениям
+        this.window      // экземпляр окна для работы с книгами
+        this.updateEventsDatatable // функция обновления таблицы событий
     }
 
     // метод инициализации компонента
-    init() {
+    init(updateEventsDatatable) {
+        this.updateEventsDatatable = updateEventsDatatable
+
         this.window = new CBookWindow() // инициализация компонента окна
         this.window.init(
             () => { this.refreshTable() }
@@ -156,8 +159,6 @@ export class CBookTab {
                     this.refreshTable()
                 })
                 break
-            case BOOK_CONTEXT_MENU.give:
-                break
             default:
                 console.error(`Неизвестное значение пункта меню: ${item}.`)
                 break
@@ -189,6 +190,7 @@ export class CBookTab {
 
         eventModel.createGiveEvent(book.ID, employee.ID).then(() => {
             this.refreshTable()
+            this.updateEventsDatatable()
         })
     }
 
@@ -244,7 +246,6 @@ export class CBookTab {
 // допустимые значения пунктов контекстного меню таба Книги
 export const BOOK_CONTEXT_MENU = {
     give: 'Выдать',
-    take: 'Сдать',
     add: 'Добавить',
     edit: 'Изменить',
     remove: 'Удалить'

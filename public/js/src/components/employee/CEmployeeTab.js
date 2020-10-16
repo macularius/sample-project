@@ -13,14 +13,15 @@ export class CEmployeeTab {
     }
 
     // метод инициализации компонента
-    init(toBook, toEvent) {
+    init(toBook, toEvent, updateEventsDatatable, updateBooksDatatable) {
+
         this.window = new CEmployeeWindow(); // инициализация компонента окна
         this.window.init(
             () => { this.refreshTable() }
         ) // вызова инициализации компонента окна
 
         this.libraryCard = new CLibraryCard(); // инициализация компонента окна
-        this.libraryCard.init(toBook, toEvent) // вызова инициализации компонента окна
+        this.libraryCard.init(toBook, toEvent, updateEventsDatatable, updateBooksDatatable) // вызова инициализации компонента окна
     }
 
     // метод получения webix конфигурации компонента
@@ -69,6 +70,7 @@ export class CEmployeeTab {
 
         switch (item) {
             case EMPLOYEE_CONTEXT_MENU.libraryCard: // читательский билет
+                this.libraryCard.setEmployee(selected)
                 this.libraryCard.refreshTable()
                 this.libraryCard.switch()
                 break;

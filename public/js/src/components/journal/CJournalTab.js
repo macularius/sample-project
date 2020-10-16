@@ -99,7 +99,7 @@ export class CJournalTab {
 
                 event.bookString = `[${event.book.ISBN}] ${event.book.name}`
                 event.employeeString = `${event.employee.lastname} ${event.employee.firstname}`
-                event.dateString = webix.i18n.dateFormatStr(event.date)
+                event.dateString = webix.i18n.dateFormatStr(new Date(event.date))
             })
 
             this.view.datatable.clearAll()
@@ -109,8 +109,8 @@ export class CJournalTab {
     }
     
     // метод отображения таба с фильтрацией по книге и сотруднику
-    showByBookID(bookID, employeeID) {
-        eventModel.getLastGiveEventByBookID(bookID, employeeID).then((event) => {
+    showLastEventByBookID(bookID) {
+        eventModel.getLastGiveEventByBookID(bookID).then((event) => {
             // проверка наличия данных
             if (!event) {
                 return
@@ -120,7 +120,7 @@ export class CJournalTab {
             this.view.datatable.getFilter('bookString').value = `[${event.book.ISBN}] ${event.book.name}`
             this.view.datatable.getFilter('employeeString').value = `${event.employee.lastname} ${event.employee.firstname}`
             this.view.datatable.getFilter('type').value = event.type
-            this.view.datatable.getFilter('dateString').value = webix.i18n.dateFormatStr(event.date)
+            this.view.datatable.getFilter('dateString').value = webix.i18n.dateFormatStr(new Date(event.date))
             this.view.datatable.filterByAll()
 
             // выделение нужной строки

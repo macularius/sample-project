@@ -64,7 +64,7 @@ func (c *CEvent) GetAll() revel.Result {
 		revel.AppLog.Errorf("CEvent.GetAll : c.provider.GetEvents, %s\n", err)
 		return c.RenderJSON(Failed(err.Error()))
 	}
-	revel.AppLog.Debugf("CEvent.GetAll : c.provider.GetEvents, events: %+v\n", events)
+	revel.AppLog.Debugf("CEvent.GetAll, events: %+v\n", events)
 
 	// рендер положительного результата
 	return c.RenderJSON(Succes(events))
@@ -78,7 +78,7 @@ func (c *CEvent) GetByBookID(id int64) revel.Result {
 		revel.AppLog.Errorf("CEvent.GetByBookID : c.provider.GetEventByBookID, %s\n", err)
 		return c.RenderJSON(Failed(err.Error()))
 	}
-	revel.AppLog.Debugf("CEvent.GetByBookID : c.provider.GetEventByBookID, events: %+v\n", events)
+	revel.AppLog.Debugf("CEvent.GetByBookID, events: %+v\n", events)
 
 	// рендер положительного результата
 	return c.RenderJSON(Succes(events))
@@ -92,7 +92,7 @@ func (c *CEvent) GetByEmployeeID(id int64) revel.Result {
 		revel.AppLog.Errorf("CEvent.GetByEmployeeID : c.provider.GetEventByEmployeeID, %s\n", err)
 		return c.RenderJSON(Failed(err.Error()))
 	}
-	revel.AppLog.Debugf("CEvent.GetByEmployeeID : c.provider.GetEventByEmployeeID, events: %+v\n", events)
+	revel.AppLog.Debugf("CEvent.GetByEmployeeID, events: %+v\n", events)
 
 	// рендер положительного результата
 	return c.RenderJSON(Succes(events))
@@ -118,7 +118,26 @@ func (c *CEvent) Create() revel.Result {
 		revel.AppLog.Errorf("CEvent.Create : c.provider.Create, %s\n", err)
 		return c.RenderJSON(Failed(err.Error()))
 	}
-	revel.AppLog.Debugf("CEvent.Create : c.provider.Create, event: %+v\n", event)
+	revel.AppLog.Debugf("CEvent.Create, event: %+v\n", event)
+
+	// рендер положительного результата
+	return c.RenderJSON(Succes(event))
+}
+
+// GetLastForBook получение последнего события выдачи событий по id книги
+func (c *CEvent) GetLastForBook(id int64) revel.Result {
+	var (
+		event *entities.Event // экземпляр сущности для создания
+		err   error           // ошибка в ходе выполнения функции
+	)
+
+	// получение последнего события выдачи по книге
+	event, err = c.provider.GetLastForBook(id)
+	if err != nil {
+		revel.AppLog.Errorf("CEvent.GetByBookID : c.provider.GetLastForBook, %s\n", err)
+		return c.RenderJSON(Failed(err.Error()))
+	}
+	revel.AppLog.Debugf("CEvent.GetByBookID, event: %+v\n", event)
 
 	// рендер положительного результата
 	return c.RenderJSON(Succes(event))

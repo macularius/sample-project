@@ -103,7 +103,7 @@ func (c *CEmployee) Create() revel.Result {
 		revel.AppLog.Errorf("CEmployee.Create : c.provider.CreateEmployee, %s\n", err)
 		return c.RenderJSON(Failed(err.Error()))
 	}
-	revel.AppLog.Debugf("CEmployee.Create : c.provider.CreateEmployee, employee: %v\n", employee)
+	revel.AppLog.Debugf("CEmployee.Create, employee: %+v\n", employee)
 
 	// рендер положительного результата
 	return c.RenderJSON(Succes(employee))
@@ -129,7 +129,7 @@ func (c *CEmployee) Update() revel.Result {
 		revel.AppLog.Errorf("CEmployee.Update : c.provider.UpdateEmployee, %s\n", err)
 		return c.RenderJSON(Failed(err.Error()))
 	}
-	revel.AppLog.Debugf("CEmployee.Update : c.provider.UpdateEmployee, employee: %v\n", employee)
+	revel.AppLog.Debugf("CEmployee.Update, employee: %+v\n", employee)
 
 	// рендер положительного результата
 	return c.RenderJSON(Succes(employee))
@@ -155,10 +155,24 @@ func (c *CEmployee) Delete() revel.Result {
 		revel.AppLog.Errorf("CEmployee.Delete : c.provider.DeleteEmployee, %s\n", err)
 		return c.RenderJSON(Failed(err.Error()))
 	}
-	revel.AppLog.Debugf("CEmployee.Delete : c.provider.DeleteEmployee, employee: %v\n", employee)
+	revel.AppLog.Debugf("CEmployee.Delete , employee: %+v\n", employee)
 
 	// рендер положительного результата
 	return c.RenderJSON(Succes(nil))
+}
+
+// GetCardBooks получение сотрудника по id
+func (c *CEmployee) GetCardBooks(id int64) revel.Result {
+	// получение читательского билета
+	books, err := c.provider.GetCardBooks(id)
+	if err != nil {
+		revel.AppLog.Errorf("CEmployee.GetCardBooks : c.provider.GetCardBooks, %s\n", err)
+		return c.RenderJSON(Failed(err.Error()))
+	}
+	revel.AppLog.Debugf("CEmployee.GetCardBooks, books: %+v\n", books)
+
+	// рендер положительного результата
+	return c.RenderJSON(Succes(books))
 }
 
 // fetchPostEmployee метод получения сущности из post параметров
@@ -181,7 +195,7 @@ func (c *CEmployee) fetchPostEmployee() (e *entities.Employee, err error) {
 		return
 	}
 
-	revel.AppLog.Debugf("CEmployee.fetchPostEmployee, employees: %v\n", e)
+	revel.AppLog.Debugf("CEmployee.fetchPostEmployee, employees: %+v\n", e)
 
 	return
 }
