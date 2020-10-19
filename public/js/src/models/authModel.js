@@ -6,14 +6,24 @@ class AuthModel extends Model {
         super()
     }
 
+    // вход в учетную запись
+    login(user) {
+        return this.post('/user/login', user)
+    }
+
     // выход из учетной записи
     logout() {
         return this.get('/user/logout')
     }
 
-    // плучение сотруднкиа текущего пользователя
+    // получение сотруднкиа текущего пользователя
     getCurrentEmployee() {
         return this.get('/user/employee')
+    }
+
+    // проверка авторизации
+    check() {
+        return this.post('/user/authorize/check')
     }
 }
 const authModel  = new AuthModel();

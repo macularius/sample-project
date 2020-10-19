@@ -10,8 +10,9 @@ module:testrunner
 GET     /                                       CIndex.Index
 
 GET     /user/employee                          CAuth.GetCurrentEmployee
-GET     /user/login                             CAuth.Login
 GET     /user/logout                            CAuth.Logout
+POST    /user/authorize/check                   CAuth.Check
+POST    /user/login                             CAuth.Login
 
 GET     /book/all                               CBook.GetAll
 GET     /book/:id                               CBook.GetByID

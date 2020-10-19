@@ -8,9 +8,10 @@ import { Book, BOOK_STATUS } from '../../models/entities/book.js'
 // класс таба 'Книги'
 export class CBookTab {
     constructor() {
-        this.view        // объект для быстрого доступа к представлениям
-        this.window      // экземпляр окна для работы с книгами
-        this.updateEventsDatatable // функция обновления таблицы событий
+        this.view                   // объект для быстрого доступа к представлениям
+        this.window                 // экземпляр окна для работы с книгами
+        this.updateEventsDatatable  // функция обновления таблицы событий
+        this.names                  // массив сотрудников в сабменю
     }
 
     // метод инициализации компонента
@@ -21,25 +22,15 @@ export class CBookTab {
         this.window.init(
             () => { this.refreshTable() }
         ) // вызова инициализации компонента окна
+
+        this.names = []
     }
 
     // метод получения webix конфигурации компонента
     config() {
         // т.к. window и popup расположены не в дереве приложения, а поверх слоев, его нужно отрисовывать отдельно
         webix.ui(this.window.config())
-        // отложенное заполнение массива сотрудников в сабменю
-        let names = []
-        employeeModel.getEmployees().then((employees) => {
-            // проверка наличия данных
-            if (!employees) {
-                return
-            }
-
-            employees.map((employee) => {
-                names.push({ ID: employee.ID, value: `${employee.lastname} ${employee.firstname}` })
-            })
-        })
-        webix.ui(BookTabContextMenu(names))
+        webix.ui(BookTabContextMenu(this.names))
 
         // вызов функции представления
         return BookTabView()
@@ -52,6 +43,18 @@ export class CBookTab {
             datatable: $$('bookTabDatatable'),
             datatableContextMenu: $$('bookTabDatatableContextMenu'),
         }
+
+        // отложенное заполнение массива сотрудников в сабменю
+        employeeModel.getEmployees().then((employees) => {
+            // проверка наличия данных
+            if (!employees) {
+                return
+            }
+
+            employees.map((employee) => {
+                this.names.push({ ID: employee.ID, value: `${employee.lastname} ${employee.firstname}` })
+            })
+        })
 
         // инициализация обработчиков событий модального окна
         this.window.attachEvents()

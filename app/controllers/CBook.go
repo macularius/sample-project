@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"io/ioutil"
+	"net/http"
 	"sample-project/app/helpers"
 	"sample-project/app/models/entities"
 	"sample-project/app/models/providers/book_provider"
@@ -25,10 +26,10 @@ func (c *CBook) Init() revel.Result {
 		err       error                // ошибка в ходе выполнения функции
 	)
 
-	// Проверка авторизованности
-	authorize := c.Session.GetDefault("authorize", nil, false)
-	if !authorize.(bool) {
-		return c.Redirect((*CAuth).Login)
+	// Проверка существования токена сервера для пользователя
+	if _, ok := helpers.ActualToken[c.Session.ID()]; !ok {
+		c.Response.Status = http.StatusUnauthorized
+		return c.RenderJSON(Succes("The request has not been applied because it lacks valid authentication credentials for the target resource"))
 	}
 
 	// получение экземпляра соединения с бд

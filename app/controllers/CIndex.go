@@ -11,12 +11,6 @@ type CIndex struct {
 
 // Init интерцептор контроллера CIndex
 func (c CIndex) Init() revel.Result {
-	// Проверка авторизованности
-	authorize := c.Session.GetDefault("authorize", nil, false)
-	if !authorize.(bool) {
-		return c.Redirect((*CAuth).Login)
-	}
-
 	return nil
 }
 

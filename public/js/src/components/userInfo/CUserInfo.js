@@ -7,10 +7,13 @@ export class CUserInfo {
     constructor() {
         this.view                           // быстрый доступ к представлениям компонента
         this.currentEmployee = undefined    // сотрудник, соответствующий текущему пользователю
+        this.onLogout                       // callback функция при логауте пользователя
     }
 
     // метод инициализации компонента
-    init() { }
+    init(onLogout) { 
+        this.onLogout = onLogout
+    }
 
     // метод получения webix конфигурации компонента
     config() {
@@ -47,7 +50,7 @@ export class CUserInfo {
 
         // выход
         this.view.logoutBtn.attachEvent('onItemClick', () => {
-            authModel.logout().then(() => { document.location.replace('/') })
+            this.onLogout()
         })
     }
 }

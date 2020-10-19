@@ -1,0 +1,18 @@
+.main_window {
+    background-color: #1b6fa8;
+    background-image: url('/public/img/background.jpg');
+    background-size: cover;
+
+    width: 101% !important;
+    height: 101% !important;
+    top: -2px !important;
+    left: -1px !important;
+}
+
+.main-window .webix_template {
+    padding: 0;
+}
+
+.webix_template {
+    padding: 0;
+}
