@@ -1,8 +1,6 @@
 package controllers
 
 import (
-	"sample-project/app/helpers"
-
 	"github.com/revel/revel"
 )
 
@@ -27,7 +25,4 @@ func init() {
 	revel.InterceptMethod((*CEvent).Init, revel.BEFORE)
 	revel.InterceptMethod((*CPosition).Init, revel.BEFORE)
 	revel.InterceptMethod((*CAuth).Init, revel.BEFORE)
-
-	// инициализация актуальных токенов
-	helpers.ActualToken = make(map[string]string)
 }

@@ -1,12 +1,12 @@
 // возвращает webix конфигурации таба для работы с событиями
-export default function UserInfoView(label) {
+export default function UserInfoView() {
     return {
         cols: [
             // фио
             {
                 view: 'label',
                 id: 'userInfoLabel',
-                label: label,
+                label: 'загрузка...',
                 width: 200,
             },
             // кнопка выхода

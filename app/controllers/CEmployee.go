@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"encoding/json"
 	"io/ioutil"
-	"net/http"
 	"sample-project/app/helpers"
 	"sample-project/app/models/entities"
 	"sample-project/app/models/providers/employee_provider"
@@ -21,15 +20,22 @@ type CEmployee struct {
 // Init интерцептор контроллера CEmployee
 func (c *CEmployee) Init() revel.Result {
 	var (
+		cache     helpers.ICache       // экземпляр кэша
 		connector helpers.IDBConnector // экземпляр коннектора, для получения экземпляра соединения с бд
 		db        *sql.DB              // экземпляр соединения с бд
 		err       error                // ошибка в ходе выполнения функции
 	)
 
+	// инициализация кэша
+	cache, err = helpers.GetCache()
+	if err != nil {
+		revel.AppLog.Errorf("CEmployee.Init : helpers.GetCache, %s\n", err)
+		return c.RenderJSON(Failed(err.Error()))
+	}
+
 	// Проверка существования токена сервера для пользователя
-	if _, ok := helpers.ActualToken[c.Session.ID()]; !ok {
-		c.Response.Status = http.StatusUnauthorized
-		return c.RenderJSON(Succes("The request has not been applied because it lacks valid authentication credentials for the target resource"))
+	if _, ok := cache.TokenIsActualBySID(c.Session.ID()); !ok {
+		return c.Redirect((*CError).Unauthorized)
 	}
 
 	// получение экземпляра соединения с бд

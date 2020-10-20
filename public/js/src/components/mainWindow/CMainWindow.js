@@ -1,4 +1,3 @@
-import { getCookie } from '../../../helpers/cookies.js'
 import authModel from '../../models/authModel.js'
 import MainWindowView from './MainWindowView.js'
 import { User } from './../../models/entities/user.js'
@@ -40,9 +39,12 @@ export class CMainWindow {
             user.login = this.view.form.login.getValue()
             user.password = this.view.form.password.getValue()
 
-            authModel.login(user).then(() => {
-                this.switch()
-                this.onLogin()
+            // авторизация пользователя
+            authModel.login(user).then((isValid) => {
+                if (isValid === true) {
+                    this.switch()
+                    this.onLogin()
+                }
             })
         })
     }

@@ -35,6 +35,8 @@ GET     /event/byEmployee/:id                   CEvent.GetByEmployeeID
 GET     /event/last/give/book/:id               CEvent.GetLastForBook
 POST    /event/create                           CEvent.Create
 
+GET     /401                                    CError.Unauthorized
+
 # Ignore favicon requests
 GET     /favicon.ico                            404
 

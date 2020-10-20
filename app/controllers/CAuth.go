@@ -9,6 +9,8 @@ import (
 	"sample-project/app/models/entities"
 	"sample-project/app/models/providers/user_provider"
 
+	"github.com/google/uuid"
+
 	"github.com/revel/revel"
 )
 
@@ -16,6 +18,7 @@ import (
 type CAuth struct {
 	*revel.Controller
 	provider *user_provider.PUser
+	cache    helpers.ICache
 }
 
 // Init интерцептор контроллера CAuth
@@ -46,6 +49,13 @@ func (c *CAuth) Init() revel.Result {
 		return c.RenderJSON(Failed(err.Error()))
 	}
 
+	// инициализация кэша
+	c.cache, err = helpers.GetCache()
+	if err != nil {
+		revel.AppLog.Errorf("CAuth.Init : helpers.GetCache, %s\n", err)
+		return c.RenderJSON(Failed(err.Error()))
+	}
+
 	return nil
 }
 
@@ -60,37 +70,51 @@ func (c *CAuth) Destroy() {
 // Login авторизация пользователя
 func (c *CAuth) Login() revel.Result {
 	var (
-		u   *entities.User
-		err error
+		u       *entities.User
+		isValid bool
+		err     error
 	)
 
-	// Проверка авторизованности
-	if token, ok := helpers.ActualToken[c.Session.ID()]; ok {
-		c.SetCookie(&http.Cookie{Name: "auth-token", Value: token, Domain: c.Request.Host, Path: "/"})
-		return c.RenderJSON(Succes("Пользователь уже авторизован"))
-	}
-
-	// получение пользователя и зpost параметров
+	// получение пользователя из post параметров
 	u, err = c.fetchUserData()
 	if err != nil {
 		return c.RenderJSON(Failed(err.Error()))
 	}
-
-	// проверка логина и пароля
-	if u.Login == "admin" && u.Password == "123" {
-		// создание токена
-		helpers.ActualToken[c.Session.ID()] = "yep" // TODO
-		// установка токена в cookies клиента
-		c.SetCookie(&http.Cookie{Name: "auth-token", Value: "yep", Domain: c.Request.Host, Path: "/"}) // TODO
+	// получение сотруднкиа пользователя
+	err = c.provider.AttachEmployee(u)
+	if err != nil {
+		return c.RenderJSON(Failed(err.Error()))
 	}
 
-	return c.RenderJSON(Succes("Пользователь авторизован"))
+	// валиадция пользователя
+	isValid, err = c.provider.Validate(u)
+	if err != nil {
+		revel.AppLog.Errorf("CAuth.Login : c.provider.Validate, %s\n", err)
+		return c.RenderJSON(Failed(err.Error()))
+	}
+	if isValid {
+		// создание токена
+		token := uuid.New().String()
+
+		// установка токена в cache сервера
+		c.cache.Set(c.Session.ID(), token, u)
+
+		// установка токена в cookies клиента
+		c.SetCookie(&http.Cookie{Name: "auth-token", Value: token, Domain: c.Request.Host, Path: "/"})
+	} else {
+		return c.RenderJSON(Succes("Пользователь не прошел валидацию"))
+	}
+
+	return c.RenderJSON(Succes(true))
 }
 
 // Logout
 func (c *CAuth) Logout() revel.Result {
 	// удаление токена
-	delete(helpers.ActualToken, c.Session.ID())
+	err := c.cache.Delete(c.Session.ID())
+	if err != nil {
+		revel.AppLog.Errorf("CAuth.Logout : c.cache.Delete, %s\n", err)
+	}
 
 	return c.Redirect((*CIndex).Index)
 }
@@ -100,27 +124,38 @@ func (c *CAuth) Check() revel.Result {
 	// получение токена клиента для пользователя
 	userToken, err := c.Request.Cookie("auth-token")
 	if err != nil {
-		revel.AppLog.Errorf("CAuth.Check : c.fetchToken, %s\n", err)
+		revel.AppLog.Errorf("CAuth.Check : c.Request.Cookie, %s\n", err)
 		return c.RenderJSON(Failed(err.Error()))
 	}
-
-	// получение токена сервера для пользователя
-	token, ok := helpers.ActualToken[c.Session.ID()]
-	if !ok {
+	if userToken.GetValue() == "" {
 		return c.RenderJSON(Succes(false))
 	}
 
-	// проверка соответствия токена пользователя сервера и клиента
-	if token == userToken.GetValue() {
-		return c.RenderJSON(Succes(true))
+	// получение токена сервера для пользователя
+	_, token, err := c.cache.Get(c.Session.ID())
+	if err != nil {
+		revel.AppLog.Errorf("CAuth.Check : c.cache.Get, %s\n", err)
+		return c.RenderJSON(Failed(err.Error()))
 	}
 
-	return c.RenderJSON(Succes(false))
+	// проверка соответствия токена пользователя сервера и клиента
+	if token != userToken.GetValue() {
+		return c.RenderJSON(Succes(false))
+	}
+
+	return c.RenderJSON(Succes(true))
 }
 
 // GetCurrentEmployee
 func (c *CAuth) GetCurrentEmployee() revel.Result {
-	return c.RenderJSON(Succes(nil))
+	// получение токена сервера для пользователя
+	u, _, err := c.cache.Get(c.Session.ID())
+	if err != nil {
+		revel.AppLog.Errorf("CAuth.Check : c.cache.Get, %s\n", err)
+		return c.RenderJSON(Failed(err.Error()))
+	}
+
+	return c.RenderJSON(Succes(u.Employee))
 }
 
 // fetchUserData метод получения сущности из post параметров
@@ -142,33 +177,6 @@ func (c *CAuth) fetchUserData() (u *entities.User, err error) {
 		revel.AppLog.Errorf("CAuth.fetchUserData : json.Unmarshal, %s\n", err)
 		return
 	}
-
-	revel.AppLog.Debugf("CAuth.fetchUserData, user: %+v\n", u)
-
-	return
-}
-
-// fetchToken метод получения token'а из post параметров
-func (c *CAuth) fetchToken() (token string, err error) {
-	var (
-		rawRequest []byte // байтовое представление тела запроса
-	)
-
-	// получение тела запроса
-	rawRequest, err = ioutil.ReadAll(c.Request.GetBody())
-	if err != nil {
-		revel.AppLog.Errorf("CAuth.fetchToken : ioutil.ReadAll, %s\n", err)
-		return
-	}
-
-	// преобразование тела запроса в структуру сущности
-	err = json.Unmarshal(rawRequest, &token)
-	if err != nil {
-		revel.AppLog.Errorf("CAuth.fetchToken : json.Unmarshal, %s\n", err)
-		return
-	}
-
-	revel.AppLog.Debugf("CAuth.fetchToken, token: %+v\n", token)
 
 	return
 }

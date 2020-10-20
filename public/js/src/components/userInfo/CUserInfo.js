@@ -17,22 +17,8 @@ export class CUserInfo {
 
     // метод получения webix конфигурации компонента
     config() {
-        // проверяем наличие сотрудника текущего пользователя в куках
-        if (!(this.currentEmployee = getCookie('current_employee'))) {
-            // отложенное обновление информации о пользователе
-            authModel.getCurrentEmployee().then((emp) => {
-                // проверка наличия данных
-                if (!emp) {
-                    return
-                }
-
-                this.currentEmployee = emp
-                this.refreshEmployeeLabel(emp)
-            })
-        }
-
         // если удалось получить текущего сотрудника, то отображаем его данные, иначе 'ждем загрузку данных'
-        return this.currentEmployee ? UserInfoView(`${employee.lastname} ${employee.firstname}`) : UserInfoView('загрузка...')
+        return UserInfoView()
     }
 
     // функция обновления информации о текущем пользователе
@@ -47,6 +33,17 @@ export class CUserInfo {
             userLabel: $$('userInfoLabel'),
             logoutBtn: $$('logoutBtn'),
         }
+
+        // отложенное обновление информации о пользователе
+        authModel.getCurrentEmployee().then((emp) => {
+            // проверка наличия данных
+            if (!emp) {
+                return
+            }
+
+            this.currentEmployee = emp
+            this.refreshEmployeeLabel(emp)
+        })
 
         // выход
         this.view.logoutBtn.attachEvent('onItemClick', () => {
