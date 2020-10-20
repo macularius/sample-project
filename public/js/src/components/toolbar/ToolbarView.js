@@ -1,7 +1,13 @@
 // возвращает webix конфигурации таба для работы с событиями
-export default function UserInfoView() {
+export default function ToolbarView() {
     return {
+        view: 'toolbar',
         cols: [
+            {
+                view: 'label',
+                label: 'Электронная библиотека',
+            },
+            {},
             // фио
             {
                 view: 'label',
@@ -13,6 +19,7 @@ export default function UserInfoView() {
             {
                 view: 'button',
                 id: 'logoutBtn',
+                css: 'webix_secondary',
                 label: 'Выход',
                 width: 150,
             },

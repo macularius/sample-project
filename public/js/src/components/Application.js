@@ -1,4 +1,4 @@
-import { CUserInfo } from './userInfo/CUserInfo.js'
+import { CToolbar } from './toolbar/CToolbar.js'
 import { CBookTab } from './book/CBookTab.js'
 import { CEmployeeTab } from './employee/CEmployeeTab.js'
 import { CJournalTab } from './journal/CJournalTab.js'
@@ -11,7 +11,7 @@ import { checkAuth } from '../../helpers/checkAuth.js'
 export class Application {
     constructor() {
         this.view                               // быстрый доступ к объектам представлений
-        this.userInfo = new CUserInfo()         // экземпляр контроллера пользовательской информации 
+        this.userInfo = new CToolbar()         // экземпляр контроллера пользовательской информации 
         this.bookTab = new CBookTab()           // экземпляр контроллера книг
         this.employeeTab = new CEmployeeTab()   // экземпляр контроллера сотрудников
         this.journalTab = new CJournalTab()     // экземпляр контроллера событий

@@ -1,9 +1,8 @@
-import UserInfoView from './UserInfoView.js'
-import { getCookie } from '../../../helpers/cookies.js'
+import UserInfoView from './ToolbarView.js'
 import authModel from '../../models/authModel.js'
 
 // класс компонента информации о пользователе
-export class CUserInfo {
+export class CToolbar {
     constructor() {
         this.view                           // быстрый доступ к представлениям компонента
         this.currentEmployee = undefined    // сотрудник, соответствующий текущему пользователю

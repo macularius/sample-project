@@ -11,12 +11,12 @@ export function EmployeeTabView() {
                 select: true,
                 columns: [
                     { id: 'ID', header: ['', { content: 'textFilter' }], hidden: true },
-                    { id: 'lastname', header: ['Фамилия', { content: 'textFilter' }], fillspace: true, },
-                    { id: 'firstname', header: ['Имя', { content: 'textFilter' }], fillspace: true, },
-                    { id: 'middlename', header: ['Отчество', { content: 'textFilter' }], fillspace: true, },
-                    { id: 'position', header: ['Должность', { content:'selectFilter' }], fillspace: true, },
-                    { id: 'phone_number', header: ['Телефонный номер', { content: 'textFilter' }], fillspace: true, },
-                    { id: 'email', header: ['Email', { content: 'textFilter' }], fillspace: true, },
+                    { id: 'lastname', header: ['Фамилия', { content: 'textFilter' }], sort: 'string', fillspace: true, },
+                    { id: 'firstname', header: ['Имя', { content: 'textFilter' }], sort: 'string', fillspace: true, },
+                    { id: 'middlename', header: ['Отчество', { content: 'textFilter' }], sort: 'string', fillspace: true, },
+                    { id: 'position', header: ['Должность', { content:'selectFilter' }], sort: 'string', fillspace: true, },
+                    { id: 'phone_number', header: ['Телефонный номер', { content: 'textFilter' }], sort: 'string', fillspace: true, },
+                    { id: 'email', header: ['Email', { content: 'textFilter' }], sort: 'string', fillspace: true, },
                 ],
                 data: [],
                 onContext: {

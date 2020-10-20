@@ -4,13 +4,13 @@ export default function WorkedPlaceView(bookTab, employeeTab, journalTab, userIn
         id: 'workedPlace',
         rows: [
             // header
+            userInfo.config(),
             {
                 cols: [
                     {
                         view: 'tabbar',
                         id: 'main-tabbar',
                         value: 'listView',
-                        width: 700,
                         multiview: true,
                         options: [
                             { id: 'bookTab', value: 'Книги' },
@@ -19,8 +19,6 @@ export default function WorkedPlaceView(bookTab, employeeTab, journalTab, userIn
                         ]
 
                     },
-                    {},
-                    userInfo.config(),
                 ],
             },
             // содержимое табов

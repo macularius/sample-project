@@ -214,8 +214,7 @@ export class CBookTab {
                 if (books) {
                     // преобразование даты издания
                     books.map((book) => {
-                        let time = new Date(book.year)
-                        book.year = time.getFullYear()
+                        book.year = new Date(book.year)
                     })
                 }
 

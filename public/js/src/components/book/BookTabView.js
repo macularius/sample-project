@@ -11,12 +11,12 @@ export function BookTabView() {
                 select: true,
                 columns: [
                     { id: 'ID', header: ['', { content: 'textFilter' }], hidden: true },
-                    { id: 'ISBN', header: ['ISBN', { content: 'textFilter' }], width: 140, },
-                    { id: 'name', header: ['Название', { content: 'textFilter' }], fillspace: true, },
-                    { id: 'author', header: ['Автор', { content: 'textFilter' }], fillspace: true, },
-                    { id: 'publisher', header: ['Издательство', { content: 'textFilter' }], fillspace: true, },
-                    { id: 'year', header: ['Год издания', { content: 'textFilter' }], width: 80, },
-                    { id: 'status', header: ['Статус', { content:'selectFilter' }], width: 120, },
+                    { id: 'ISBN', header: ['ISBN', { content: 'textFilter' }], sort: 'string', width: 140, },
+                    { id: 'name', header: ['Название', { content: 'textFilter' }], sort: 'string', fillspace: true, },
+                    { id: 'author', header: ['Автор', { content: 'textFilter' }], sort: 'string', fillspace: true, },
+                    { id: 'publisher', header: ['Издательство', { content: 'textFilter' }], sort: 'string', fillspace: true, },
+                    { id: 'year', header: ['Год издания', { content: 'textFilter' }], sort: 'date', format: webix.Date.dateToStr("%Y"), width: 80, },
+                    { id: 'status', header: ['Статус', { content: 'selectFilter' }], sort: 'string', width: 120, },
                 ],
                 data: [],
                 onContext: {

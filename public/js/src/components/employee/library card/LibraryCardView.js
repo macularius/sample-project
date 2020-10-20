@@ -19,9 +19,9 @@ export function LibraryCardView() {
                     id: 'libraryCardDatatable',
                     select: true,
                     columns: [
-                        { id: 'ID', header: ['', { content: 'textFilter' }], hidden: true },
-                        { id: 'ISBN', header: ['ISBN', { content: 'textFilter' }], width: 140, },
-                        { id: 'name', header: ['Название', { content: 'textFilter' }], fillspace: true, },
+                        { id: 'ID', header: ['', { content: 'textFilter' }], sort: 'string', hidden: true },
+                        { id: 'ISBN', header: ['ISBN', { content: 'textFilter' }], sort: 'string', width: 140, },
+                        { id: 'name', header: ['Название', { content: 'textFilter' }], sort: 'string', fillspace: true, },
                     ],
                     data: [],
                     onContext: {

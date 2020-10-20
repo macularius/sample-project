@@ -1,6 +1,6 @@
 import { JournalTabView, EventTabContextMenu } from './JournalTabView.js'
 import eventModel from '../../models/eventModel.js'
-import FormatDate from '../../../helpers/dateFormatter.js'
+import { GetDate } from '../../../helpers/dateFormatter.js'
 
 // класс таба 'Журнал событий'
 export class CJournalTab {
@@ -100,7 +100,7 @@ export class CJournalTab {
 
                 event.bookString = `[${event.book.ISBN}] ${event.book.name}`
                 event.employeeString = `${event.employee.lastname} ${event.employee.firstname}`
-                event.dateString = FormatDate(new Date(event.date))
+                event.date = GetDate(new Date(event.date))
             })
 
             this.view.datatable.clearAll()
@@ -108,7 +108,7 @@ export class CJournalTab {
             this.view.datatable.refresh()
         })
     }
-    
+
     // метод отображения таба с фильтрацией по книге и сотруднику
     showLastEventByBookID(bookID) {
         eventModel.getLastGiveEventByBookID(bookID).then((event) => {
@@ -121,7 +121,7 @@ export class CJournalTab {
             this.view.datatable.getFilter('bookString').value = `[${event.book.ISBN}] ${event.book.name}`
             this.view.datatable.getFilter('employeeString').value = `${event.employee.lastname} ${event.employee.firstname}`
             this.view.datatable.getFilter('type').value = event.type
-            this.view.datatable.getFilter('dateString').value = FormatDate(new Date(event.date))
+            this.view.datatable.getFilter('date').value = GetDate(new Date(event.date))
             this.view.datatable.filterByAll()
 
             // выделение нужной строки

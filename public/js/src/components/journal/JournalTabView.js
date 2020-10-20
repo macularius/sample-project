@@ -11,10 +11,10 @@ export function JournalTabView() {
                 select: true,
                 columns: [
                     { id: 'ID', header: ['', { content: 'textFilter' }], hidden: true },
-                    { id: 'bookString', header: ['Книга', { content: 'textFilter' }], fillspace: true, },
-                    { id: 'employeeString', header: ['Сотрудник', { content: 'textFilter' }], fillspace: true, },
-                    { id: 'type', header: ['Тип события', { content:'selectFilter' }], width: 120, },
-                    { id: 'dateString', header: ['Дата события', { content: 'textFilter' }], width: 160, },
+                    { id: 'bookString', header: ['Книга', { content: 'textFilter' }], sort: 'string', fillspace: true, },
+                    { id: 'employeeString', header: ['Сотрудник', { content: 'textFilter' }], sort: 'string', fillspace: true, },
+                    { id: 'type', header: ['Тип события', { content:'selectFilter' }], sort: 'string', width: 120, },
+                    { id: 'date', header: ['Дата события', { content: 'textFilter' }], sort: 'date', width: 160, format: webix.Date.dateToStr("%Y-%m-%d %H:%i") },
                 ],
                 data: [],
                 onContext: {
