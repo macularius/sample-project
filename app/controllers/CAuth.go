@@ -124,6 +124,10 @@ func (c *CAuth) Check() revel.Result {
 	// получение токена клиента для пользователя
 	userToken, err := c.Request.Cookie("auth-token")
 	if err != nil {
+		if err == http.ErrNoCookie {
+			return c.RenderJSON(Succes(false))
+		}
+
 		revel.AppLog.Errorf("CAuth.Check : c.Request.Cookie, %s\n", err)
 		return c.RenderJSON(Failed(err.Error()))
 	}
