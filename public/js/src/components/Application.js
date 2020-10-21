@@ -30,6 +30,7 @@ export class Application {
         // инициализация компонента вкладки книг
         this.bookTab.init(
             () => { return this.journalTab.refreshTable() }, // updateEvent
+            (config) => { this.refreshControlls(config) }, // refreshControlls
         )
         // инициализация компонента вкладки сотрудников
         this.employeeTab.init(
@@ -37,11 +38,13 @@ export class Application {
             () => { return this.dispatch(APP_TAB.journalTab) }, // toEvent
             () => { return this.journalTab.refreshTable() }, // updateEventsDatatable
             () => { return this.bookTab.refreshTable() }, // updateBooksDatatable
+            (config) => { this.refreshControlls(config) }, // refreshControlls
         )
         // инициализация компонента вкладки событий
         this.journalTab.init(
             () => { return this.dispatch(APP_TAB.booksTab) }, // toBook
             () => { return this.dispatch(APP_TAB.employeesTab) }, // toEvent
+            (config) => { this.refreshControlls(config) }, // refreshControlls
         )
         // инициализация компонента окна входа в приложение
         this.mainWindow.init(
@@ -55,6 +58,7 @@ export class Application {
             tabbar: $$('main-tabbar'),
             multiviews: $$('main-views'),
             workedPlace: $$('workedPlace'),
+            tabControllsContainer: $$('main'),
         }
 
         // компоненты требующие авторизации
@@ -63,14 +67,22 @@ export class Application {
         // компоненты не будут отрисованы
         checkAuth((isAuth) => {
             if (isAuth) {
+                // переключение таба
+                this.view.tabbar.attachEvent('onItemClick', () => {
+                    this.dispatch(this.view.tabbar.getValue())
+                })
+
+                // отрисовать рабочее пространство
                 this.view.workedPlace.show()
 
-                this.dispatch(APP_TAB.booksTab)
-
+                // обработчики событий компонентов
                 this.userInfo.attachEvents()
                 this.bookTab.attachEvents()
                 this.employeeTab.attachEvents()
                 this.journalTab.attachEvents()
+
+                // выделить таб книг
+                this.dispatch(APP_TAB.booksTab)
             } else {
                 this.view.workedPlace.hide()
             }
@@ -95,6 +107,7 @@ export class Application {
     dispatch(tab) {
         let tabObj
 
+        // определение объекта таба
         switch (tab) {
             case APP_TAB.booksTab:
                 tabObj = this.bookTab
@@ -110,10 +123,21 @@ export class Application {
                 return
         }
 
+        // переключение таба
         this.view.tabbar.setValue(tab)
         this.view.multiviews.setValue(tab)
 
+        // замена элементов управления в header'е
+        this.bookTab.hideControlls()
+        this.employeeTab.hideControlls()
+        this.journalTab.hideControlls()
+        tabObj.switchControlls()
+
         return tabObj
+    }
+
+    refreshControlls(config) {
+        webix.ui(config, this.view.tabControllsContainer, $$('tab-controlls'))
     }
 }
 

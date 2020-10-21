@@ -1,4 +1,4 @@
-import { BookTabView, BookTabContextMenu } from './BookTabView.js'
+import { BookTabView, BookTabContextMenu, TabControllsView } from './BookTabView.js'
 import { CBookWindow, BOOK_WINDOW_TYPE } from './bookWindow/CBookWindow.js'
 import bookModel from '../../models/bookModel.js'
 import eventModel from '../../models/eventModel.js'
@@ -8,6 +8,7 @@ import { Book, BOOK_STATUS } from '../../models/entities/book.js'
 // класс таба 'Книги'
 export class CBookTab {
     constructor() {
+        this.refreshControlls       // функция обновления элементов управления в header'е
         this.view                   // объект для быстрого доступа к представлениям
         this.window                 // экземпляр окна для работы с книгами
         this.updateEventsDatatable  // функция обновления таблицы событий
@@ -15,15 +16,16 @@ export class CBookTab {
     }
 
     // метод инициализации компонента
-    init(updateEventsDatatable) {
-        this.updateEventsDatatable = updateEventsDatatable
+    init(updateEventsDatatable, refreshControlls) {
+        this.updateEventsDatatable = updateEventsDatatable  // функция обновления таблицы событий
+        this.refreshControlls = refreshControlls            // функция обновления элементов управления в header'е
 
         this.window = new CBookWindow() // инициализация компонента окна
         this.window.init(
             () => { this.refreshTable() }
         ) // вызова инициализации компонента окна
 
-        this.names = []
+        this.names = [] // массив сотрудников в сабменю
     }
 
     // метод получения webix конфигурации компонента
@@ -36,13 +38,39 @@ export class CBookTab {
         return BookTabView()
     }
 
+    // метод получения webix конфигурации элементов управления таба
+    configTabControlls() {
+        return TabControllsView()
+    }
+
     // метод инициализации обработчиков событий компонента
     attachEvents() {
         // инициализация используемых представлений
         this.view = {
             datatable: $$('bookTabDatatable'),
             datatableContextMenu: $$('bookTabDatatableContextMenu'),
+            controlls: $$('booktab-controlls'),
+            btns: {
+                createBtn: $$('booktab-add-btn'),
+                updateBtn: $$('booktab-edit-btn'),
+                deleteBtn: $$('booktab-remove-btn'),
+            }
         }
+
+        // создание книги
+        this.view.btns.createBtn.attachEvent('onItemClick', () => {
+            this.createBook()
+        })
+
+        // изменение книги
+        this.view.btns.updateBtn.attachEvent('onItemClick', () => {
+            this.updateBook()
+        })
+
+        // удаление книги
+        this.view.btns.deleteBtn.attachEvent('onItemClick', () => {
+            this.deleteBook()
+        })
 
         // отложенное заполнение массива сотрудников в сабменю
         employeeModel.getEmployees().then((employees) => {
@@ -81,70 +109,13 @@ export class CBookTab {
 
     // обработка выбора в контекстном меню
     handleContextMenu(item) {
-        // получение выделенного элемента
-        let selected = this.view.datatable.getSelectedItem()
-
         switch (item) {
-            case BOOK_CONTEXT_MENU.add: // добавление книги
-                this.window.parse(new Book())
-                this.window.switch(BOOK_WINDOW_TYPE.create)
+            case BOOK_CONTEXT_MENU.edit: // редактирование выделленой книгиbreak
+                this.updateBook()
                 break
-            case BOOK_CONTEXT_MENU.edit: // редактирование выделленой книги
-                // проверка выделенного элемента
-                if (!selected) {
-                    webix.message('Выделите строку')
-                    return
-                }
-                // проверка наличия поля ID у выделенного элемента
-                if (!selected.ID) {
-                    console.error('Incorrect ID of item:', selected.ID)
-                    return
-                }
-                bookModel.getBookByID(selected.ID).then((book) => {
-                    // проверка наличия данных
-                    if (!book) {
-                        return
-                    }
-
-                    // преобразование даты издания
-                    let time = new Date(book.year)
-                    book.year = time.getFullYear()
-
-                    // заполнение полей окна данными книги
-                    this.window.parse(book)
-                    this.window.switch(BOOK_WINDOW_TYPE.update)
-                })
+            case BOOK_CONTEXT_MENU.remove: // удаление выделенной книгиbreak
+                this.deleteBook()
                 break
-            case BOOK_CONTEXT_MENU.remove: // удаление выделенной книги
-                if (!selected) {
-                    webix.message('Выделите строку')
-                    return
-                }
-                if (!selected.ID) {
-                    console.error('id of item is ', selected.ID)
-                    return
-                }
-                bookModel.deleteBook(selected.ID).then((book) => {
-                    // проверка наличия данных
-                    if (!book) {
-                        return
-                    }
-                    // проверка выданности книги
-                    if (book.type === BOOK_STATUS.notAvailable) {
-                        webix.message('Нельзя удалить выданную книгу')
-                        return
-                    }
-
-                    // преобразование даты издания
-                    let time = new Date(book.year)
-                    book.year = time.getFullYear()
-
-                    // заполнение полей окна данными книги
-                    this.window.parse(book)
-                    this.window.switch(BOOK_WINDOW_TYPE.delete)
-                })
-                break
-            
             case BOOK_CONTEXT_MENU.take: // добавление книги
                 // получение выделенного элемента
                 let book = this.view.datatable.getSelectedItem()
@@ -246,6 +217,99 @@ export class CBookTab {
                     break
                 }
             }
+        })
+    }
+
+    // функция переключения оторбажения элементов управления таба
+    switchControlls() {
+        switch (this.view.controlls.isVisible()) {
+            case true:
+                this.hideControlls()
+                break;
+            case false:
+                this.showControlls()
+                break;
+        }
+    }
+
+    // функция отображения элементов управления таба
+    showControlls() {
+        this.view.controlls.show()
+    }
+
+    // функция сокрытия элементов управления таба
+    hideControlls() {
+        this.view.controlls.hide()
+    }
+
+    // функция создания книги
+    createBook() {
+        this.window.parse(new Book())
+        this.window.switch(BOOK_WINDOW_TYPE.create)
+    }
+
+    // функция изменения книги
+    updateBook() {
+        // получение выделенного элемента
+        let selected = this.view.datatable.getSelectedItem()
+
+        // проверка выделенного элемента
+        if (!selected) {
+            webix.message('Выделите строку')
+            return
+        }
+        // проверка наличия поля ID у выделенного элемента
+        if (!selected.ID) {
+            console.error('Incorrect ID of item:', selected.ID)
+            return
+        }
+        bookModel.getBookByID(selected.ID).then((book) => {
+            // проверка наличия данных
+            if (!book) {
+                return
+            }
+
+            // преобразование даты издания
+            let time = new Date(book.year)
+            book.year = time.getFullYear()
+
+            // заполнение полей окна данными книги
+            this.window.parse(book)
+            this.window.switch(BOOK_WINDOW_TYPE.update)
+        })
+    }
+
+    // функция удаления книги
+    deleteBook() {
+        // получение выделенного элемента
+        let selected = this.view.datatable.getSelectedItem()
+
+        if (!selected) {
+            webix.message('Выделите строку')
+            return
+        }
+        if (!selected.ID) {
+            console.error('id of item is ', selected.ID)
+            return
+        }
+        bookModel.getBookByID(selected.ID).then((book) => {
+            // проверка наличия данных
+            if (!book) {
+                return
+            }
+            // проверка выданности книги
+            if (book.status === BOOK_STATUS.notAvailable) {
+                webix.message('Нельзя удалить выданную книгу')
+                return
+            }
+
+            // преобразование даты издания
+            let time = new Date(book.year)
+            book.year = time.getFullYear()
+
+            // заполнение полей окна данными книги
+            this.window.parse(book)
+            this.window.switch(BOOK_WINDOW_TYPE.delete)
         })
     }
 }

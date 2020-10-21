@@ -19,17 +19,7 @@ export function BookTabView() {
                     { id: 'status', header: ['Статус', { content: 'selectFilter' }], sort: 'string', width: 120, },
                 ],
                 data: [],
-                onContext: {
-                    // обработка вызова контекстного меню при остутствии данных
-                    webix_view: function (e, id) {
-                        id = this.locate(e.target || e.srcElement);
-                        if (!id) {
-                            $$('bookTabDatatableContextMenu').setContext({ obj: webix.$$(e) });
-                            $$('bookTabDatatableContextMenu').show(e);
-                            webix.html.preventEvent(e);
-                        }
-                    }
-                },
+                onContext: {},
             },
         ]
     }
@@ -46,9 +36,40 @@ export function BookTabContextMenu(employees) {
                 id: BOOK_CONTEXT_MENU.give,
                 submenu: employees,
             },
-            BOOK_CONTEXT_MENU.add,
             BOOK_CONTEXT_MENU.edit,
             BOOK_CONTEXT_MENU.remove
         ],
+    }
+}
+
+// элементы управления для таба
+export function TabControllsView() {
+    return {
+        id: 'booktab-controlls',
+        hidden: true,
+        cols: [
+            {
+                id: 'booktab-add-btn',
+                view: 'icon',
+                tooltip: 'Добавить',
+                icon: 'plus',
+                width: 30,
+            },
+            {
+                id: 'booktab-edit-btn',
+                view: 'icon',
+                tooltip: 'Редактировать',
+                icon: 'pencil',
+                width: 30,
+            },
+            {
+                id: 'booktab-remove-btn',
+                view: 'icon',
+                tooltip: 'Удалить',
+                icon: 'trash',
+                width: 30,
+            },
+            { width: 30 },
+        ]
     }
 }

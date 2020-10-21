@@ -17,17 +17,7 @@ export function JournalTabView() {
                     { id: 'date', header: ['Дата события', { content: 'textFilter' }], sort: 'date', width: 160, format: webix.Date.dateToStr("%Y-%m-%d %H:%i") },
                 ],
                 data: [],
-                onContext: {
-                    // обработка вызова контекстного меню при остутствии данных
-                    webix_view: function (e, id) {
-                        id = this.locate(e.target || e.srcElement);
-                        if (!id) {
-                            $$('eventTabDatatableContextMenu').setContext({ obj: webix.$$(e) });
-                            $$('eventTabDatatableContextMenu').show(e);
-                            webix.html.preventEvent(e);
-                        }
-                    }
-                },
+                onContext: {},
             },
         ]
     }
@@ -39,5 +29,30 @@ export function EventTabContextMenu() {
         view: 'contextmenu',
         id: 'eventTabDatatableContextMenu',
         data: [EVENT_CONTEXT_MENU.toEmployee, EVENT_CONTEXT_MENU.toBook],
+    }
+}
+
+// элементы управления для таба
+export function TabControllsView() {
+    return {
+        id: 'journaltab-controlls',
+        hidden: true,
+        cols: [
+            {
+                id: 'journaltab-to-employee-btn',
+                view: 'icon',
+                tooltip: 'Перейти к пользователю',
+                icon: 'user',
+                width: 30,
+            },
+            {
+                id: 'journaltab-to-book-btn',
+                view: 'icon',
+                tooltip: 'Перейти к книге',
+                icon: 'book',
+                width: 30,
+            },
+            { width: 30 },
+        ]
     }
 }

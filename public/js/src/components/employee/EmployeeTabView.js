@@ -19,17 +19,7 @@ export function EmployeeTabView() {
                     { id: 'email', header: ['Email', { content: 'textFilter' }], sort: 'string', fillspace: true, },
                 ],
                 data: [],
-                onContext: {
-                    // обработка вызова контекстного меню при остутствии данных
-                    webix_view: function (e, id) {
-                        id = this.locate(e.target || e.srcElement);
-                        if (!id) {
-                            $$('employeeTabDatatableContextMenu').setContext({ obj: webix.$$(e) });
-                            $$('employeeTabDatatableContextMenu').show(e);
-                            webix.html.preventEvent(e);
-                        }
-                    }
-                },
+                onContext: {},
             },
         ]
     }
@@ -41,10 +31,48 @@ export function EmployeeTabContextMenu() {
         view: 'contextmenu',
         id: 'employeeTabDatatableContextMenu',
         data: [
-            EMPLOYEE_CONTEXT_MENU.libraryCard, 
-            EMPLOYEE_CONTEXT_MENU.add, 
+            EMPLOYEE_CONTEXT_MENU.libraryCard,
             EMPLOYEE_CONTEXT_MENU.edit, 
             EMPLOYEE_CONTEXT_MENU.remove
         ],
+    }
+}
+
+// элементы управления для таба
+export function TabControllsView() {
+    return {
+        id: 'employeetab-controlls',
+        hidden: true,
+        cols: [
+            {
+                id: 'employeetab-card-btn',
+                view: 'icon',
+                tooltip: 'Читательский билет',
+                icon: 'book',
+                width: 30,
+            },
+            {
+                id: 'employeetab-add-btn',
+                view: 'icon',
+                tooltip: 'Добавить',
+                icon: 'plus',
+                width: 30,
+            },
+            {
+                id: 'employeetab-edit-btn',
+                view: 'icon',
+                tooltip: 'Редактировать',
+                icon: 'pencil',
+                width: 30,
+            },
+            {
+                id: 'employeetab-remove-btn',
+                view: 'icon',
+                tooltip: 'Удалить',
+                icon: 'trash',
+                width: 30,
+            },
+            { width: 30 },
+        ]
     }
 }

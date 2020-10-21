@@ -57,8 +57,9 @@ export class CEmployeeWindow {
 
         // обработка события 'принять'
         this.view.windowConfirmBtn.attachEvent('onItemClick', () => {
+            // при удалении не требуется валидировать данные формы
             // валидация введенных данных по обязательным полям
-            if (!this.validate()) {
+            if (this.type !== EMPLOYEE_WINDOW_TYPE.delete && !this.validate()) {
                 webix.message('Заполните поля отмеченные *', 'error')
                 return;
             }
@@ -77,9 +78,20 @@ export class CEmployeeWindow {
                     })
                     break;
                 case EMPLOYEE_WINDOW_TYPE.delete:
-                    employeeModel.deleteEmployee(this.fetch()).then(() => {
-                        this.onChange()
-                        this.hide()
+                    // получение сотрудника
+                    let employee = this.fetch()
+                    employeeModel.getCardByEmployeeID(employee.ID).then((books) => {
+                        // проверка наличия несданных книг
+                        if (books) {
+                            webix.message('Нельзя удалить сотрудника, который не сдал книги')
+                            return
+                        }
+
+                        // удаление сотрудника
+                        employeeModel.deleteEmployee(this.fetch()).then(() => {
+                            this.onChange()
+                            this.hide()
+                        })
                     })
                     break;
             }

@@ -1,19 +1,21 @@
-import { JournalTabView, EventTabContextMenu } from './JournalTabView.js'
+import { JournalTabView, EventTabContextMenu, TabControllsView } from './JournalTabView.js'
 import eventModel from '../../models/eventModel.js'
 import { GetDate } from '../../../helpers/dateFormatter.js'
 
 // класс таба 'Журнал событий'
 export class CJournalTab {
     constructor() {
-        this.view       // объект для быстрого доступа к представлениям
-        this.toBook     // функция перехода к книге
-        this.toEmployee // функция перехода к сотруднику
+        this.refreshControlls   // функция обновления элементов управления в header'е
+        this.view               // объект для быстрого доступа к представлениям
+        this.toBookTab          // функция перехода к книге
+        this.toEmployeeTab      // функция перехода к сотруднику
     }
 
     // метод инициализации компонента
-    init(toBook, toEmployee) {
-        this.toBook = toBook // функция перехода к книге, возвращает ссылку на CBookTab
-        this.toEmployee = toEmployee // функция перехода к сотруднику, возвращает ссылку на CEmployeeTab
+    init(toBookTab, toEmployeeTab, refreshControlls) {
+        this.refreshControlls = refreshControlls    // функция обновления элементов управления в header'е
+        this.toBookTab = toBookTab                  // функция перехода к книге, возвращает ссылку на CBookTab
+        this.toEmployeeTab = toEmployeeTab          // функция перехода к сотруднику, возвращает ссылку на CEmployeeTab
     }
 
     // метод получения webix конфигурации компонента
@@ -25,13 +27,33 @@ export class CJournalTab {
         return JournalTabView()
     }
 
+    // метод получения webix конфигурации элементов управления таба
+    configTabControlls() {
+        return TabControllsView()
+    }
+
     // метод инициализации обработчиков событий компонента
     attachEvents() {
         // инициализация используемых представлений
         this.view = {
             datatable: $$('eventTabDatatable'),
             datatableContextMenu: $$('eventTabDatatableContextMenu'),
+            controlls: $$('journaltab-controlls'),
+            btns: {
+                toEmployeeBtn: $$('journaltab-to-employee-btn'),
+                toBookBtn: $$('journaltab-to-book-btn'),
+            }
         }
+
+        // переход к сотруднику
+        this.view.btns.toEmployeeBtn.attachEvent('onItemClick', () => {
+            this.toEmployee()
+        })
+
+        // переход к книге
+        this.view.btns.toBookBtn.attachEvent('onItemClick', () => {
+            this.toBook()
+        })
 
         // прикрепление контекстного меню к таблице
         this.view.datatableContextMenu.attachTo(this.view.datatable)
@@ -49,34 +71,12 @@ export class CJournalTab {
 
     // обработка выбора в контекстном меню
     handleContextMenu(item) {
-        // получение выделенного элемента
-        let selected = this.view.datatable.getSelectedItem()
-
         switch (item) {
             case EVENT_CONTEXT_MENU.toBook: // переход к книге
-                if (!selected) {
-                    webix.message('Выделите строку')
-                    return
-                }
-                if (!selected.ID) {
-                    console.error('Incorrect ID of item:', selected.ID)
-                    return
-                }
-                let cBookTab = this.toBook()
-                cBookTab.showByBookID(selected.book.ID)
+                this.toBook()
                 break;
             case EVENT_CONTEXT_MENU.toEmployee: // переход к сотруднику
-                if (!selected) {
-                    webix.message('Выделите строку')
-                    return
-                }
-                if (!selected.ID) {
-                    console.error('Incorrect ID of item:', selected.ID)
-                    return
-                }
-
-                let cEmployeeTab = this.toEmployee()
-                cEmployeeTab.showByEmployeeID(selected.employee.ID)
+                this.toEmployee()
                 break;
             default:
                 console.error(`Неизвестное значение пункта меню: ${item}.`);
@@ -134,6 +134,63 @@ export class CJournalTab {
                 }
             }
         })
+    }
+
+    // функция переключения оторбажения элементов управления таба
+    switchControlls() {
+        switch (this.view.controlls.isVisible()) {
+            case true:
+                this.hideControlls()
+                break;
+            case false:
+                this.showControlls()
+                break;
+        }
+    }
+
+    // функция отображения элементов управления таба
+    showControlls() {
+        this.view.controlls.show()
+    }
+
+    // функция сокрытия элементов управления таба
+    hideControlls() {
+        this.view.controlls.hide()
+    }
+
+    // функция перехода к книге
+    toBook() {
+        // получение выделенного элемента
+        let selected = this.view.datatable.getSelectedItem()
+        
+        if (!selected) {
+            webix.message('Выделите строку')
+            return
+        }
+        if (!selected.ID) {
+            console.error('Incorrect ID of item:', selected.ID)
+            return
+        }
+        let cBookTab = this.toBookTab()
+        cBookTab.showByBookID(selected.book.ID)
+    }
+
+    // функция перехода к сотруднику
+    toEmployee() {
+        // получение выделенного элемента
+        let selected = this.view.datatable.getSelectedItem()
+
+        if (!selected) {
+            webix.message('Выделите строку')
+            return
+        }
+        if (!selected.ID) {
+            console.error('Incorrect ID of item:', selected.ID)
+            return
+        }
+
+        let cEmployeeTab = this.toEmployeeTab()
+        cEmployeeTab.showByEmployeeID(selected.employee.ID)
     }
 }
 
