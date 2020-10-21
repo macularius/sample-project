@@ -5,7 +5,7 @@
 -- Dumped from database version 11.8 (Ubuntu 11.8-1.pgdg18.04+1)
 -- Dumped by pg_dump version 12.0
 
--- Started on 2020-10-15 18:17:04
+-- Started on 2020-10-21 14:09:39
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -19,11 +19,11 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- TOC entry 3023 (class 1262 OID 1200202)
+-- TOC entry 3024 (class 1262 OID 1200202)
 -- Name: library; Type: DATABASE; Schema: -; Owner: -
 --
 
-CREATE DATABASE library;
+CREATE DATABASE library WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'ru_RU.UTF-8' LC_CTYPE = 'ru_RU.UTF-8';
 
 
 \connect library
@@ -59,7 +59,7 @@ CREATE TABLE library.ref_event_types (
 
 
 --
--- TOC entry 3024 (class 0 OID 0)
+-- TOC entry 3025 (class 0 OID 0)
 -- Dependencies: 204
 -- Name: TABLE ref_event_types; Type: COMMENT; Schema: library; Owner: -
 --
@@ -68,7 +68,7 @@ COMMENT ON TABLE library.ref_event_types IS 'справочник типов с�
 
 
 --
--- TOC entry 3025 (class 0 OID 0)
+-- TOC entry 3026 (class 0 OID 0)
 -- Dependencies: 204
 -- Name: COLUMN ref_event_types.c_value; Type: COMMENT; Schema: library; Owner: -
 --
@@ -91,7 +91,7 @@ CREATE SEQUENCE library.ref_event_types_pk_id_seq
 
 
 --
--- TOC entry 3026 (class 0 OID 0)
+-- TOC entry 3027 (class 0 OID 0)
 -- Dependencies: 203
 -- Name: ref_event_types_pk_id_seq; Type: SEQUENCE OWNED BY; Schema: library; Owner: -
 --
@@ -125,7 +125,7 @@ CREATE SEQUENCE library.ref_positions_pk_id_seq
 
 
 --
--- TOC entry 3027 (class 0 OID 0)
+-- TOC entry 3028 (class 0 OID 0)
 -- Dependencies: 209
 -- Name: ref_positions_pk_id_seq; Type: SEQUENCE OWNED BY; Schema: library; Owner: -
 --
@@ -145,7 +145,7 @@ CREATE TABLE library.ref_statuses (
 
 
 --
--- TOC entry 3028 (class 0 OID 0)
+-- TOC entry 3029 (class 0 OID 0)
 -- Dependencies: 200
 -- Name: TABLE ref_statuses; Type: COMMENT; Schema: library; Owner: -
 --
@@ -154,7 +154,7 @@ COMMENT ON TABLE library.ref_statuses IS 'справочник статусов 
 
 
 --
--- TOC entry 3029 (class 0 OID 0)
+-- TOC entry 3030 (class 0 OID 0)
 -- Dependencies: 200
 -- Name: COLUMN ref_statuses.c_value; Type: COMMENT; Schema: library; Owner: -
 --
@@ -177,7 +177,7 @@ CREATE SEQUENCE library.ref_statuses_pk_id_seq
 
 
 --
--- TOC entry 3030 (class 0 OID 0)
+-- TOC entry 3031 (class 0 OID 0)
 -- Dependencies: 199
 -- Name: ref_statuses_pk_id_seq; Type: SEQUENCE OWNED BY; Schema: library; Owner: -
 --
@@ -203,7 +203,7 @@ CREATE TABLE library.t_books (
 
 
 --
--- TOC entry 3031 (class 0 OID 0)
+-- TOC entry 3032 (class 0 OID 0)
 -- Dependencies: 198
 -- Name: TABLE t_books; Type: COMMENT; Schema: library; Owner: -
 --
@@ -212,7 +212,7 @@ COMMENT ON TABLE library.t_books IS 'таблица книг';
 
 
 --
--- TOC entry 3032 (class 0 OID 0)
+-- TOC entry 3033 (class 0 OID 0)
 -- Dependencies: 198
 -- Name: COLUMN t_books.c_isbn; Type: COMMENT; Schema: library; Owner: -
 --
@@ -221,7 +221,7 @@ COMMENT ON COLUMN library.t_books.c_isbn IS 'уникальный id';
 
 
 --
--- TOC entry 3033 (class 0 OID 0)
+-- TOC entry 3034 (class 0 OID 0)
 -- Dependencies: 198
 -- Name: COLUMN t_books.c_is_archive; Type: COMMENT; Schema: library; Owner: -
 --
@@ -244,7 +244,7 @@ CREATE SEQUENCE library.t_books_pk_id_seq
 
 
 --
--- TOC entry 3034 (class 0 OID 0)
+-- TOC entry 3035 (class 0 OID 0)
 -- Dependencies: 197
 -- Name: t_books_pk_id_seq; Type: SEQUENCE OWNED BY; Schema: library; Owner: -
 --
@@ -270,7 +270,7 @@ CREATE TABLE library.t_employees (
 
 
 --
--- TOC entry 3035 (class 0 OID 0)
+-- TOC entry 3036 (class 0 OID 0)
 -- Dependencies: 206
 -- Name: TABLE t_employees; Type: COMMENT; Schema: library; Owner: -
 --
@@ -279,7 +279,7 @@ COMMENT ON TABLE library.t_employees IS 'справочник должносте
 
 
 --
--- TOC entry 3036 (class 0 OID 0)
+-- TOC entry 3037 (class 0 OID 0)
 -- Dependencies: 206
 -- Name: COLUMN t_employees.c_is_archive; Type: COMMENT; Schema: library; Owner: -
 --
@@ -302,7 +302,7 @@ CREATE SEQUENCE library.t_employees_pk_id_seq
 
 
 --
--- TOC entry 3037 (class 0 OID 0)
+-- TOC entry 3038 (class 0 OID 0)
 -- Dependencies: 205
 -- Name: t_employees_pk_id_seq; Type: SEQUENCE OWNED BY; Schema: library; Owner: -
 --
@@ -320,12 +320,12 @@ CREATE TABLE library.t_event (
     fk_book integer NOT NULL,
     fk_employee integer NOT NULL,
     fk_event_type integer NOT NULL,
-    c_date date
+    c_date timestamp(0) without time zone
 );
 
 
 --
--- TOC entry 3038 (class 0 OID 0)
+-- TOC entry 3039 (class 0 OID 0)
 -- Dependencies: 202
 -- Name: TABLE t_event; Type: COMMENT; Schema: library; Owner: -
 --
@@ -348,7 +348,7 @@ CREATE SEQUENCE library.t_event_pk_id_seq
 
 
 --
--- TOC entry 3039 (class 0 OID 0)
+-- TOC entry 3040 (class 0 OID 0)
 -- Dependencies: 201
 -- Name: t_event_pk_id_seq; Type: SEQUENCE OWNED BY; Schema: library; Owner: -
 --
@@ -364,13 +364,13 @@ ALTER SEQUENCE library.t_event_pk_id_seq OWNED BY library.t_event.pk_id;
 CREATE TABLE library.t_users (
     pk_id integer NOT NULL,
     c_login character varying(50) NOT NULL,
-    c_password character varying(50) NOT NULL,
+    c_password bytea NOT NULL,
     fk_employee integer NOT NULL
 );
 
 
 --
--- TOC entry 3040 (class 0 OID 0)
+-- TOC entry 3041 (class 0 OID 0)
 -- Dependencies: 208
 -- Name: TABLE t_users; Type: COMMENT; Schema: library; Owner: -
 --
@@ -393,7 +393,7 @@ CREATE SEQUENCE library.t_users_pk_id_seq
 
 
 --
--- TOC entry 3041 (class 0 OID 0)
+-- TOC entry 3042 (class 0 OID 0)
 -- Dependencies: 207
 -- Name: t_users_pk_id_seq; Type: SEQUENCE OWNED BY; Schema: library; Owner: -
 --
@@ -414,7 +414,7 @@ CREATE TABLE library.toc_books_employees (
 
 
 --
--- TOC entry 3042 (class 0 OID 0)
+-- TOC entry 3043 (class 0 OID 0)
 -- Dependencies: 212
 -- Name: TABLE toc_books_employees; Type: COMMENT; Schema: library; Owner: -
 --
@@ -437,7 +437,7 @@ CREATE SEQUENCE library.toc_books_employees_pk_id_seq
 
 
 --
--- TOC entry 3043 (class 0 OID 0)
+-- TOC entry 3044 (class 0 OID 0)
 -- Dependencies: 211
 -- Name: toc_books_employees_pk_id_seq; Type: SEQUENCE OWNED BY; Schema: library; Owner: -
 --
@@ -446,7 +446,7 @@ ALTER SEQUENCE library.toc_books_employees_pk_id_seq OWNED BY library.toc_books_
 
 
 --
--- TOC entry 2850 (class 2604 OID 1200316)
+-- TOC entry 2851 (class 2604 OID 1200316)
 -- Name: ref_event_types pk_id; Type: DEFAULT; Schema: library; Owner: -
 --
 
@@ -454,7 +454,7 @@ ALTER TABLE ONLY library.ref_event_types ALTER COLUMN pk_id SET DEFAULT nextval(
 
 
 --
--- TOC entry 2853 (class 2604 OID 1200348)
+-- TOC entry 2854 (class 2604 OID 1200348)
 -- Name: ref_positions pk_id; Type: DEFAULT; Schema: library; Owner: -
 --
 
@@ -462,7 +462,7 @@ ALTER TABLE ONLY library.ref_positions ALTER COLUMN pk_id SET DEFAULT nextval('l
 
 
 --
--- TOC entry 2848 (class 2604 OID 1200300)
+-- TOC entry 2849 (class 2604 OID 1200300)
 -- Name: ref_statuses pk_id; Type: DEFAULT; Schema: library; Owner: -
 --
 
@@ -470,7 +470,7 @@ ALTER TABLE ONLY library.ref_statuses ALTER COLUMN pk_id SET DEFAULT nextval('li
 
 
 --
--- TOC entry 2846 (class 2604 OID 1200291)
+-- TOC entry 2847 (class 2604 OID 1200291)
 -- Name: t_books pk_id; Type: DEFAULT; Schema: library; Owner: -
 --
 
@@ -478,7 +478,7 @@ ALTER TABLE ONLY library.t_books ALTER COLUMN pk_id SET DEFAULT nextval('library
 
 
 --
--- TOC entry 2851 (class 2604 OID 1200332)
+-- TOC entry 2852 (class 2604 OID 1200332)
 -- Name: t_employees pk_id; Type: DEFAULT; Schema: library; Owner: -
 --
 
@@ -486,7 +486,7 @@ ALTER TABLE ONLY library.t_employees ALTER COLUMN pk_id SET DEFAULT nextval('lib
 
 
 --
--- TOC entry 2849 (class 2604 OID 1200308)
+-- TOC entry 2850 (class 2604 OID 1200308)
 -- Name: t_event pk_id; Type: DEFAULT; Schema: library; Owner: -
 --
 
@@ -494,7 +494,7 @@ ALTER TABLE ONLY library.t_event ALTER COLUMN pk_id SET DEFAULT nextval('library
 
 
 --
--- TOC entry 2852 (class 2604 OID 1200340)
+-- TOC entry 2853 (class 2604 OID 1200340)
 -- Name: t_users pk_id; Type: DEFAULT; Schema: library; Owner: -
 --
 
@@ -502,7 +502,7 @@ ALTER TABLE ONLY library.t_users ALTER COLUMN pk_id SET DEFAULT nextval('library
 
 
 --
--- TOC entry 2854 (class 2604 OID 1200403)
+-- TOC entry 2855 (class 2604 OID 1200403)
 -- Name: toc_books_employees pk_id; Type: DEFAULT; Schema: library; Owner: -
 --
 
@@ -510,7 +510,7 @@ ALTER TABLE ONLY library.toc_books_employees ALTER COLUMN pk_id SET DEFAULT next
 
 
 --
--- TOC entry 3009 (class 0 OID 1200313)
+-- TOC entry 3010 (class 0 OID 1200313)
 -- Dependencies: 204
 -- Data for Name: ref_event_types; Type: TABLE DATA; Schema: library; Owner: -
 --
@@ -520,7 +520,7 @@ INSERT INTO library.ref_event_types (pk_id, c_value) VALUES (2, 'сдача');
 
 
 --
--- TOC entry 3015 (class 0 OID 1200345)
+-- TOC entry 3016 (class 0 OID 1200345)
 -- Dependencies: 210
 -- Data for Name: ref_positions; Type: TABLE DATA; Schema: library; Owner: -
 --
@@ -529,7 +529,7 @@ INSERT INTO library.ref_positions (pk_id, c_name) VALUES (1, 'Инженер-п�
 
 
 --
--- TOC entry 3005 (class 0 OID 1200297)
+-- TOC entry 3006 (class 0 OID 1200297)
 -- Dependencies: 200
 -- Data for Name: ref_statuses; Type: TABLE DATA; Schema: library; Owner: -
 --
@@ -539,17 +539,17 @@ INSERT INTO library.ref_statuses (pk_id, c_value) VALUES (2, 'не доступ�
 
 
 --
--- TOC entry 3003 (class 0 OID 1200288)
+-- TOC entry 3004 (class 0 OID 1200288)
 -- Dependencies: 198
 -- Data for Name: t_books; Type: TABLE DATA; Schema: library; Owner: -
 --
 
-INSERT INTO library.t_books (pk_id, fk_status, c_name, c_isbn, c_author, c_publisher, c_year, c_is_archive) VALUES (6, 1, 'Секреты javascript ниндзя', '0000000002', 'Бибо Бэер', 'САНКТ ПЕТЕРБУРГ', '2016-01-01', 0);
-INSERT INTO library.t_books (pk_id, fk_status, c_name, c_isbn, c_author, c_publisher, c_year, c_is_archive) VALUES (3, 2, 'Программирование на GO', '0000000001', 'Алан Донован Керниган', 'МОСКВА', '2012-01-01', 0);
+INSERT INTO library.t_books (pk_id, fk_status, c_name, c_isbn, c_author, c_publisher, c_year, c_is_archive) VALUES (6, 1, 'Ceкpeты JavaScript ниндзя', '9785845919595', 'Джон Реэиг, Беэр Бибо', 'Издательский дом "Вильямс"', '2015-01-01', 0);
+INSERT INTO library.t_books (pk_id, fk_status, c_name, c_isbn, c_author, c_publisher, c_year, c_is_archive) VALUES (3, 2, 'зык  программирования  Go.', '9785845920515', 'Алан А. А. Донован', 'Издательский дом “Вильямс”', '2016-01-01', 0);
 
 
 --
--- TOC entry 3011 (class 0 OID 1200329)
+-- TOC entry 3012 (class 0 OID 1200329)
 -- Dependencies: 206
 -- Data for Name: t_employees; Type: TABLE DATA; Schema: library; Owner: -
 --
@@ -558,36 +558,40 @@ INSERT INTO library.t_employees (pk_id, fk_position, c_firstname, c_lastname, c_
 
 
 --
--- TOC entry 3007 (class 0 OID 1200305)
+-- TOC entry 3008 (class 0 OID 1200305)
 -- Dependencies: 202
 -- Data for Name: t_event; Type: TABLE DATA; Schema: library; Owner: -
 --
 
-INSERT INTO library.t_event (pk_id, fk_book, fk_employee, fk_event_type, c_date) VALUES (10, 6, 1, 1, '2020-10-15');
-INSERT INTO library.t_event (pk_id, fk_book, fk_employee, fk_event_type, c_date) VALUES (11, 3, 1, 1, '2020-10-15');
-INSERT INTO library.t_event (pk_id, fk_book, fk_employee, fk_event_type, c_date) VALUES (12, 3, 1, 1, '2020-10-15');
-INSERT INTO library.t_event (pk_id, fk_book, fk_employee, fk_event_type, c_date) VALUES (13, 6, 1, 1, '2020-10-15');
-INSERT INTO library.t_event (pk_id, fk_book, fk_employee, fk_event_type, c_date) VALUES (14, 3, 1, 1, '2020-10-15');
+INSERT INTO library.t_event (pk_id, fk_book, fk_employee, fk_event_type, c_date) VALUES (31, 3, 1, 1, '2020-10-16 11:46:36');
+INSERT INTO library.t_event (pk_id, fk_book, fk_employee, fk_event_type, c_date) VALUES (32, 6, 1, 1, '2020-10-16 12:29:04');
+INSERT INTO library.t_event (pk_id, fk_book, fk_employee, fk_event_type, c_date) VALUES (33, 3, 1, 2, '2020-10-16 12:29:10');
+INSERT INTO library.t_event (pk_id, fk_book, fk_employee, fk_event_type, c_date) VALUES (34, 6, 1, 2, '2020-10-16 12:29:12');
+INSERT INTO library.t_event (pk_id, fk_book, fk_employee, fk_event_type, c_date) VALUES (35, 3, 1, 1, '2020-10-16 12:42:26');
+INSERT INTO library.t_event (pk_id, fk_book, fk_employee, fk_event_type, c_date) VALUES (36, 3, 1, 2, '2020-10-16 13:22:25');
+INSERT INTO library.t_event (pk_id, fk_book, fk_employee, fk_event_type, c_date) VALUES (37, 3, 1, 1, '2020-10-16 15:32:58');
 
 
 --
--- TOC entry 3013 (class 0 OID 1200337)
+-- TOC entry 3014 (class 0 OID 1200337)
 -- Dependencies: 208
 -- Data for Name: t_users; Type: TABLE DATA; Schema: library; Owner: -
 --
 
+INSERT INTO library.t_users (pk_id, c_login, c_password, fk_employee) VALUES (3, 'admin', '\x202cb962ac59075b964b07152d234b70', 1);
 
 
 --
--- TOC entry 3017 (class 0 OID 1200400)
+-- TOC entry 3018 (class 0 OID 1200400)
 -- Dependencies: 212
 -- Data for Name: toc_books_employees; Type: TABLE DATA; Schema: library; Owner: -
 --
 
+INSERT INTO library.toc_books_employees (pk_id, fk_book, fk_employee) VALUES (11, 3, 1);
 
 
 --
--- TOC entry 3044 (class 0 OID 0)
+-- TOC entry 3045 (class 0 OID 0)
 -- Dependencies: 203
 -- Name: ref_event_types_pk_id_seq; Type: SEQUENCE SET; Schema: library; Owner: -
 --
@@ -596,7 +600,7 @@ SELECT pg_catalog.setval('library.ref_event_types_pk_id_seq', 2, true);
 
 
 --
--- TOC entry 3045 (class 0 OID 0)
+-- TOC entry 3046 (class 0 OID 0)
 -- Dependencies: 209
 -- Name: ref_positions_pk_id_seq; Type: SEQUENCE SET; Schema: library; Owner: -
 --
@@ -605,7 +609,7 @@ SELECT pg_catalog.setval('library.ref_positions_pk_id_seq', 1, true);
 
 
 --
--- TOC entry 3046 (class 0 OID 0)
+-- TOC entry 3047 (class 0 OID 0)
 -- Dependencies: 199
 -- Name: ref_statuses_pk_id_seq; Type: SEQUENCE SET; Schema: library; Owner: -
 --
@@ -614,16 +618,16 @@ SELECT pg_catalog.setval('library.ref_statuses_pk_id_seq', 2, true);
 
 
 --
--- TOC entry 3047 (class 0 OID 0)
+-- TOC entry 3048 (class 0 OID 0)
 -- Dependencies: 197
 -- Name: t_books_pk_id_seq; Type: SEQUENCE SET; Schema: library; Owner: -
 --
 
-SELECT pg_catalog.setval('library.t_books_pk_id_seq', 6, true);
+SELECT pg_catalog.setval('library.t_books_pk_id_seq', 11, true);
 
 
 --
--- TOC entry 3048 (class 0 OID 0)
+-- TOC entry 3049 (class 0 OID 0)
 -- Dependencies: 205
 -- Name: t_employees_pk_id_seq; Type: SEQUENCE SET; Schema: library; Owner: -
 --
@@ -632,34 +636,34 @@ SELECT pg_catalog.setval('library.t_employees_pk_id_seq', 1, true);
 
 
 --
--- TOC entry 3049 (class 0 OID 0)
+-- TOC entry 3050 (class 0 OID 0)
 -- Dependencies: 201
 -- Name: t_event_pk_id_seq; Type: SEQUENCE SET; Schema: library; Owner: -
 --
 
-SELECT pg_catalog.setval('library.t_event_pk_id_seq', 15, true);
-
-
---
--- TOC entry 3050 (class 0 OID 0)
--- Dependencies: 207
--- Name: t_users_pk_id_seq; Type: SEQUENCE SET; Schema: library; Owner: -
---
-
-SELECT pg_catalog.setval('library.t_users_pk_id_seq', 1, false);
+SELECT pg_catalog.setval('library.t_event_pk_id_seq', 37, true);
 
 
 --
 -- TOC entry 3051 (class 0 OID 0)
+-- Dependencies: 207
+-- Name: t_users_pk_id_seq; Type: SEQUENCE SET; Schema: library; Owner: -
+--
+
+SELECT pg_catalog.setval('library.t_users_pk_id_seq', 3, true);
+
+
+--
+-- TOC entry 3052 (class 0 OID 0)
 -- Dependencies: 211
 -- Name: toc_books_employees_pk_id_seq; Type: SEQUENCE SET; Schema: library; Owner: -
 --
 
-SELECT pg_catalog.setval('library.toc_books_employees_pk_id_seq', 1, false);
+SELECT pg_catalog.setval('library.toc_books_employees_pk_id_seq', 11, true);
 
 
 --
--- TOC entry 2864 (class 2606 OID 1200318)
+-- TOC entry 2865 (class 2606 OID 1200318)
 -- Name: ref_event_types ref_event_types_pk; Type: CONSTRAINT; Schema: library; Owner: -
 --
 
@@ -668,7 +672,7 @@ ALTER TABLE ONLY library.ref_event_types
 
 
 --
--- TOC entry 2860 (class 2606 OID 1200302)
+-- TOC entry 2861 (class 2606 OID 1200302)
 -- Name: ref_statuses ref_statuses_pk; Type: CONSTRAINT; Schema: library; Owner: -
 --
 
@@ -677,7 +681,7 @@ ALTER TABLE ONLY library.ref_statuses
 
 
 --
--- TOC entry 2856 (class 2606 OID 1200294)
+-- TOC entry 2857 (class 2606 OID 1200294)
 -- Name: t_books t_books_pk; Type: CONSTRAINT; Schema: library; Owner: -
 --
 
@@ -686,7 +690,7 @@ ALTER TABLE ONLY library.t_books
 
 
 --
--- TOC entry 2858 (class 2606 OID 1200390)
+-- TOC entry 2859 (class 2606 OID 1200390)
 -- Name: t_books t_books_un_c_isbn; Type: CONSTRAINT; Schema: library; Owner: -
 --
 
@@ -695,7 +699,7 @@ ALTER TABLE ONLY library.t_books
 
 
 --
--- TOC entry 2866 (class 2606 OID 1200334)
+-- TOC entry 2867 (class 2606 OID 1200334)
 -- Name: t_employees t_employees_pk; Type: CONSTRAINT; Schema: library; Owner: -
 --
 
@@ -704,7 +708,7 @@ ALTER TABLE ONLY library.t_employees
 
 
 --
--- TOC entry 2862 (class 2606 OID 1200310)
+-- TOC entry 2863 (class 2606 OID 1200310)
 -- Name: t_event t_event_pk; Type: CONSTRAINT; Schema: library; Owner: -
 --
 
@@ -713,7 +717,7 @@ ALTER TABLE ONLY library.t_event
 
 
 --
--- TOC entry 2872 (class 2606 OID 1200350)
+-- TOC entry 2873 (class 2606 OID 1200350)
 -- Name: ref_positions t_positions_pk; Type: CONSTRAINT; Schema: library; Owner: -
 --
 
@@ -722,7 +726,7 @@ ALTER TABLE ONLY library.ref_positions
 
 
 --
--- TOC entry 2868 (class 2606 OID 1200342)
+-- TOC entry 2869 (class 2606 OID 1200342)
 -- Name: t_users t_users_pk; Type: CONSTRAINT; Schema: library; Owner: -
 --
 
@@ -731,7 +735,7 @@ ALTER TABLE ONLY library.t_users
 
 
 --
--- TOC entry 2870 (class 2606 OID 1200392)
+-- TOC entry 2871 (class 2606 OID 1200392)
 -- Name: t_users t_users_un_c_login; Type: CONSTRAINT; Schema: library; Owner: -
 --
 
@@ -740,7 +744,7 @@ ALTER TABLE ONLY library.t_users
 
 
 --
--- TOC entry 2873 (class 2606 OID 1200351)
+-- TOC entry 2874 (class 2606 OID 1200351)
 -- Name: t_books t_books_fk; Type: FK CONSTRAINT; Schema: library; Owner: -
 --
 
@@ -749,7 +753,7 @@ ALTER TABLE ONLY library.t_books
 
 
 --
--- TOC entry 2877 (class 2606 OID 1200376)
+-- TOC entry 2878 (class 2606 OID 1200376)
 -- Name: t_employees t_employees_fk_position; Type: FK CONSTRAINT; Schema: library; Owner: -
 --
 
@@ -758,7 +762,7 @@ ALTER TABLE ONLY library.t_employees
 
 
 --
--- TOC entry 2875 (class 2606 OID 1200361)
+-- TOC entry 2876 (class 2606 OID 1200361)
 -- Name: t_event t_event_fk_book; Type: FK CONSTRAINT; Schema: library; Owner: -
 --
 
@@ -767,7 +771,7 @@ ALTER TABLE ONLY library.t_event
 
 
 --
--- TOC entry 2876 (class 2606 OID 1200366)
+-- TOC entry 2877 (class 2606 OID 1200366)
 -- Name: t_event t_event_fk_employee; Type: FK CONSTRAINT; Schema: library; Owner: -
 --
 
@@ -776,7 +780,7 @@ ALTER TABLE ONLY library.t_event
 
 
 --
--- TOC entry 2874 (class 2606 OID 1200356)
+-- TOC entry 2875 (class 2606 OID 1200356)
 -- Name: t_event t_event_fk_event_types; Type: FK CONSTRAINT; Schema: library; Owner: -
 --
 
@@ -785,7 +789,7 @@ ALTER TABLE ONLY library.t_event
 
 
 --
--- TOC entry 2878 (class 2606 OID 1200393)
+-- TOC entry 2879 (class 2606 OID 1200393)
 -- Name: t_users t_users_fk_employee; Type: FK CONSTRAINT; Schema: library; Owner: -
 --
 
@@ -794,24 +798,24 @@ ALTER TABLE ONLY library.t_users
 
 
 --
--- TOC entry 2879 (class 2606 OID 1200404)
--- Name: toc_books_employees toc_books_employees_fk_book; Type: FK CONSTRAINT; Schema: library; Owner: -
+-- TOC entry 2880 (class 2606 OID 1200414)
+-- Name: toc_books_employees toc_books_employees_fk_books; Type: FK CONSTRAINT; Schema: library; Owner: -
 --
 
 ALTER TABLE ONLY library.toc_books_employees
-    ADD CONSTRAINT toc_books_employees_fk_book FOREIGN KEY (fk_book) REFERENCES library.t_books(pk_id) ON UPDATE CASCADE ON DELETE RESTRICT;
+    ADD CONSTRAINT toc_books_employees_fk_books FOREIGN KEY (fk_book) REFERENCES library.t_books(pk_id) ON UPDATE CASCADE;
 
 
 --
--- TOC entry 2880 (class 2606 OID 1200409)
--- Name: toc_books_employees toc_books_employees_fk_employee; Type: FK CONSTRAINT; Schema: library; Owner: -
+-- TOC entry 2881 (class 2606 OID 1200419)
+-- Name: toc_books_employees toc_books_employees_fk_employees; Type: FK CONSTRAINT; Schema: library; Owner: -
 --
 
 ALTER TABLE ONLY library.toc_books_employees
-    ADD CONSTRAINT toc_books_employees_fk_employee FOREIGN KEY (fk_employee) REFERENCES library.t_employees(pk_id) ON UPDATE CASCADE ON DELETE RESTRICT;
+    ADD CONSTRAINT toc_books_employees_fk_employees FOREIGN KEY (fk_employee) REFERENCES library.t_employees(pk_id) ON UPDATE CASCADE;
 
 
--- Completed on 2020-10-15 18:17:04
+-- Completed on 2020-10-21 14:09:40
 
 --
 -- PostgreSQL database dump complete
