@@ -2,6 +2,7 @@ package employee_provider
 
 import (
 	"database/sql"
+	"sample-project/app/helpers"
 	"sample-project/app/models/entities"
 	"sample-project/app/models/mappers"
 
@@ -17,7 +18,16 @@ type PEmployee struct {
 }
 
 // Init
-func (p *PEmployee) Init(db *sql.DB) (err error) {
+func (p *PEmployee) Init() (err error) {
+	var db *sql.DB // экземпляр подключения к бд
+
+	// получение экземпляра подключения к бд
+	db, err = helpers.GetDBConnection()
+	if err != nil {
+		revel.AppLog.Errorf("PEmployee.Init : helpers.GetDBConnection, %s\n", err)
+		return err
+	}
+
 	// инициализация маппера сотрудников
 	p.employeeMapper = new(mappers.MEmployee)
 	p.employeeMapper.Init(db)

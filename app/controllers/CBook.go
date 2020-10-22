@@ -20,10 +20,9 @@ type CBook struct {
 // Init интерцептор контроллера CBook
 func (c *CBook) Init() revel.Result {
 	var (
-		cache     helpers.ICache       // экземпляр кэша
-		connector helpers.IDBConnector // экземпляр коннектора, для получения экземпляра соединения с бд
-		db        *sql.DB              // экземпляр соединения с бд
-		err       error                // ошибка в ходе выполнения функции
+		cache helpers.ICache // экземпляр кэша
+		db    *sql.DB        // экземпляр соединения с бд
+		err   error          // ошибка в ходе выполнения функции
 	)
 
 	// инициализация кэша
@@ -38,21 +37,9 @@ func (c *CBook) Init() revel.Result {
 		return c.Redirect((*CError).Unauthorized)
 	}
 
-	// получение экземпляра соединения с бд
-	connector, err = helpers.GetConnector()
-	if err != nil {
-		revel.AppLog.Errorf("CBook.Init : connector.GetDBConnection, %s\n", err)
-		return c.RenderJSON(Failed(err.Error()))
-	}
-	db, err = connector.GetDBConnection()
-	if err != nil {
-		revel.AppLog.Errorf("CBook.Init : connector.GetDBConnection, %s\n", err)
-		return c.RenderJSON(Failed(err.Error()))
-	}
-
 	// инициализация провайдера
 	c.provider = new(book_provider.PBook)
-	err = c.provider.Init(db)
+	err = c.provider.Init()
 	if err != nil {
 		revel.AppLog.Errorf("CBook.Init : c.provider.Init, %s\n", err)
 		return c.RenderJSON(Failed(err.Error()))

@@ -3,6 +3,7 @@ package event_provider
 import (
 	"database/sql"
 	"errors"
+	"sample-project/app/helpers"
 	"sample-project/app/models/entities"
 	"sample-project/app/models/mappers"
 	"time"
@@ -27,7 +28,16 @@ type PEvent struct {
 }
 
 // Init
-func (p *PEvent) Init(db *sql.DB) (err error) {
+func (p *PEvent) Init() (err error) {
+	var db *sql.DB // экземпляр подключения к бд
+
+	// получение экземпляра подключения к бд
+	db, err = helpers.GetDBConnection()
+	if err != nil {
+		revel.AppLog.Errorf("PEvent.Init : helpers.GetDBConnection, %s\n", err)
+		return err
+	}
+
 	// инициализация маппера событий
 	p.eventMapper = new(mappers.MEvent)
 	p.eventMapper.Init(db)
@@ -95,13 +105,13 @@ func (p *PEvent) Create(event *entities.Event) (e *entities.Event, err error) {
 
 	// определение типа события
 	switch event.Type {
-	case string(entities.EVENT_TYPE_GIVE):
+	case entities.EVENT_TYPE_GIVE:
 		e, err = p.createGiveEvent(edbt)
 		if err != nil {
 			revel.AppLog.Errorf("PEvent.Create : p.createGiveEvent, %s\n", err)
 			return
 		}
-	case string(entities.EVENT_TYPE_TAKE):
+	case entities.EVENT_TYPE_TAKE:
 		e, err = p.createTakeEvent(edbt)
 		if err != nil {
 			revel.AppLog.Errorf("PEvent.Create : p.createTakeEven, %s\n", err)

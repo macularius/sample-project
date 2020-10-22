@@ -2,6 +2,7 @@ package book_provider
 
 import (
 	"database/sql"
+	"sample-project/app/helpers"
 	"sample-project/app/models/entities"
 	"sample-project/app/models/mappers"
 
@@ -15,7 +16,16 @@ type PBook struct {
 }
 
 // Init
-func (p *PBook) Init(db *sql.DB) (err error) {
+func (p *PBook) Init() (err error) {
+	var db *sql.DB // экземпляр подключения к бд
+
+	// получение экземпляра подключения к бд
+	db, err = helpers.GetDBConnection()
+	if err != nil {
+		revel.AppLog.Errorf("PBook.Init : helpers.GetDBConnection, %s\n", err)
+		return err
+	}
+
 	// инициализация маппера книг
 	p.bookMapper = new(mappers.MBook)
 	p.bookMapper.Init(db)

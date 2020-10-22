@@ -3,6 +3,7 @@ package user_provider
 import (
 	"crypto/md5"
 	"database/sql"
+	"sample-project/app/helpers"
 	"sample-project/app/models/entities"
 	"sample-project/app/models/mappers"
 
@@ -16,7 +17,15 @@ type PUser struct {
 }
 
 // Init
-func (p *PUser) Init(db *sql.DB) (err error) {
+func (p *PUser) Init() (err error) {
+	var db *sql.DB // экземпляр подключения к бд
+
+	// получение экземпляра подключения к бд
+	db, err = helpers.GetDBConnection()
+	if err != nil {
+		revel.AppLog.Errorf("PUser.Init : helpers.GetDBConnection, %s\n", err)
+		return err
+	}
 	// инициализация маппера пользователей
 	p.userMapper = new(mappers.MUser)
 	p.userMapper.Init(db)

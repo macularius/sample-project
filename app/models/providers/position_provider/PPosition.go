@@ -2,6 +2,7 @@ package position_provider
 
 import (
 	"database/sql"
+	"sample-project/app/helpers"
 	"sample-project/app/models/entities"
 	"sample-project/app/models/mappers"
 
@@ -14,7 +15,16 @@ type PPosition struct {
 }
 
 // Init
-func (p *PPosition) Init(db *sql.DB) (err error) {
+func (p *PPosition) Init() (err error) {
+	var db *sql.DB // экземпляр подключения к бд
+
+	// получение экземпляра подключения к бд
+	db, err = helpers.GetDBConnection()
+	if err != nil {
+		revel.AppLog.Errorf("PPosition.Init : helpers.GetDBConnection, %s\n", err)
+		return err
+	}
+
 	// инициализация маппера должностей
 	p.positionMapper = new(mappers.MPosition)
 	p.positionMapper.Init(db)

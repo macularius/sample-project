@@ -2,6 +2,7 @@ package mappers
 
 import (
 	"database/sql"
+	"sample-project/app/models/entities"
 
 	"github.com/revel/revel"
 )
@@ -17,7 +18,7 @@ func (m *MEventType) Init(db *sql.DB) {
 }
 
 // EventByID получение типа события по id
-func (m *MEventType) EventByID(id int64) (eventType string, err error) {
+func (m *MEventType) EventByID(id int64) (eventType entities.EventType, err error) {
 	var (
 		query string   // строка запроса
 		row   *sql.Row // выборка данных
@@ -53,7 +54,7 @@ func (m *MEventType) EventByID(id int64) (eventType string, err error) {
 }
 
 // IDByEventType получение id статуса по значению
-func (m *MEventType) IDByEventType(eventType string) (id int64, err error) {
+func (m *MEventType) IDByEventType(eventType entities.EventType) (id int64, err error) {
 	var (
 		query string   // строка запроса
 		row   *sql.Row // выборка данных
