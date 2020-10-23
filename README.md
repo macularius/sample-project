@@ -1,43 +1,38 @@
-# Welcome to Revel
+# Спецификация проекта “Библиотека”
 
-A high-productivity web framework for the [Go language](http://www.golang.org/).
+## Цель
 
+   Разработка информационной системы для учета книг и сотрудников; учета событий сдачи и выдачи экземпляров книг, с возможностью просмотра книг, выданных сотрудникам.
 
-### Start the web server:
+## Описание
 
-   revel run myapp
+    Библиотека - это инструмент, который позволяет библиотекарю вести учет книг и сотрудников; учета событий сдачи и выдачи экземпляров книг, с возможностью просмотра книг, выданных сотрудникам.
 
-### Go to http://localhost:9000/ and you'll see:
+## Функциональные возможности
 
-    "It works"
+1. Учет книг
+  1. Создание книги
+  2. Редактирование книги
+  3. Удаление книг
+2. Учет сотрудников
+  1. Создание сотрудника
+  2. Редактирование сотрудника
+  3. Удаление сотрудника
+3. Учет выданных сотрудникам книг в текущий момент
+  1. Просмотр списка книг, которые выданы сотруднику
+4. Учет событий выдачи/сдачи книг
+  1. Просмотр списка событий
+  2. Возможность просмотра книги, которая участвовала в событии
+  3. Возможность просмотра сотрудника, который участвовал в событии
+5. Логика состояний книг
+  1. Автоматическое установка статуса книги при событии сдачи или выдачи
+6. Авторизация
 
-## Code Layout
+## Используемые технологии
 
-The directory structure of a generated Revel application:
-
-    conf/             Configuration directory
-        app.conf      Main app configuration file
-        routes        Routes definition file
-
-    app/              App sources
-        init.go       Interceptor registration
-        controllers/  App controllers go here
-        views/        Templates directory
-
-    messages/         Message files
-
-    public/           Public static assets
-        css/          CSS files
-        js/           Javascript files
-        images/       Image files
-
-    tests/            Test suites
-
-
-## Help
-
-* The [Getting Started with Revel](http://revel.github.io/tutorial/gettingstarted.html).
-* The [Revel guides](http://revel.github.io/manual/index.html).
-* The [Revel sample apps](http://revel.github.io/examples/index.html).
-* The [API documentation](https://godoc.org/github.com/revel/revel).
-
+| Технология    | Версия    |
+| ------------- |:---------:|
+| Go            | 1.14.4    |
+| Revel         | 1.0.0     |
+| PostgreSQL    | 11.8      |
+| Webix         | 5.3.0     |
