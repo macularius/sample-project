@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"database/sql"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
@@ -24,26 +23,12 @@ type CAuth struct {
 // Init интерцептор контроллера CAuth
 func (c *CAuth) Init() revel.Result {
 	var (
-		connector helpers.IDBConnector // экземпляр коннектора, для получения экземпляра соединения с бд
-		db        *sql.DB              // экземпляр соединения с бд
-		err       error                // ошибка в ходе выполнения функции
+		err error // ошибка в ходе выполнения функции
 	)
-
-	// получение экземпляра соединения с бд
-	connector, err = helpers.GetConnector()
-	if err != nil {
-		revel.AppLog.Errorf("CAuth.Init : connector.GetDBConnection, %s\n", err)
-		return c.RenderJSON(Failed(err.Error()))
-	}
-	db, err = connector.GetDBConnection()
-	if err != nil {
-		revel.AppLog.Errorf("CAuth.Init : connector.GetDBConnection, %s\n", err)
-		return c.RenderJSON(Failed(err.Error()))
-	}
 
 	// инициализация провайдера
 	c.provider = new(user_provider.PUser)
-	err = c.provider.Init(db)
+	err = c.provider.Init()
 	if err != nil {
 		revel.AppLog.Errorf("CAuth.Init : c.provider.Init, %s\n", err)
 		return c.RenderJSON(Failed(err.Error()))

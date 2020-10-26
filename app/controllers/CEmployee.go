@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"database/sql"
 	"encoding/json"
 	"io/ioutil"
 	"sample-project/app/helpers"
@@ -21,7 +20,6 @@ type CEmployee struct {
 func (c *CEmployee) Init() revel.Result {
 	var (
 		cache helpers.ICache // экземпляр кэша
-		db    *sql.DB        // экземпляр соединения с бд
 		err   error          // ошибка в ходе выполнения функции
 	)
 

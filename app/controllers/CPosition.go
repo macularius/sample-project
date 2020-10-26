@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"database/sql"
 	"sample-project/app/helpers"
 	"sample-project/app/models/providers/position_provider"
 
@@ -18,7 +17,6 @@ type CPosition struct {
 func (c *CPosition) Init() revel.Result {
 	var (
 		cache helpers.ICache // экземпляр кэша
-		db    *sql.DB        // экземпляр соединения с бд
 		err   error          // ошибка в ходе выполнения функции
 	)
 
