@@ -143,7 +143,7 @@ func (p *PEvent) createGiveEvent(edbt *mappers.EventDBType) (e *entities.Event, 
 	}
 
 	// обновления статуса книги
-	bdbt.Fk_status, err = p.bookStatusMapper.IDByStatus(string(entities.BOOK_STATUS_NOT_AVAILABLE))
+	bdbt.Fk_status, err = p.bookStatusMapper.IDByStatus(entities.BOOK_STATUS_NOT_AVAILABLE)
 	if err != nil {
 		revel.AppLog.Errorf("PEvent.createTakeEvent : p.bookStatusMapper.IDByStatus, %s\n", err)
 		return
@@ -209,7 +209,7 @@ func (p *PEvent) createTakeEvent(edbt *mappers.EventDBType) (e *entities.Event, 
 	}
 
 	// обновления статуса книги
-	bdbt.Fk_status, err = p.bookStatusMapper.IDByStatus(string(entities.BOOK_STATUS_AVAILABLE))
+	bdbt.Fk_status, err = p.bookStatusMapper.IDByStatus(entities.BOOK_STATUS_AVAILABLE)
 	if err != nil {
 		revel.AppLog.Errorf("PEvent.Create : p.bookStatusMapper.IDByStatus, %s\n", err)
 		return

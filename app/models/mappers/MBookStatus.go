@@ -2,6 +2,7 @@ package mappers
 
 import (
 	"database/sql"
+	"sample-project/app/models/entities"
 
 	"github.com/revel/revel"
 )
@@ -17,7 +18,7 @@ func (m *MBookStatus) Init(db *sql.DB) {
 }
 
 // StatusByID получение статуса книги по id
-func (m *MBookStatus) StatusByID(id int64) (status string, err error) {
+func (m *MBookStatus) StatusByID(id int64) (status entities.BookStatus, err error) {
 	var (
 		query string   // строка запроса
 		row   *sql.Row // выборка данных
@@ -50,7 +51,7 @@ func (m *MBookStatus) StatusByID(id int64) (status string, err error) {
 }
 
 // IDByStatus получение id статуса по значению
-func (m *MBookStatus) IDByStatus(status string) (id int64, err error) {
+func (m *MBookStatus) IDByStatus(status entities.BookStatus) (id int64, err error) {
 	var (
 		query string   // строка запроса
 		row   *sql.Row // выборка данных

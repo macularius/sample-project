@@ -10,7 +10,7 @@ type Book struct {
 	Author    *string    `json:"author"`    // автор
 	Publisher *string    `json:"publisher"` // издательство
 	Year      *time.Time `json:"year"`      // год изданиия
-	Status    string     `json:"status"`    // статус книги
+	Status    BookStatus `json:"status"`    // статус книги
 }
 
 // BookStatus статус книги
