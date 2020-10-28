@@ -4,3 +4,5 @@ routes/
 node_modules/
 none
 target/
+go.mod
+go.sum
