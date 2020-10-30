@@ -107,7 +107,7 @@ func (c *CAuth) Logout() revel.Result {
 // Check проверка авторизованности пользователя
 func (c *CAuth) Check() revel.Result {
 	// получение токена клиента для пользователя
-	userToken, err := c.Request.Cookie("auth-token")
+	userToken, err := c.Request.Cookie("auth_token")
 	if err != nil {
 		if err == http.ErrNoCookie {
 			return c.RenderJSON(Succes(false))
