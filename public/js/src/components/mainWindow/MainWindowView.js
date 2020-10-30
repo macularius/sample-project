@@ -30,6 +30,7 @@ export default function MainWindowView() {
                                     view: 'text',
                                     id: 'mainWindowFormPassword',
                                     label: 'Пароль',
+                                    type: 'password',
                                     name: 'password',
                                     required: true,
                                     labelWidth: 150,
