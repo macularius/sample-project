@@ -1,6 +1,6 @@
-import EmployeeWindowView from './EmployeeWindowView.js'
-import positionModel from '../../../models/positionModel.js'
 import employeeModel from '../../../models/employeeModel.js';
+import positionModel from '../../../models/positionModel.js';
+import EmployeeWindowView from './EmployeeWindowView.js';
 
 // компонент окна для работы с сущностью сотрудника
 export class CEmployeeWindow {
@@ -158,11 +158,12 @@ export class CEmployeeWindow {
         let isValid = false
 
         // удаление пробелов в полях формы
-        this.view.formfields.ISBN.setValue(this.view.formfields.ISBN.getValue().trim())
-        this.view.formfields.name.setValue(this.view.formfields.name.getValue().trim())
-        this.view.formfields.author.setValue(this.view.formfields.author.getValue().trim())
-        this.view.formfields.publisher.setValue(this.view.formfields.publisher.getValue().trim())
-        this.view.formfields.year.setValue(this.view.formfields.year.getValue().trim())
+        this.view.formfields.lastname.setValue(this.view.formfields.lastname.getValue().trim())
+        this.view.formfields.firstname.setValue(this.view.formfields.firstname.getValue().trim())
+        this.view.formfields.middlename.setValue(this.view.formfields.middlename.getValue().trim())
+        this.view.formfields.position.setValue(this.view.formfields.position.getValue().trim())
+        this.view.formfields.phoneNumber.setValue(this.view.formfields.phoneNumber.getValue().trim())
+        this.view.formfields.email.setValue(this.view.formfields.email.getValue().trim())
 
         // валидация webix
         isValid = this.view.form.validate()
