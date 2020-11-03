@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"sample-project/app/models/entities"
+	"sync"
 )
 
 var cach *cache
@@ -17,6 +18,7 @@ type ICache interface {
 
 // cache тип кэша
 type cache struct {
+	*sync.Mutex                           // мьютекс для потокобезопасности кэша
 	actualToken map[string]string         // [:Session ID:]:token:
 	actualUsers map[string]*entities.User // [:Session ID:]:user:
 }
@@ -34,6 +36,10 @@ func GetCache() (c ICache, err error) {
 
 // TokenIsActualByToken актуальность токена по токену
 func (c *cache) TokenIsActualByToken(token string) (string, bool) {
+	// блокировка кэша до завершения функции
+	c.Lock()
+	defer c.Unlock()
+
 	for _, t := range c.actualToken {
 		if token == t {
 			return token, true
@@ -45,6 +51,10 @@ func (c *cache) TokenIsActualByToken(token string) (string, bool) {
 
 // TokenIsActualBySID актуальность токена по Session ID
 func (c *cache) TokenIsActualBySID(sid string) (token string, ok bool) {
+	// блокировка кэша до завершения функции
+	c.Lock()
+	defer c.Unlock()
+
 	if token, ok = c.actualToken[sid]; ok {
 		return
 	}
@@ -54,11 +64,19 @@ func (c *cache) TokenIsActualBySID(sid string) (token string, ok bool) {
 
 // Get получение данных кэша по SID
 func (c *cache) Get(sid string) (u *entities.User, token string, err error) {
+	// блокировка кэша до завершения функции
+	c.Lock()
+	defer c.Unlock()
+
 	return c.actualUsers[sid], c.actualToken[sid], nil
 }
 
 // Set установка данных кэша по SID
 func (c *cache) Set(sid, token string, user *entities.User) (err error) {
+	// блокировка кэша до завершения функции
+	c.Lock()
+	defer c.Unlock()
+
 	c.actualToken[sid] = token
 	c.actualUsers[sid] = user
 
@@ -67,6 +85,10 @@ func (c *cache) Set(sid, token string, user *entities.User) (err error) {
 
 // Delete удаление данных кэша по SID
 func (c *cache) Delete(sid string) (err error) {
+	// блокировка кэша до завершения функции
+	c.Lock()
+	defer c.Unlock()
+
 	delete(c.actualToken, sid)
 	delete(c.actualUsers, sid)
 
