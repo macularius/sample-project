@@ -1,11 +1,11 @@
-import { CToolbar } from './toolbar/CToolbar.js'
+import { checkAuth } from '../../helpers/checkAuth.js'
+import { deleteCookie } from '../../helpers/cookies.js'
+import WorkedPlaceView from './ApplicationView.js'
 import { CBookTab } from './book/CBookTab.js'
 import { CEmployeeTab } from './employee/CEmployeeTab.js'
 import { CJournalTab } from './journal/CJournalTab.js'
-import WorkedPlaceView from './ApplicationView.js'
 import { CMainWindow } from './mainWindow/CMainWindow.js'
-import { deleteCookie } from '../../helpers/cookies.js'
-import { checkAuth } from '../../helpers/checkAuth.js'
+import { CToolbar } from './toolbar/CToolbar.js'
 
 // галвный компонент приложения
 export class Application {
