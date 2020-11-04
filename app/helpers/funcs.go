@@ -9,7 +9,7 @@ import (
 // GetToken функция получения токена
 func GetToken(c *revel.Controller) (string, error) {
 	// получение токена клиента
-	token, err := c.Request.Cookie("auth-token")
+	token, err := c.Request.Cookie("auth_token")
 	if err != nil {
 		if err == http.ErrNoCookie {
 			return "", nil
