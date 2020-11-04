@@ -82,7 +82,11 @@ func (c *CAuth) Login() revel.Result {
 		token := uuid.New().String()
 
 		// установка токена в cache сервера
-		c.cache.Set(c.Session.ID(), token, u)
+		err = c.cache.Set(token, u)
+		if err != nil {
+			revel.AppLog.Errorf("CAuth.Login : c.cache.Set, %s\n", err)
+			return c.RenderJSON(Failed(err.Error()))
+		}
 
 		// установка токена в cookies клиента
 		c.SetCookie(&http.Cookie{Name: "auth-token", Value: token, Domain: c.Request.Host, Path: "/"})
@@ -106,29 +110,15 @@ func (c *CAuth) Logout() revel.Result {
 
 // Check проверка авторизованности пользователя
 func (c *CAuth) Check() revel.Result {
-	// получение токена клиента для пользователя
-	userToken, err := c.Request.Cookie("auth-token")
+	// получение токена клиента
+	token, err := helpers.GetToken(c.Controller)
 	if err != nil {
-		if err == http.ErrNoCookie {
-			return c.RenderJSON(Succes(false))
-		}
-
-		revel.AppLog.Errorf("CAuth.Check : c.Request.Cookie, %s\n", err)
-		return c.RenderJSON(Failed(err.Error()))
-	}
-	if userToken.GetValue() == "" {
-		return c.RenderJSON(Succes(false))
-	}
-
-	// получение токена сервера для пользователя
-	_, token, err := c.cache.Get(c.Session.ID())
-	if err != nil {
-		revel.AppLog.Errorf("CAuth.Check : c.cache.Get, %s\n", err)
+		revel.AppLog.Errorf("CAuth.Check : helpers.GetToken, %s\n", err)
 		return c.RenderJSON(Failed(err.Error()))
 	}
 
-	// проверка соответствия токена пользователя сервера и клиента
-	if token != userToken.GetValue() {
+	// проверка токена
+	if isExist := c.cache.TokenIsActual(token); !isExist {
 		return c.RenderJSON(Succes(false))
 	}
 
@@ -137,8 +127,20 @@ func (c *CAuth) Check() revel.Result {
 
 // GetCurrentEmployee
 func (c *CAuth) GetCurrentEmployee() revel.Result {
+	// получение токена клиента
+	token, err := helpers.GetToken(c.Controller)
+	if err != nil {
+		revel.AppLog.Errorf("CAuth.Check : helpers.GetToken, %s\n", err)
+		return c.Redirect((*CError).Unauthorized)
+	}
+
+	// проверка токена
+	if isExist := c.cache.TokenIsActual(token); !isExist {
+		return c.Redirect((*CError).Unauthorized)
+	}
+
 	// получение токена сервера для пользователя
-	u, _, err := c.cache.Get(c.Session.ID())
+	u, err := c.cache.Get(token)
 	if err != nil {
 		revel.AppLog.Errorf("CAuth.Check : c.cache.Get, %s\n", err)
 		return c.RenderJSON(Failed(err.Error()))

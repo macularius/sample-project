@@ -27,8 +27,15 @@ func (c *CPosition) Init() revel.Result {
 		return c.RenderJSON(Failed(err.Error()))
 	}
 
-	// Проверка существования токена сервера для пользователя
-	if _, ok := cache.TokenIsActualBySID(c.Session.ID()); !ok {
+	// получение токена клиента
+	token, err := helpers.GetToken(c.Controller)
+	if err != nil {
+		revel.AppLog.Errorf("CAuth.Check : helpers.GetToken, %s\n", err)
+		return c.Redirect((*CError).Unauthorized)
+	}
+
+	// проверка токена
+	if isExist := cache.TokenIsActual(token); !isExist {
 		return c.Redirect((*CError).Unauthorized)
 	}
 
