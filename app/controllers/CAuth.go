@@ -99,8 +99,15 @@ func (c *CAuth) Login() revel.Result {
 
 // Logout
 func (c *CAuth) Logout() revel.Result {
+	// получение токена клиента
+	token, err := helpers.GetToken(c.Controller)
+	if err != nil {
+		revel.AppLog.Errorf("CAuth.Check : helpers.GetToken, %s\n", err)
+		return c.RenderJSON(Failed(err.Error()))
+	}
+
 	// удаление токена
-	err := c.cache.Delete(c.Session.ID())
+	err = c.cache.Delete(token)
 	if err != nil {
 		revel.AppLog.Errorf("CAuth.Logout : c.cache.Delete, %s\n", err)
 	}
