@@ -141,7 +141,7 @@ func (m *MEmployee) SelectByID(id int64) (e *EmployeeDBType, err error) {
 		FROM "library".t_employees
 		WHERE pk_id = $1 and
 			c_is_archive = 0
-			ORDER BY pk_id;
+		ORDER BY pk_id;
 	`
 
 	// выполнение запроса
@@ -236,13 +236,13 @@ func (m *MEmployee) Update(edbt *EmployeeDBType) (err error) {
 	// запрос
 	query = `
 		UPDATE "library".t_employees
-			SET 
-				fk_position = $2,
-				c_firstname = $3,
-				c_lastname = $4,
-				c_middlename = $5,
-				c_phone_number = $6,
-				c_email = $7
+		SET 
+			fk_position = $2,
+			c_firstname = $3,
+			c_lastname = $4,
+			c_middlename = $5,
+			c_phone_number = $6,
+			c_email = $7
 		WHERE pk_id = $1;
 	`
 
