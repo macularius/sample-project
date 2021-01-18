@@ -1,0 +1,49 @@
+{
+  "_from": "webix@5.3.0",
+  "_id": "webix@5.3.0",
+  "_inBundle": false,
+  "_integrity": "sha512-eJzqijpA7yYwPxuxIQeGm41Yq1t7OKS4aPw4yXDqdjRNHtfCkjzMX/nCtaU18AOjwjUAXXYUo881ZgQRcO+eQg==",
+  "_location": "/webix",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "webix@5.3.0",
+    "name": "webix",
+    "escapedName": "webix",
+    "rawSpec": "5.3.0",
+    "saveSpec": null,
+    "fetchSpec": "5.3.0"
+  },
+  "_requiredBy": [
+    "#DEV:/"
+  ],
+  "_resolved": "https://registry.npmjs.org/webix/-/webix-5.3.0.tgz",
+  "_shasum": "63c7a86746bbdc43de454c01ea804d20975b96dd",
+  "_spec": "webix@5.3.0",
+  "_where": "/home/igor/go/src/stream_web",
+  "author": {
+    "name": "XB Software"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "Webix UI",
+  "keywords": [
+    "webix",
+    "ui",
+    "tree",
+    "datatable",
+    "list",
+    "chart",
+    "form",
+    "grid"
+  ],
+  "license": "SEE LICENSE IN license.text",
+  "main": "webix.js",
+  "name": "webix",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "types": "webix.d.ts",
+  "version": "5.3.0"
+}

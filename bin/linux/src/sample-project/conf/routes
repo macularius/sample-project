@@ -1,0 +1,54 @@
+# Routes Config
+#
+# This file defines all application routes (Higher priority routes first)
+#
+
+module:testrunner
+# module:jobs
+
+
+GET     /                                       CIndex.Index
+
+GET     /user/employee                          CAuth.GetCurrentEmployee
+GET     /user/logout                            CAuth.Logout
+POST    /user/authorize/check                   CAuth.Check
+POST    /user/login                             CAuth.Login
+
+GET     /book/all                               CBook.GetAll
+GET     /book/:id                               CBook.GetByID
+POST    /book/create                            CBook.Create
+POST    /book/update                            CBook.Update
+POST    /book/delete                            CBook.Delete
+
+GET     /employee/all                           CEmployee.GetAll
+GET     /employee/:id                           CEmployee.GetByID
+GET     /employee/:id/card                      CEmployee.GetCardBooks
+POST    /employee/create                        CEmployee.Create
+POST    /employee/update                        CEmployee.Update
+POST    /employee/delete                        CEmployee.Delete
+
+GET     /position/all                           CPosition.GetAll
+
+GET     /event/all                              CEvent.GetAll
+GET     /event/byBook/:id                       CEvent.GetByBookID
+GET     /event/byEmployee/:id                   CEvent.GetByEmployeeID
+GET     /event/last/give/book/:id               CEvent.GetLastForBook
+POST    /event/create                           CEvent.Create
+
+GET     /401                                    CError.Unauthorized
+
+# Ignore favicon requests
+GET     /favicon.ico                            404
+
+# Map static resources from the /app/public folder to the /public path
+GET     /public/*filepath                       Static.Serve("public")
+
+# Catch all, this will route any request into the controller path
+#
+#                    **** WARNING ****
+# Enabling this exposes any controller and function to the web.
+# ** This is a serious security issue if used online **
+#
+# For rapid development uncomment the following to add new controller.action endpoints
+# without having to add them to the routes table.
+# *       /:controller/:action                    :controller.:action
